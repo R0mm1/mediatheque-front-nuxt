@@ -1,0 +1,24 @@
+{
+  "api": {
+    "endpoint": "###ENDPOINT###",
+    "commonUrlBase": "/api",
+    "paths": {
+      "security_refresh_token": "/security/token/refresh"
+    }
+  },
+  "auth": {
+    "client_id": "###CLIENTID###",
+    "client_secret": "###CLIENTSECRET###"
+  },
+  "default": {
+    "page": "/book",
+    "notification_settings": {
+      "duration": 1500,
+      "iconPack": "fontawesome"
+    }
+  },
+  "params": {
+    "login_page": "/login",
+    "fontawesome_kit_name": ""
+  }
+}

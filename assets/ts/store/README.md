@@ -1,0 +1,1 @@
+The stores must be in the assets directory and not on the Nuxt's store directory as we are using tsyring - Nuxt is not expecting ts in his store directory, and all the decorators are removed by Babel.

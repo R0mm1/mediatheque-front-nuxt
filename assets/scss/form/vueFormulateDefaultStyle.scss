@@ -1,0 +1,43 @@
+@import "../colors";
+
+@mixin positioning(){
+  &.formulate-input-wrapper{
+    display: flex;
+    height: 2rem;
+    margin: 2px 0;
+
+    label{
+      line-height: 2rem;
+      width: 25%;
+      max-width: 250px;
+      margin-left: 2px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .formulate-input-element{
+      flex: 1;
+    }
+  }
+}
+
+@mixin wrapperStyle(){
+  &.formulate-input-wrapper {
+    .formulate-input-element{
+      position: relative;
+      border-radius: 5px;
+      border: 1px solid $shade0;
+      padding: 4px 6px;
+      transition: all .3s;
+      background-color: $shade4;
+    }
+
+    + .formulate-input-errors{
+      list-style-type: none;
+      padding: 0;
+      color: $textError;
+      margin: 5px 0;
+    }
+  }
+}

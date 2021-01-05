@@ -1,0 +1,32 @@
+@import 'assets/scss/form/vueFormulateDefaultStyle';
+
+@mixin select{
+  .formulate-input[data-type="select"] .formulate-input-wrapper:not(.no-def-style) {
+    @include positioning;
+    @include wrapperStyle;
+
+    .formulate-input-element--select {
+      &::before {
+        content: "";
+        width: 0;
+        height: 0;
+        border-color: black transparent transparent;
+        border-style: solid;
+        border-width: .3em .3em 0;
+        right: 1em;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        width: 100%;
+        border: none;
+        height: 100%;
+        background: top;
+      }
+    }
+  }
+}

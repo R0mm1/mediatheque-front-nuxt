@@ -1,0 +1,7 @@
+@import "text";
+@import "button";
+
+@mixin form{
+  @include text;
+  @include button;
+}
