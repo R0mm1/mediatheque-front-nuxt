@@ -15,72 +15,95 @@
   </div>
 </template>
 
-<script>
-import MedInputButton from '@/components/form/elements/MedInputButton'
+<script lang="ts">
+import MedInputButton from '@/components/form/elements/MedInputButton.vue'
+import { Component, Prop, Vue } from 'vue-property-decorator'
+import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
 
-export default {
-  name: 'SimpleList',
-  components: { MedInputButton },
-  props: {
-    // An array of Element objects
-    elements: { type: Array, default: () => [] },
-    // An array of Action objects
-    actions: { type: Array, default: () => [] }
+@Component({
+  components: { MedInputButton }
+})
+export default class SimpleList extends Vue {
+  @Prop({ type: Array, default: () => [] }) elements!:Element<any>[];
+  @Prop({ type: Array, default: () => [] }) actions!:Action[];
+}
+
+export class Action {
+  buttonDescriptor: ButtonDescriptor;
+  action: ((...args: any[])=>any);
+
+  constructor (buttonDescriptor: ButtonDescriptor, action: ((...args: any[])=>any)) {
+    this.buttonDescriptor = buttonDescriptor
+    this.buttonDescriptor
+      .addCustomClass('row_action')
+    this.action = action
   }
 }
 
-const Action = function (buttonDescriptor, action) {
-  this.buttonDescriptor = buttonDescriptor
-  this.buttonDescriptor
-    // .setStyle('negative')
-    .addCustomClass('row_action')
-    // .setRoundedCorner(true)
-    // .setIsIconButon(true, 24)
-  this.action = action
+export class Element<ExtraType> {
+  id:string;
+  content: string;
+  extra: ExtraType;
+  constructor (id: string, content: string, extra: ExtraType) {
+    this.id = id
+    this.content = content
+    this.extra = extra
+  }
 }
-
-const Element = function (id, content, extra) {
-  this.id = id
-  this.content = content
-  this.extra = extra
-}
-
-export { Action, Element }
 </script>
 
-<style scoped lang="scss">
-    @import "../../assets/scss/colors";
+<style lang="scss">
+@import "../../assets/scss/colors";
 
-    .list_row {
-        display: flex;
-        height: 30px;
-        line-height: 30px;
-        transition: all 0.3s;
-        border-style: solid;
-        border-width: 1px 0 1px 0;
-        border-color: transparent;
+.widget_simpleList {
+  .list_row {
+    display: flex;
+    height: 30px;
+    line-height: 30px;
+    transition: all 0.3s;
+    border-style: solid;
+    border-width: 1px 0 1px 0;
+    border-color: transparent;
 
-        &:hover {
-            border-color: $shade1;
-        }
-
-        .form_element_button2 {
-            font-size: .8rem;
-            margin: 2px;
-
-            &:nth-child(2){
-                margin-left: 10px;
-            }
-
-            &:last-of-type {
-                margin-right: 0;
-            }
-        }
+    &:hover {
+      border-color: $shade1;
     }
 
-    .row_content {
-        flex: 1;
-        text-overflow: ellipsis;
-        overflow: hidden;
+    &:nth-child(even) {
+      background-color: #fcfcfa;
     }
+
+    .form_element_button2 {
+      font-size: .8rem;
+      margin: 2px;
+
+      &:nth-child(2) {
+        margin-left: 10px;
+      }
+
+      &:last-of-type {
+        margin-right: 0;
+      }
+    }
+  }
+
+  .row_content {
+    flex: 1;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  .formulate-input {
+    line-height: 24px;
+    margin: auto;
+
+    button {
+      height: 24px;
+      width: 24px;
+      line-height: 24px;
+      font-size: .8rem !important;
+      padding: initial !important;
+    }
+  }
+}
 </style>
