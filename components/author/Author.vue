@@ -4,16 +4,7 @@
       {{ firstname }} {{ lastname }}
     </template>
     <template #entity-layout-content>
-      <Group custom-class="information">
-        <template #group_name>
-          Informations
-        </template>
-
-        <template #group_content>
-          <MedInputText v-model="firstname" :text-descriptor="firstnameTextDescriptor" />
-          <MedInputText v-model="lastname" :text-descriptor="lastnameTextDescriptor" />
-        </template>
-      </Group>
+      <MainTab />
     </template>
     <template #entity-layout-footer>
       <MedInputButton v-if="isModified" :button-descriptor="saveButtonDescriptor" @click.native="save" />
@@ -25,15 +16,13 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import EntityLayout from '~/components/page/EntityLayout.vue'
 import { TabData } from '~/components/widgets/Tabs.vue'
-
 import authorModule from '~/assets/ts/store/AuthorModule'
-import TextDescriptor from '~/assets/ts/form/TextDescriptor'
-
 import config from '~/mediatheque.json'
 import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
+import MainTab from '~/components/author/groups/MainTab.vue'
 
 @Component({
-  components: { EntityLayout }
+  components: { EntityLayout, MainTab }
 })
 export default class Author extends Vue {
   @Prop({ type: Number, required: true }) authorId!:number|null;
@@ -46,28 +35,12 @@ export default class Author extends Vue {
     }
   ];
 
-  get firstname () {
-    return authorModule.author.firstname
-  }
-
-  set firstname (firstname:string|undefined) {
-    authorModule.setFirstname(firstname ?? '')
-  }
-
   get lastname () {
     return authorModule.author.lastname
   }
 
-  set lastname (lastname: string |undefined) {
-    authorModule.setLastname(lastname ?? '')
-  }
-
-  get firstnameTextDescriptor () {
-    return new TextDescriptor('firstname').setLabel('Prénom')
-  }
-
-  get lastnameTextDescriptor () {
-    return new TextDescriptor('lastname').setLabel('Nom')
+  get firstname () {
+    return authorModule.author.firstname
   }
 
   get saveButtonDescriptor () {
@@ -106,7 +79,4 @@ export default class Author extends Vue {
 </script>
 
 <style scoped>
-.group_information{
-  max-width: 350px;
-}
 </style>

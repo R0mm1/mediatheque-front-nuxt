@@ -14,7 +14,9 @@ const requestService = container.resolve(RequestService)
 @Module({ dynamic: true, name: 'author', store, namespaced: true })
 class AuthorModule extends VuexModule implements EntityModuleInterface<AuthorEntity> {
     protected baseUrl = '/authors';
-    protected baseAuthor = {};
+    protected baseAuthor = {
+      books: []
+    };
 
     author: AuthorEntity = this.baseAuthor;
 
@@ -26,12 +28,12 @@ class AuthorModule extends VuexModule implements EntityModuleInterface<AuthorEnt
     proxy = new EntityProxyService(this.flagService, new HistoryService());
 
     @Mutation new () {
-      this.author = new Proxy(this.baseAuthor, this.proxy)
+      this.author = new Proxy<AuthorEntity>(this.baseAuthor, this.proxy)
       this.flagService.reset()
     }
 
     @Mutation set (entity: AuthorEntity): void {
-      this.author = new Proxy(entity, this.proxy)
+      this.author = new Proxy<AuthorEntity>(entity, this.proxy)
     }
 
     @Mutation setFirstname (firstname: string) {
