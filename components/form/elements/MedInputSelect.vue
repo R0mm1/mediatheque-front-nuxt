@@ -41,6 +41,11 @@ export default class MedSelect extends Vue {
     }
   }
 
+  setValue (value: string) {
+    this.noInputEventEmission = true;
+    this.bindValue = value
+  }
+
   @Watch('selectDescriptor', { deep: true }) descriptorChanged () {
     this.reloadOptions()
   }

@@ -2,7 +2,11 @@
   <transition name="headerPopup">
     <div v-if="isDisplayed" class="listHeaderPopup">
       <div v-if="column.isSearchable" class="headerPopupSearch">
-        <MedInputTextWithButton v-model="column.searchString" :text-with-button-descriptor="textWithButtonDescriptor" @click="search" />
+        <MedInputTextWithButton
+          v-model="searchString"
+          :text-with-button-descriptor="textWithButtonDescriptor"
+          @click="search"
+        />
       </div>
     </div>
   </transition>
@@ -17,6 +21,7 @@ import MedInputButton from '~/components/form/elements/MedInputButton.vue'
 import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
 import MedInputTextWithButton from '~/components/form/elements/MedInputTextWithButton.vue'
 import TextWithButtonDescriptor from '~/assets/ts/form/TextWithButtonDescriptor'
+import listModule from '~/assets/ts/store/ListModule'
 
 @Component({
   components: { MedInputTextWithButton, MedInputButton, MedInputText }
@@ -25,10 +30,14 @@ export default class HeaderPopup extends Vue {
   @Prop(Object) column!: Column;
   @Prop({ type: Boolean, default: false }) isDisplayed!: boolean;
 
-  textWithButtonDescriptor!:TextWithButtonDescriptor;
+  textWithButtonDescriptor!: TextWithButtonDescriptor;
+
+  searchString: string = '';
 
   @Emit('list-header-search')
   search () {
+    this.column.searchString = this.searchString
+    listModule.setColumn(this.column)
     return this.column
   }
 
@@ -44,6 +53,7 @@ export default class HeaderPopup extends Vue {
       .setName('submitSearch_' + this.column.searchParameterName)
 
     this.textWithButtonDescriptor = new TextWithButtonDescriptor(textDescriptor).setButtonDescriptor(buttonDescriptor)
+    this.searchString = this.column.searchString + ''
   }
 }
 </script>
@@ -64,7 +74,7 @@ export default class HeaderPopup extends Vue {
   position: absolute;
   width: 100%;
   min-width: 250px;
-  margin-left: -2px;
+  margin-left: -5px;
   z-index: 1;
 }
 </style>

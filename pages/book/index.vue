@@ -7,7 +7,7 @@
         :cols="cols"
         :row-actions="rowActions"
         :left-action-bar-properties="leftActionBarProperties"
-        :custom-filters="cCustomFilters"
+        details-component-path="book/BookListRowDetails.vue"
         @custom-action-triggered="customActionTriggered"
         @list-action-set="setBook"
       />
@@ -16,8 +16,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
-
 import { container } from 'tsyringe'
 import Column from 'assets/ts/list/Column'
 import DataSubProperty from 'assets/ts/list/DataSubProperty'

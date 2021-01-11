@@ -1,6 +1,6 @@
 <template>
-  <tr class="listListHeader">
-    <th v-for="column in cols" :key="column.dataField" class="cell">
+  <div class="list-header">
+    <div v-for="column in columns" :key="column.dataField" class="cell">
       <div class="headerRow">
         <div class="headerRowLabel">
           {{ column.label }}
@@ -16,12 +16,12 @@
         <div v-if="column.isSortable" class="buttonGroup">
           <button
             class="headerSortButtonUp fas fa-sort-up"
-            :class="{isActive: column.sortState === column.sortUp}"
+            :class="{isActive: column.sortState === sortUpString}"
             @click="sortUpSwitched(column)"
           />
           <button
             class="headerSortButtonDown fas fa-sort-down"
-            :class="{isActive: column.sortState === column.sortDown}"
+            :class="{isActive: column.sortState === sortDownString}"
             @click="sortDownSwitched(column)"
           />
         </div>
@@ -32,21 +32,20 @@
         :is-displayed="isPopupDisplayed(column.dataField)"
         @list-header-search="searchFiltered"
       />
-    </th>
+    </div>
 
-    <th v-if="hasRowAction" />
-  </tr>
+    <div v-if="hasRowAction" class="cell" />
+
+    <!-- To avoid having a width diff with list body due to scrollbar -->
+    <div class="list-header-scrollbar-width" />
+  </div>
 </template>
 
 <script lang="ts">
-import { Component, Emit, Prop, Vue } from 'vue-property-decorator'
-import { getModule } from 'vuex-module-decorators'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 
 import Column from '~/assets/ts/list/Column'
-
-import ListModule from '~/assets/ts/store/ListModule'
-
-const listModule = getModule(ListModule)
+import listModule from '~/assets/ts/store/ListModule'
 
 @Component({
   components: {
@@ -54,106 +53,122 @@ const listModule = getModule(ListModule)
   }
 })
 export default class Header extends Vue {
-        @Prop(Array) cols!: Column[];
-        @Prop(Boolean) hasRowAction!: Boolean;
+  @Prop(Boolean) hasRowAction!: Boolean;
 
-        listDisplayPopup: { [index: string]: boolean } = {};
-        listHasPopupNotice: { [index: string]: boolean } = {};
+  listDisplayPopup: { [index: string]: boolean } = {};
+  listHasPopupNotice: { [index: string]: boolean } = {};
 
-        toggleRowTwo (dataField: string) {
-          if (typeof this.listDisplayPopup[dataField] === 'undefined') {
-            this.$set(this.listDisplayPopup, dataField, true)
-          } else {
-            this.$set(this.listDisplayPopup, dataField, !this.listDisplayPopup[dataField])
-          }
-        }
+  toggleRowTwo (dataField: string) {
+    if (typeof this.listDisplayPopup[dataField] === 'undefined') {
+      this.$set(this.listDisplayPopup, dataField, true)
+    } else {
+      this.$set(this.listDisplayPopup, dataField, !this.listDisplayPopup[dataField])
+    }
+  }
 
-        setHasPopupNotice (dataField: string, hasPopupNotice: boolean) {
-          this.$set(this.listHasPopupNotice, dataField, hasPopupNotice)
-        }
+  get columns () {
+    return listModule._columns
+  }
 
-        isPopupDisplayed (dataField: string) {
-          return this.listDisplayPopup[dataField]
-        }
+  setHasPopupNotice (dataField: string, hasPopupNotice: boolean) {
+    this.$set(this.listHasPopupNotice, dataField, hasPopupNotice)
+  }
 
-        isButtonPopupLocked (dataField: string) {
-          return this.isPopupDisplayed(dataField) || this.listHasPopupNotice[dataField]
-        }
+  isPopupDisplayed (dataField: string) {
+    return this.listDisplayPopup[dataField]
+  }
 
-        @Emit('list-header-sort-up')
-        sortUpSwitched (column: Column) {
-          listModule.handleSortState({ dataField: column.dataField, sortState: column.sortUp })
-          return column
-        }
+  isButtonPopupLocked (dataField: string) {
+    return this.isPopupDisplayed(dataField) || this.listHasPopupNotice[dataField]
+  }
 
-        @Emit('list-header-sort-down')
-        sortDownSwitched (column: Column) {
-          listModule.handleSortState({ dataField: column.dataField, sortState: column.sortDown })
-          return column
-        }
+  get sortUpString () {
+    return Column.sortUp
+  }
 
-        @Emit('list-header-search')
-        searchFiltered (column: Column) {
-          this.setHasPopupNotice(column.dataField, column.searchString.length > 0)
-          return column
-        }
+  get sortDownString () {
+    return Column.sortDown
+  }
+
+  sortUpSwitched (column: Column) {
+    listModule.handleSortState({ dataField: column.dataField, sortState: Column.sortUp })
+  }
+
+  sortDownSwitched (column: Column) {
+    listModule.handleSortState({ dataField: column.dataField, sortState: Column.sortDown })
+  }
+
+  searchFiltered (column: Column) {
+    this.setHasPopupNotice(column.dataField, column.searchString.length > 0)
+  }
+
+  created () {
+    Object.values(listModule.columns).forEach((column:Column) => {
+      this.searchFiltered(column)
+    })
+  }
 }
 </script>
 
 <style lang="scss">
-    @import "../../assets/scss/colors";
-    @import "../../assets/scss/breakpoints";
+@import "../../assets/scss/colors";
+@import "../../assets/scss/breakpoints";
 
-    .listListHeader {
-        background-color: $shade1;
+.list-header {
+  background-color: $shade1;
+  display: flex;
 
-        .cell {
-            height: 2rem;
-            position: relative;
+  .cell {
+    flex: 1;
+    height: 2rem;
+    position: relative;
+    padding: 0 2px;
 
-            @include phone-portrait{
-                width: 100vw;
-            }
-        }
-
-        .headerRow {
-            position: relative;
-            z-index: 2;
-            display: flex;
-            height: 100%;
-            border-right: 1px solid $shade1;
-
-            .headerRowLabel {
-                flex-grow: 1;
-                margin: auto;
-            }
-
-            .buttonGroup {
-                height: 100%;
-                border-radius: 0 5px 0 0;
-                overflow: hidden;
-
-                > button {
-                    display: block;
-                    height: 50%;
-                    padding: 0 3px;
-                }
-            }
-
-            button {
-                border: none;
-                background: $shade4;
-                transition: background-color .3s, color .3s;
-
-                &:hover, &.isActive {
-                    background: $shade0;
-                    color: white;
-                }
-            }
-
-            > button {
-                padding: 5px;
-            }
-        }
+    @include phone-portrait {
+      width: 100vw;
     }
+  }
+
+  .headerRow {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    height: 100%;
+    border-right: 1px solid $shade1;
+
+    .headerRowLabel {
+      flex-grow: 1;
+      margin: auto;
+    }
+
+    .buttonGroup {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      > button {
+        display: block;
+        height: calc(50% - 2px);
+      }
+    }
+
+    button {
+      border: none;
+      transition: background-color .3s, color .3s;
+      background: none;
+
+      &:hover, &.isActive {
+        color: white;
+      }
+    }
+
+    > button {
+      padding: 5px;
+    }
+  }
+
+  .list-header-scrollbar-width {
+    overflow-y: scroll;
+  }
+}
 </style>

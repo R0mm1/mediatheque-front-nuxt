@@ -4,7 +4,7 @@
       {{ title }}
     </template>
     <template v-slot:entity-layout-title-note>
-      {{ authors }}
+      <HeaderAuthorsList :authors="authors" />
     </template>
     <template v-slot:entity-layout-content>
       <MainTab v-if="activeTab === 'details'" :book-module="bookModule" />
@@ -33,6 +33,7 @@ import MainTab from '~/components/book/paperBook/MainTab.vue'
 import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
 import MedInputButton from '~/components/form/elements/MedInputButton.vue'
 import EntityLayout from '~/components/page/EntityLayout.vue'
+import bookElectronicModule from '~/assets/ts/store/book/BookElectronicModule'
 
 @Component({
   components: { MedInputButton, MainTab, GroupInformation, EntityLayout }
@@ -60,11 +61,9 @@ export default class PaperBook extends Vue {
   }
 
   get authors () {
-    const authors = bookPaperModule.book.authors
-    if (typeof authors !== 'undefined') {
-      return authors.map(author => author.firstname + ' ' + author.lastname).join(', ')
-    }
-    return ''
+    const authors = bookElectronicModule.book.authors
+
+    return typeof authors === 'undefined' ? [] : authors
   }
 
   get isModified () {

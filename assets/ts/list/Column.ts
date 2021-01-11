@@ -1,12 +1,17 @@
 import DataSubProperty from '@/assets/ts/list/DataSubProperty'
 
+export type ColumnSortASC = 'ASC'
+export type ColumnSortDESC = 'DESC'
+export type ColumnSortNone = 'none'
+export type ColumnSort = (ColumnSortASC|ColumnSortDESC|ColumnSortNone)
+
 /**
  * Represent a column of the list
  */
 export default class Column {
-    readonly sortUp: string = 'ASC';
-    readonly sortDown: string = 'DESC';
-    readonly sortNone: string = 'none';
+    static readonly sortUp: ColumnSortASC = 'ASC';
+    static readonly sortDown: ColumnSortDESC = 'DESC';
+    static readonly sortNone: ColumnSortNone = 'none';
 
     dataField: string;
     label: string;
@@ -14,7 +19,7 @@ export default class Column {
     isSearchable: boolean;
     subProperties: DataSubProperty[] = [];
     searchParameterName: string;
-    sortState: string = this.sortNone;
+    sortState: ColumnSort = Column.sortNone;
     searchString: string = '';
 
     /**
@@ -45,5 +50,12 @@ export default class Column {
     setSearchParameterName (searchParameterName: string) {
       this.searchParameterName = searchParameterName
       return this
+    }
+
+    setSortStateFromString (sortState: string) {
+      if (sortState !== Column.sortNone && sortState !== Column.sortDown && sortState !== Column.sortUp) {
+        throw new Error('Invalid sort state ' + sortState)
+      }
+      this.sortState = sortState
     }
 }

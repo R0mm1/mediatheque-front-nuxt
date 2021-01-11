@@ -21,8 +21,6 @@ export default class RequestService {
       this.goToLoginPage()
     }
 
-    request.addHeader('Chec')
-
     if (!skipAuthentication) {
       request.addHeader('Authorization', 'Bearer ' + this.authenticationService.getToken())
     }

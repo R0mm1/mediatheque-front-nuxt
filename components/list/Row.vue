@@ -1,19 +1,27 @@
 <template>
-  <tr :id="elementId" class="listRow">
-    <td v-for="column in cols" :key="column.dataField" class="cell">
-      {{ getValue(column) }}
-    </td>
+  <div :id="elementId" class="listRow" @mouseenter="onMouseOver" @mouseleave="onMouseOut">
+    <div class="listCells">
+      <div v-for="column in cols" :key="column.dataField" class="cell">
+        {{ getValue(column) }}
+      </div>
 
-    <td v-if="hasRowAction" class="listRowCustomActions">
-      <CustomAction
-        v-for="rowAction in rowActions"
-        :key="rowAction.id"
-        :row-action="rowAction"
-        :row-data="dataRow"
-        @custom-action-triggered="customActionTriggered"
-      />
-    </td>
-  </tr>
+      <div v-if="hasRowAction" class="listRowCustomActions cell">
+        <CustomAction
+          v-for="rowAction in rowActions"
+          :key="rowAction.id"
+          :row-action="rowAction"
+          :row-data="dataRow"
+          @custom-action-triggered="customActionTriggered"
+        />
+      </div>
+    </div>
+
+    <transition name="list-row-details-trans">
+      <div v-if="hasDetailsComponent && detailsOpened" class="listRowDetails">
+        <component :is="detailsComponent" :data="dataRow" />
+      </div>
+    </transition>
+  </div>
 </template>
 
 <script lang="ts">
@@ -28,7 +36,6 @@ import RowAction from '~/assets/ts/list/RowAction'
   }
 })
 export default class Row extends Vue {
-  rowActionClicks: object = {};
   rowId: any;
 
   @Prop(Object) dataRow: any;
@@ -100,8 +107,42 @@ export default class Row extends Vue {
     this.$parent.$emit('custom-action-triggered', actionName, this.dataRow)
   }
 
+  onMouseOver () {
+    this.openingDetailsTimeout = window.setTimeout(() => {
+      this.detailsOpened = true
+    }, 500)
+  }
+
+  onMouseOut () {
+    if (this.openingDetailsTimeout !== null) {
+      window.clearTimeout(this.openingDetailsTimeout)
+    }
+    this.detailsOpened = false
+  }
+
+  openingDetailsTimeout: number | null = null;
+
+  detailsOpened: boolean = false;
+
+  @Prop({ type: String, default: null }) detailsComponentPath!: string | null;
+  detailsComponent: any = null;
+
+  get hasDetailsComponent () {
+    return this.detailsComponentPath !== null
+  }
+
+  get detailsComponentLoader () {
+    return () => import('~/components/' + this.detailsComponentPath)
+  }
+
   created () {
     this.rowId = 'el' + (this.dataRow.id ? this.dataRow.id : Math.random().toString())
+
+    if (this.hasDetailsComponent) {
+      this.detailsComponentLoader().then(() => {
+        this.detailsComponent = () => this.detailsComponentLoader()
+      })
+    }
   }
 }
 </script>
@@ -117,26 +158,53 @@ export default class Row extends Vue {
 }
 
 .listRow {
-  height: calc(1.5rem - 2px);
+  display: flex;
+  flex-direction: column;
   transition: all 0.3s;
   border-style: solid;
   border-width: 1px 0 1px 0;
   border-color: transparent;
-}
 
-.listRow:hover {
-  border-color: #d0c3a9;
+  .listCells {
+    width: 100%;
+    display: flex;
+  }
+
+  .cell, .listRowCustomActions {
+    height: 2rem;
+    line-height: 2rem;
+    flex: 1;
+    padding: 0 2px;
+  }
 
   .listRowCustomActions {
-    opacity: 1;
-    visibility: visible;
+    display: flex;
+    opacity: 0;
+    visibility: hidden;
+    transition: all .3s;
   }
-}
 
-.listRowCustomActions {
-  display: flex;
-  opacity: 0;
-  visibility: hidden;
-  transition: all .3s;
+  .listRowDetails {
+    padding: 2px 2px;
+  }
+
+  .list-row-details-trans-enter-active, .list-row-details-trans-leave-active {
+    transition: all .3s;
+    overflow: hidden;
+    max-height: 230px;
+  }
+
+  .list-row-details-trans-enter, .list-row-details-trans-leave-to {
+    max-height: 0;
+  }
+
+  &:hover {
+    border-color: #d0c3a9;
+
+    .listRowCustomActions {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
 }
 </style>

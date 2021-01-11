@@ -2,18 +2,6 @@
   <div v-if="rowAction.isDisplayed(rowData)" class="rowCustomAction">
     <MedInputButton :button-descriptor="buttonDescriptor" @click.native="triggerCustomAction" />
 
-    <!--    <FormulateInput-->
-    <!--      type="button"-->
-    <!--      value=""-->
-    <!--      @click.native="triggerCustomAction"-->
-    <!--    />-->
-
-    <!--    <InputButton-->
-    <!--      value=""-->
-    <!--      :label-custom-classes="rowAction.iconClassname"-->
-    <!--      @click.native="triggerCustomAction"-->
-    <!--    />-->
-
     <div v-if="rowAction.needConfirm" class="customActionConfirm" :class="{isDisplayed: confirmDisplayed}">
       {{ rowAction.confirmMessage }}
     </div>
@@ -87,5 +75,11 @@ export default class CustomAction extends Vue {
   &:not(.isDisplayed) {
     display: none;
   }
+}
+</style>
+
+<style lang="scss">
+.rowCustomAction button {
+  border: none !important;
 }
 </style>

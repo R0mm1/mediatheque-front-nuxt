@@ -7,32 +7,25 @@
 
     <div id="vueListContent" ref="vueListContent">
 
-      <table id="vueList" :class="{withPagination: isPaginationEnabled}">
-        <thead>
-          <list-header
+      <div id="vueList" :class="{withPagination: isPaginationEnabled}">
+        <list-header
+          :has-row-action="hasRowAction"
+        />
+        <div v-if="!isLoading" id="vueListRows">
+          <Row
+            v-for="dataRow in listData"
+            :key="'r_'+dataRow.id"
+            :data-row="dataRow"
             :cols="cols"
-            :has-row-action="hasRowAction"
-            @list-header-sort-up="queryParamsChanged"
-            @list-header-sort-down="queryParamsChanged"
-            @list-header-search="queryParamsChanged"
+            :row-actions="rowActions"
+            :details-component-path="detailsComponentPath"
+            @click.native="$emit('list-action-set', dataRow)"
           />
-        </thead>
-        <tbody>
-          <template v-if="!isLoading">
-            <Row
-              v-for="dataRow in listData"
-              :key="dataRow.id"
-              :data-row="dataRow"
-              :cols="cols"
-              :row-actions="rowActions"
-              @click.native="$emit('list-action-set', dataRow)"
-            />
-          </template>
-          <template v-else>
-            <Loader class="list-loader" />
-          </template>
-        </tbody>
-      </table>
+        </div>
+        <template v-else>
+          <Loader class="list-loader" />
+        </template>
+      </div>
 
       <paginate
         v-if="isPaginationEnabled"
@@ -53,7 +46,6 @@
 <script lang="ts">
 
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
-import { getModule } from 'vuex-module-decorators'
 
 import { container } from 'tsyringe'
 import Column from '~/assets/ts/list/Column'
@@ -61,13 +53,10 @@ import RowAction from '~/assets/ts/list/RowAction'
 import LeftActionBarProperties from '~/assets/ts/list/LeftActionBarProperties'
 import PaginationHelper from '~/assets/js/paginationHelper.js'
 import Filter from '~/assets/ts/list/Filter'
-
-import ListModule from '~/assets/ts/store/ListModule'
-
+import listModule from '~/assets/ts/store/ListModule'
 import RequestService from '~/assets/ts/service/RequestService'
 
 const requestService = container.resolve(RequestService)
-const listModule = getModule(ListModule)
 
 @Component({
   components: {
@@ -92,8 +81,8 @@ export default class List extends Vue {
   @Prop({ type: Array, default: () => [] })
   rowActions!: RowAction[];
 
-  @Prop({ type: Array, default: () => [] })
-  customFilters!: Filter[];
+  @Prop({ type: String, default: null })
+  detailsComponentPath!: string | null;
 
   get hasRowAction () {
     return this.rowActions.length > 0
@@ -101,10 +90,6 @@ export default class List extends Vue {
 
   get paginationCurrentPage () {
     return listModule._paginationCurrentPage
-  }
-
-  queryParamsChanged () {
-    this.load(false, true)
   }
 
   load (fromCache: boolean = true, resetPagination: boolean = false) {
@@ -139,20 +124,126 @@ export default class List extends Vue {
     this.load(false)
   }
 
+  // Handle list data filtering (filters, search...)
+
+  get customFilters () {
+    return listModule._customFilters
+  }
+
+  get columns () {
+    return listModule.columns
+  }
+
+  @Watch('columns', { deep: true })columnsChanged () {
+    console.log(this.columns)
+    if (!this.isLoading) {
+      const filteredQuery = this.removeParamsFromQuery([SortQueryParamPrefix, SearchQueryParamPrefix])
+      Object.values(this.columns).forEach((column: Column) => {
+        if (column.sortState !== Column.sortNone) {
+          filteredQuery.push([SortQueryParamPrefix + column.dataField, column.sortState])
+        }
+        if (column.searchString.length > 0) {
+          filteredQuery.push([SearchQueryParamPrefix + column.dataField, encodeURIComponent(column.searchString)])
+        }
+      })
+      this.$router.push({
+        query: Object.fromEntries(filteredQuery)
+      })
+    }
+  }
+
   @Watch('customFilters')
-  onCustomFiltersChanged () {
-    listModule.setCustomFilters(this.customFilters)
+  customFiltersChanged () {
+    if (!this.isLoading) {
+      // Extract the current query string and remove filters on it
+      const filteredQuery = this.removeParamsFromQuery(FilterQueryParamPrefix)
+
+      // Add the current filters on the query string and give it to the router
+      this.customFilters.forEach(customFilter => filteredQuery.push([FilterQueryParamPrefix + customFilter.property, customFilter.value]))
+      this.$router.push({
+        query: Object.fromEntries(filteredQuery)
+      })
+    }
+  }
+
+  @Watch('$route.query')
+  queryStringChanged () {
+    this.updateFiltersFromQueryString()
+    this.updateColumnsFromQueryString()
     this.load(false, true)
   }
 
+  updateFiltersFromQueryString () {
+    const filters: Filter[] = []
+    Object.entries(this.$route.query).forEach(([paramName, paramValue]) => {
+      if (paramName.startsWith(FilterQueryParamPrefix)) {
+        if (typeof paramValue === 'string') {
+          filters.push(new Filter(paramName.split(FilterQueryParamPrefix).pop() ?? '', paramValue))
+        } else if (Array.isArray(paramValue)) {
+          paramValue.forEach(value => filters.push(new Filter(paramName.split(FilterQueryParamPrefix).pop() ?? '', value)))
+        }
+      }
+    })
+
+    listModule.setCustomFilters(filters)
+  }
+
+  updateColumnsFromQueryString () {
+    Object.entries(this.$route.query).forEach(([paramName, paramValue]) => {
+      if (paramName.startsWith(SortQueryParamPrefix)) {
+        const column = paramName.split(SortQueryParamPrefix).pop() as string
+        if (typeof this.columns[column] !== 'undefined' && typeof paramValue === 'string') {
+          try {
+            this.columns[column].setSortStateFromString(paramValue)
+          } catch (e) {
+            console.error('Could not set sort state ' + paramValue + ' for column ' + paramName)
+          }
+        }
+      } else if (paramName.startsWith(SearchQueryParamPrefix)) {
+        const column = paramName.split(SearchQueryParamPrefix).pop() as string
+        if (typeof this.columns[column] !== 'undefined' && typeof paramValue === 'string') {
+          this.columns[column].searchString = decodeURIComponent(paramValue)
+        }
+      }
+    })
+  }
+
+  removeParamsFromQuery (paramsStartingWith: ListQueryParams|ListQueryParams[]):[string, string|null][] {
+    const includeParam = (paramName: string, paramsStartingWith: ListQueryParams|ListQueryParams[]):boolean => {
+      if (Array.isArray(paramsStartingWith)) {
+        for (const startString of paramsStartingWith) {
+          if (paramName.startsWith(startString)) {
+            return true
+          }
+        }
+        return false
+      } else {
+        return paramName.startsWith(paramsStartingWith)
+      }
+    }
+
+    return Object.entries(this.$route.query)
+      .map(queryParam => includeParam(queryParam[0], paramsStartingWith) ? null : queryParam)
+      .filter((value):value is [string, string] => value !== null)
+  }
+
+  // End handle list data filtering (filters, search...)
+
   created () {
     this.cols.forEach((col: Column) => {
-      listModule.addColumn(col)
+      listModule.setColumn(col)
     })
-    listModule.setCustomFilters(this.customFilters)
+
+    this.updateFiltersFromQueryString()
+    this.updateColumnsFromQueryString()
     this.load(false)
   }
 }
+
+export const FilterQueryParamPrefix = 'lcf-'
+export const SortQueryParamPrefix = 'lst-'
+export const SearchQueryParamPrefix = 'lsh-'
+export type ListQueryParams = (typeof FilterQueryParamPrefix|typeof SortQueryParamPrefix | typeof SearchQueryParamPrefix)
 </script>
 
 <style scoped lang="scss">
@@ -178,7 +269,8 @@ $leftActionBarWidth: 30px;
   }
 
   #vueList {
-    display: block;
+    display: flex;
+    flex-direction: column;
     border-collapse: collapse;
     width: 100%;
     height: 100%;
@@ -188,34 +280,11 @@ $leftActionBarWidth: 30px;
       height: calc(100% - 2rem) !important;
     }
 
-    thead {
-      display: table;
-      width: 100%;
-      table-layout: fixed;
+    #vueListRows {
+      overflow-y: scroll;
     }
 
-    tbody tr {
-      display: table;
-      width: 100%;
-      table-layout: fixed;
-    }
-
-    tbody {
-      display: block;
-      height: calc(100% - 34px);
-      overflow: auto;
-
-      @include phone-portrait {
-        overflow-y: auto;
-        overflow-x: hidden;
-      }
-    }
-
-    td.cell {
-      padding: 5px 3px 5px 5px;
-    }
-
-    tr:not(.listListHeader):nth-child(even) {
+    .listRow:nth-child(even) {
       background-color: #fcfcfa;
 
       @include phone-portrait {
@@ -226,6 +295,11 @@ $leftActionBarWidth: 30px;
     .list-loader {
       margin: 0 auto;
       display: flex;
+    }
+
+    .row-details-container {
+      overflow: hidden;
+      transition: all 5s cubic-bezier(0, 1, 0, 1);
     }
   }
 }

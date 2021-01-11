@@ -4,10 +4,12 @@ export type ButtonStyle = 'normal' | 'negative';
 export type ButtonRoundedCorner = Boolean | Number; // Number to specify the value to use in CSS, true to use default value, false to deactivate
 
 export default class ButtonDescriptor extends AbstractDescriptor {
+  static descriptorType = 'ButtonDescriptor';
+
   static readonly typeButton = 'button';
   static readonly typeSubmit = 'submit';
 
-  descriptorType = 'ButtonDescriptor';
+  descriptorType = ButtonDescriptor.descriptorType;
   type: ('button' | 'submit') = ButtonDescriptor.typeButton;
   value: string = '';
   disabled: boolean = false;
