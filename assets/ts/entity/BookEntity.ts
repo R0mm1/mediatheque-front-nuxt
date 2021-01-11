@@ -16,4 +16,5 @@ export interface BookEntity extends Entity {
     cover?: string | FileEntity | null;
     owner?: string | UserEntity | null;
     groups: GroupEntity[];
+    shortSummary?:string;
 }
