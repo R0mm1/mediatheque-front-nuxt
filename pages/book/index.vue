@@ -28,14 +28,13 @@ import store from 'assets/js/store'
 import BookModule from 'assets/js/store/book'
 import LeftActionBarElement from 'assets/ts/list/LeftActionBarElement'
 import LeftActionBarProperties from 'assets/ts/list/LeftActionBarProperties'
-import LeftActionBarSeparator from 'assets/ts/list/LeftActionBarSeparator'
 import LeftActionBarFormSelectDescriptor from 'assets/ts/list/LeftActionBarFormSelectDescriptor'
-import Filter from 'assets/ts/list/Filter'
 import ButtonDescriptor from 'assets/ts/form/ButtonDescriptor'
 import RequestService from 'assets/ts/service/RequestService'
 import BookService from 'assets/ts/service/BookService'
 import bookElectronicModule from 'assets/ts/store/book/BookElectronicModule'
 import BookStoreService from 'assets/ts/service/BookStoreService'
+import LeftActionBarSeparatorDescriptor from 'assets/ts/list/LeftActionBarSeparatorDescriptor'
 import List from '~/components/list/List'
 
 const requestService = container.resolve(RequestService)
@@ -76,42 +75,46 @@ export default {
           .setNeedConfirm(true, 'Re-cliquez pour confirmer la suppression')
       ],
       leftActionBarProperties: new LeftActionBarProperties([
-        new LeftActionBarSeparator('Ajouter', 'fas fa-plus'),
         new LeftActionBarElement(
+          'separator',
+          () => null,
+          new LeftActionBarSeparatorDescriptor('add').setLabel('Ajouter').setFaIcon('fas fa-plus')
+        ),
+        new LeftActionBarElement(
+          'element',
           () => {
             this.$router.push({
               path: '/book/paper'
             })
+            return null
           },
           new ButtonDescriptor('addPaper', 'Livre papier').setFaIcon('fas fa-scroll').setNoDefaultStyle(true)
         ),
         new LeftActionBarElement(
+          'element',
           () => {
             this.$router.push({
               path: '/book/electronic'
             })
+            return null
           },
           new ButtonDescriptor('addElectronic', 'Epub').setFaIcon('fas fa-tablet-alt').setNoDefaultStyle(true)
         ),
-        new LeftActionBarSeparator('Filtres', 'fas fa-sliders-h'),
         new LeftActionBarElement(
-          (bookType) => {
-            const customFilter = new Filter('bookType', bookType)
-            Vue.set(this.customFilters, customFilter.property, customFilter)
-          },
+          'separator',
+          () => null,
+          new LeftActionBarSeparatorDescriptor('filters').setLabel('Filtres').setFaIcon('fas fa-sliders-h')
+        ),
+        new LeftActionBarElement(
+          'filter',
+          () => null,
           new LeftActionBarFormSelectDescriptor('bookType', {
             all: 'Tous',
             paper: 'Papier',
             electronic: 'Epub'
           }).setDefaultValue('all').setFaIcon('fas fa-book').setNoDefaultStyle(true)
         )
-      ], false),
-      customFilters: {}
-    }
-  },
-  computed: {
-    cCustomFilters () {
-      return Object.values(this.customFilters)
+      ], false)
     }
   },
   mounted () {

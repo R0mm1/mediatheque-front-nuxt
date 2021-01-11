@@ -1,11 +1,20 @@
-import AbstractDescriptor from '@/assets/ts/form/AbstractDescriptor'
+import LeftActionBarFormSelectDescriptor from '~/assets/ts/list/LeftActionBarFormSelectDescriptor'
+import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
+import { FilterValue } from '~/assets/ts/list/Filter'
+import LeftActionBarSeparatorDescriptor from '~/assets/ts/list/LeftActionBarSeparatorDescriptor'
+
+type ElementType = ('element' | 'filter' | 'separator')
+type FormElementDescriptorType = (LeftActionBarFormSelectDescriptor | ButtonDescriptor | LeftActionBarSeparatorDescriptor)
+type CallbackType = (...args: any[]) => FilterValue
 
 export default class LeftActionBarElement {
-    callback!: Function;
-    elementDescriptor!: AbstractDescriptor;
+  type: ElementType;
+  callback: CallbackType;
+  formElementDescriptor: FormElementDescriptorType;
 
-    constructor (callback: Function, elementDescriptor: AbstractDescriptor) {
-      this.callback = callback
-      this.elementDescriptor = elementDescriptor
-    }
+  constructor (type: ElementType, callback: CallbackType, formElementDescriptor: FormElementDescriptorType) {
+    this.type = type
+    this.callback = callback
+    this.formElementDescriptor = formElementDescriptor
+  }
 }

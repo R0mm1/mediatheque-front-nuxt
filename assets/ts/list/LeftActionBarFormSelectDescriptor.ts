@@ -1,14 +1,16 @@
 import SelectDescriptor from '@/assets/ts/form/SelectDescriptor'
 
 export default class LeftActionBarFormSelectDescriptor extends SelectDescriptor {
-    descriptorType = 'LeftActionBarFormSelectDescriptor';
+  static descriptorType = 'LeftActionBarFormSelectDescriptor';
 
-    constructor (name: string, options: { [index: string]: string }, label: string = '') {
-      super(name, label)
+  descriptorType = LeftActionBarFormSelectDescriptor.descriptorType;
 
-      this.options = options
-      this.noLabel = true
+  constructor (name: string, options: { [index: string]: string }, label: string = '') {
+    super(name, label)
 
-      return this
-    }
+    this.options = options
+    this.noLabel = true
+
+    return this
+  }
 }

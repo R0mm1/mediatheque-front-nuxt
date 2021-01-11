@@ -1,7 +1,9 @@
 <template>
   <span id="vueListContainer">
 
-    <left-action-bar :left-action-bar-properties="leftActionBarProperties" />
+    <left-action-bar
+      :left-action-bar-properties="leftActionBarProperties"
+    />
 
     <div id="vueListContent" ref="vueListContent">
 
