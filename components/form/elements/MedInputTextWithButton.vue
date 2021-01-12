@@ -75,8 +75,6 @@ export default class MedInputTextWithButton extends Vue {
 </script>
 
 <style lang="scss">
-//@import "../../../assets/scss/form/button.scss";
-//@import "../../../assets/scss/form/text.scss";
 @import "../../../assets/scss/colors.scss";
 
 .med-input-text-with-button {
@@ -100,13 +98,21 @@ export default class MedInputTextWithButton extends Vue {
         button {
           height: 100%;
           width: 100%;
-          justify-content: center;
-          flex-direction: column;
+
+          &, &:focus, &:hover {
+            //For Chrome
+            outline: none;
+          }
         }
 
         input {
           height: 100%;
           width: 100%;
+
+          &, &:focus, &:hover {
+            //For Chrome
+            outline: none;
+          }
         }
       }
     }

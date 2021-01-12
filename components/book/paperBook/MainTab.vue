@@ -1,10 +1,10 @@
 <template>
   <div id="book-main-tab">
     <GroupPicture :book-module="bookModule" />
-    <GroupSummary :book-module="bookModule" class="groupSummary" />
-    <Column>
+    <GroupSummary :book-module="bookModule" :edit-mode-on="editModeOn" class="groupSummary" />
+    <Column class="third-col">
       <template v-slot:column_content>
-        <PaperGroupInformation />
+        <PaperGroupInformation :edit-mode-on="editModeOn" />
         <GroupReferences :book-module="bookModule" @group-wanna-open-book="onGroupWannaOpenBook" />
       </template>
     </Column>
@@ -30,6 +30,10 @@ export default {
   props: {
     bookModule: {
       type: Object,
+      required: true
+    },
+    editModeOn: {
+      type: Boolean,
       required: true
     }
   },
@@ -62,6 +66,10 @@ export default {
 
 .groupInformation {
   max-width: 500px;
+}
+
+.third-col{
+  width: 550px;
 }
 </style>
 

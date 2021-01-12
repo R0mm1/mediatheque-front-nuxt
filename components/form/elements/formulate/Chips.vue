@@ -3,21 +3,21 @@
     :class="`formulate-input-element formulate-input-element--${context.type}`"
     :data-type="context.type"
   >
-    <template v-if="!editionModeOn">
-      <div v-for="(entity) in entities" :key="entity.id" class="entity">
-        <div class="entity_ro_label">
-          {{ getEntityLabel(entity) }}
-        </div>
+    <template v-if="!editModeOn">
+      <div v-for="(entity) in entities" :key="entity.id" class="entity-readonly">
+        {{ getEntityLabel(entity) }}
       </div>
     </template>
 
-    <template v-if="editionModeOn">
-      <div v-for="(entity, index) in entities" :key="entity.id" class="entity">
-        <div class="entity_label">
-          {{ getEntityLabel(entity) }}
-        </div>
-        <div class="entity_delete" @click="removeEntity(index)">
-          <div class="fas fa-times" />
+    <template v-if="editModeOn">
+      <div class="entities">
+        <div v-for="(entity, index) in entities" :key="entity.id" class="entity">
+          <div class="entity_label">
+            {{ getEntityLabel(entity) }}
+          </div>
+          <div class="entity_delete" @click="removeEntity(index)">
+            <div class="fas fa-times" />
+          </div>
         </div>
       </div>
 
@@ -82,8 +82,6 @@ const requestService = container.resolve(RequestService)
   directives: { 'click-outside': ClickOutside }
 })
 export default class Chips extends Vue {
-  editionModeOn = true;
-
   @Prop({ type: Object, required: true }) context!: any;
 
   @Prop({ type: Array, required: true }) entities!:any[];
@@ -91,6 +89,8 @@ export default class Chips extends Vue {
   @Prop({ type: Array, required: true }) entityFields!:string[];
 
   @Prop({ type: String, required: false, default: ' ' }) fieldsSeparator!:string;
+
+  @Prop({ type: Boolean, required: false, default: true }) editModeOn!:boolean;
 
   getEntityLabel (entity: any) {
     const elements:any[] = []

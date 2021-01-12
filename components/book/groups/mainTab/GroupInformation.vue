@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import MedInputText from '~/components/form/elements/MedInputText.vue'
 import TextDescriptor from '~/assets/ts/form/TextDescriptor'
 import MedEntities from '~/components/form/elements/MedEntities.vue'
@@ -39,6 +39,7 @@ import { BookElectronicModule } from '~/assets/ts/store/book/BookElectronicModul
 })
 export default class GroupInformation extends Vue {
   @Prop({ type: Object, required: true }) bookModule!: BookPaperModule | BookElectronicModule;
+  @Prop({ type: Boolean, required: true }) editModeOn!:boolean;
 
   newAuthor = {
     firstname: undefined,
@@ -46,11 +47,11 @@ export default class GroupInformation extends Vue {
   };
 
   formInputTextDescriptors = {
-    title: new TextDescriptor('title').setLabel('Titre'),
-    language: new TextDescriptor('language').setLabel('Langue'),
-    year: new TextDescriptor('year').setLabel('Année'),
-    pageCount: new TextDescriptor('pageCount').setLabel('Nombre de pages'),
-    isbn: new TextDescriptor('isbn').setLabel('ISBN'),
+    title: new TextDescriptor('title').setLabel('Titre').setEditModeOn(this.editModeOn),
+    language: new TextDescriptor('language').setLabel('Langue').setEditModeOn(this.editModeOn),
+    year: new TextDescriptor('year').setLabel('Année').setEditModeOn(this.editModeOn),
+    pageCount: new TextDescriptor('pageCount').setLabel('Nombre de pages').setEditModeOn(this.editModeOn),
+    isbn: new TextDescriptor('isbn').setLabel('ISBN').setEditModeOn(this.editModeOn),
     newAuthor: {
       firstname: new TextDescriptor('firstname').setLabel('Prénom'),
       lastname: new TextDescriptor('lastname').setLabel('Nom')
@@ -124,6 +125,7 @@ export default class GroupInformation extends Vue {
         name: 'lastname'
       }
     ]
+    chipsDescriptor.editModeOn = this.editModeOn
     return chipsDescriptor
   }
 
@@ -145,6 +147,14 @@ export default class GroupInformation extends Vue {
       }
     })
   };
+
+  @Watch('editModeOn') editModeOnChanged () {
+    this.formInputTextDescriptors.title.setEditModeOn(this.editModeOn)
+    this.formInputTextDescriptors.language.setEditModeOn(this.editModeOn)
+    this.formInputTextDescriptors.year.setEditModeOn(this.editModeOn)
+    this.formInputTextDescriptors.pageCount.setEditModeOn(this.editModeOn)
+    this.formInputTextDescriptors.isbn.setEditModeOn(this.editModeOn)
+  }
 }
 </script>
 

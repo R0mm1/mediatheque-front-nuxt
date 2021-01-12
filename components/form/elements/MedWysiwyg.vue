@@ -7,8 +7,8 @@
     :no-label="noLabel"
   >
     <template v-slot:element_content>
-      <div v-if="noEdit" v-html="editorData" />
-      <ckeditor v-if="!noEdit" v-model="editorData" :config="editorConfig" />
+      <div v-if="!editModeOn" v-html="editorData" />
+      <ckeditor v-if="editModeOn" v-model="editorData" :config="editorConfig" />
     </template>
   </FormElement>
 </template>
@@ -18,7 +18,7 @@ import FormElement from '@/components/form/FormElement'
 
 export default {
   name: 'MedWysiwyg',
-  components: { /* ckeditor: CKEditor.component, */
+  components: {
     FormElement
   },
   props: {
@@ -42,7 +42,7 @@ export default {
       default: '',
       type: String
     },
-    noEdit: {
+    editModeOn: {
       default: false,
       type: Boolean
     }

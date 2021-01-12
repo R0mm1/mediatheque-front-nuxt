@@ -13,7 +13,7 @@ Vue.use(VueFormulate, {
       classification: 'chips',
       component: Chips,
       slotProps: {
-        component: ['entities', 'entityFields', 'fieldsSeparator', 'formCreationValidationAction', 'formCreationTitle', 'searchFieldPlaceholder', 'searchParam', 'entityURI', 'formCreationSchema']
+        component: ['entities', 'entityFields', 'fieldsSeparator', 'formCreationValidationAction', 'formCreationTitle', 'searchFieldPlaceholder', 'searchParam', 'entityURI', 'formCreationSchema', 'editModeOn']
       }
     },
     files: {

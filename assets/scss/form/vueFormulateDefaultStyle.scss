@@ -1,13 +1,15 @@
 @import "../colors";
 
+$standardHeight: 2rem;
+
 @mixin positioning(){
   &.formulate-input-wrapper{
     display: flex;
-    height: 2rem;
+    height: $standardHeight;
     margin: 2px 0;
 
     label{
-      line-height: 2rem;
+      line-height: $standardHeight;
       width: 25%;
       max-width: 250px;
       margin-left: 2px;
@@ -40,4 +42,9 @@
       margin: 5px 0;
     }
   }
+}
+
+@mixin inputTextStyle(){
+  font-size: .91rem;
+  color: $textInput;
 }

@@ -10,4 +10,10 @@ export default class ChipsDescriptor {
   formCreationValidationAction?: (formCreationData: any) => Promise<any>;
   formCreationTitle: string = '';
   formCreationSchema: any[] = [];
+  editModeOn: boolean = true;
+
+  setEditModeOn (editModeOn: boolean) {
+    this.editModeOn = editModeOn
+    return this
+  }
 }

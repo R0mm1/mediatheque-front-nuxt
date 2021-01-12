@@ -5,6 +5,7 @@
         <h1><slot name="entity-layout-title" /></h1>
         <span><slot name="entity-layout-title-note" /></span>
       </div>
+      <MedInputButton :button-descriptor="editButtonDescriptor" @click.native="editButtonPressed" />
     </div>
     <Tabs v-model="activeTab" :tabs="tabs">
       <template v-slot:tab-content>
@@ -18,8 +19,9 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator'
 import Tabs, { TabData } from '~/components/widgets/Tabs.vue'
+import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
 
 @Component({
   components: { Tabs }
@@ -32,6 +34,15 @@ export default class EntityLayout extends Vue {
 
   @Watch('activeTab') activeTabChange () {
     this.$emit('input', this.activeTab)
+  }
+
+  get editButtonDescriptor () {
+    return new ButtonDescriptor('edit').setFaIcon('fas fa-pencil-alt')
+  }
+
+  @Emit('edit-button-pressed')
+  editButtonPressed () {
+    return true
   }
 
   created () {
@@ -65,6 +76,14 @@ $headerHeight: 50px;
 
   span{
     color: $textLessImportant;
+  }
+
+  .formulate-input{
+    float: right;
+    line-height: 50px;
+    margin-right: 10px;
+    position: relative;
+    z-index: 1;
   }
 }
 .tabs{

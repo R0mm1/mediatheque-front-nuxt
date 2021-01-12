@@ -1,5 +1,5 @@
 <template>
-  <ElectronicBook :book-id="null" />
+  <ElectronicBook :book-id="null" :edit-mode-on="true" />
 </template>
 
 <script lang="ts">

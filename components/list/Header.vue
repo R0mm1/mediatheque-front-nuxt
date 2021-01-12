@@ -157,6 +157,11 @@ export default class Header extends Vue {
       transition: background-color .3s, color .3s;
       background: none;
 
+      &, &:focus, &:hover {
+        //For Chrome
+        outline: none;
+      }
+
       &:hover, &.isActive {
         color: white;
       }
@@ -169,6 +174,7 @@ export default class Header extends Vue {
 
   .list-header-scrollbar-width {
     overflow-y: scroll;
+    opacity: 0;
   }
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <GroupInformation :book-module="bookElectronicModule">
+  <GroupInformation :book-module="bookElectronicModule" :edit-mode-on="editModeOn">
     <template #specific-fields>
       <MedFiles :files-descriptor="filesDescriptor" :files="electronicFile" />
     </template>
@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import GroupInformation from '@/components/book/groups/mainTab/GroupInformation.vue'
 import bookElectronicModule from '@/assets/ts/store/book/BookElectronicModule'
 import MedFile from '~/assets/ts/objects/MedFile'
@@ -21,6 +21,8 @@ import MedFiles from '~/components/form/elements/MedFiles.vue'
   }
 })
 export default class PaperGroupInformation extends Vue {
+  @Prop({ type: Boolean, required: true }) editModeOn!:boolean;
+
   bookElectronicModule = bookElectronicModule;
 
   get filesDescriptor () {

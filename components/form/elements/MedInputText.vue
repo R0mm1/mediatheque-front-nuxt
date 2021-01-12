@@ -7,6 +7,7 @@
     :label="textDescriptor.label"
     :add-label="addLabel"
     :disabled="textDescriptor.disabled"
+    :readonly="!textDescriptor.editModeOn"
     @input.native="$emit('input', bindValue)"
   />
 </template>
@@ -19,7 +20,7 @@ import FormElement from '~/components/form/FormElement.vue'
 @Component({
   components: { FormElement }
 })
-export default class Button extends Vue {
+export default class MedInputText extends Vue {
   @Prop(Object) textDescriptor!: TextDescriptor;
 
   @Prop(String) value?: string;
@@ -34,6 +35,9 @@ export default class Button extends Vue {
     const wrapperClass = ['med_input_text']
     if (this.textDescriptor.noDefaultStyle) {
       wrapperClass.push('no-def-style')
+    }
+    if (!this.textDescriptor.editModeOn) {
+      wrapperClass.push('edit-mode-off')
     }
     return wrapperClass
   }

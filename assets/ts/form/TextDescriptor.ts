@@ -9,6 +9,7 @@ export default class TextDescriptor extends AbstractDescriptor {
   noDefaultStyle: boolean = false;
   withCopyContentButton: boolean = false;
   type: ('text'|'password') = TextDescriptor.typeText;
+  editModeOn: boolean = true;
 
   // eslint-disable-next-line no-useless-constructor
   public constructor (name: string) {
@@ -37,6 +38,11 @@ export default class TextDescriptor extends AbstractDescriptor {
 
   setType (type: ('text'|'password')) {
     this.type = type
+    return this
+  }
+
+  setEditModeOn (editModeOn: boolean) {
+    this.editModeOn = editModeOn
     return this
   }
 }

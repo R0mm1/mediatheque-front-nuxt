@@ -11,7 +11,7 @@
           name="summary"
           :no-label="true"
           :content="summary"
-          :no-edit="noEdit"
+          :edit-mode-on="editModeOn"
           @content-changed="summaryChanged"
         />
       </template>
@@ -26,12 +26,7 @@ import MedWysiwyg from '~/components/form/elements/MedWysiwyg'
 export default {
   name: 'GroupSummary',
   components: { MedWysiwyg, Group },
-  props: { bookModule: { type: Object, required: true } },
-  data () {
-    return {
-      noEdit: false
-    }
-  },
+  props: { bookModule: { type: Object, required: true }, editModeOn: { type: Boolean, required: false, default: true } },
   computed: {
     summary () {
       let summary = this.bookModule.book.summary

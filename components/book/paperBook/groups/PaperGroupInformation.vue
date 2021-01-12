@@ -1,5 +1,5 @@
 <template>
-  <GroupInformation :book-module="bookPaperModule">
+  <GroupInformation :book-module="bookPaperModule" :edit-mode-on="editModeOn">
     <template #specific-fields>
       <MedInputSelect v-model="ownerId" :select-descriptor="formSelectOwnerDescriptor" />
     </template>
@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import GroupInformation from '@/components/book/groups/mainTab/GroupInformation.vue'
 import MedInputSelect from '@/components/form/elements/MedInputSelect.vue'
 import SelectDescriptor from '@/assets/ts/form/SelectDescriptor'
@@ -25,6 +25,8 @@ const requestService = container.resolve(RequestService)
   }
 })
 export default class PaperGroupInformation extends Vue {
+  @Prop({ type: Boolean, required: true }) editModeOn!:boolean;
+
   bookPaperModule = bookPaperModule;
 
   get ownerId () {
@@ -48,6 +50,7 @@ export default class PaperGroupInformation extends Vue {
     const selectDescriptor = new SelectDescriptor('owner')
     selectDescriptor.label = 'Propriétaire'
     selectDescriptor.optionsSource = this.getUserListPromise()
+    selectDescriptor.editModeOn = this.editModeOn
     return selectDescriptor
   }
 

@@ -5,7 +5,13 @@
     type="select"
     :options="options"
     :label="selectDescriptor.label"
-  />
+  >
+    <template v-if="!selectDescriptor.editModeOn" #element>
+      <div class="select-readonly">
+        {{ options[bindValue] }}
+      </div>
+    </template>
+  </FormulateInput>
 </template>
 
 <script lang="ts">
@@ -42,7 +48,7 @@ export default class MedSelect extends Vue {
   }
 
   setValue (value: string) {
-    this.noInputEventEmission = true;
+    this.noInputEventEmission = true
     this.bindValue = value
   }
 

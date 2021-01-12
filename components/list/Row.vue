@@ -175,6 +175,9 @@ export default class Row extends Vue {
     line-height: 2rem;
     flex: 1;
     padding: 0 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .listRowCustomActions {

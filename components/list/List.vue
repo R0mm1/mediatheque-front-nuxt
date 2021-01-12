@@ -135,7 +135,6 @@ export default class List extends Vue {
   }
 
   @Watch('columns', { deep: true })columnsChanged () {
-    console.log(this.columns)
     if (!this.isLoading) {
       const filteredQuery = this.removeParamsFromQuery([SortQueryParamPrefix, SearchQueryParamPrefix])
       Object.values(this.columns).forEach((column: Column) => {

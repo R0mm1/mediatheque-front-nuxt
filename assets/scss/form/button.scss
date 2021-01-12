@@ -2,6 +2,7 @@
 
 @mixin button {
   .formulate-input[data-type="submit"], .formulate-input[data-type="button"] {
+
     .formulate-input-wrapper:not(.no-def-style) .formulate-input-element button {
       border: 1px solid $shade0;
       border-radius: 5px;
@@ -10,6 +11,11 @@
       font-size: inherit;
       color: initial;
       transition: all .3s;
+
+      &, &:focus, &:hover {
+        //For Chrome
+        outline: none;
+      }
 
       &:hover {
         background-color: $shade3;

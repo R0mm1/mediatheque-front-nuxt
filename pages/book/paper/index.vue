@@ -1,5 +1,5 @@
 <template>
-  <PaperBook :book-id="null" />
+  <PaperBook :book-id="null" :edit-mode-on="true" />
 </template>
 
 <script lang="ts">

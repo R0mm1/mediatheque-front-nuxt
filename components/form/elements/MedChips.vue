@@ -13,6 +13,7 @@
     :search-param="chipsDescriptor.searchParam"
     :entity-u-r-i="chipsDescriptor.entityURI"
     :form-creation-schema="chipsDescriptor.formCreationSchema"
+    :edit-mode-on="chipsDescriptor.editModeOn"
 
     @entity-removed="entityRemoved"
     @entity-added="entityAdded"
@@ -56,9 +57,23 @@ export default class MedChips extends Vue {
       padding: 2px 3px;
       margin-right: 3px;
       background-color: $shade4;
+      @include inputTextStyle;
 
       .entity_delete {
         padding-left: 5px;
+      }
+    }
+
+    .entity-readonly{
+      display: inline-flex;
+      height: $standardHeight;
+      line-height: $standardHeight;
+      @include inputTextStyle;
+
+      &:not(:last-child)::after{
+        content: ',';
+        display: block;
+        width: .5rem;
       }
     }
 

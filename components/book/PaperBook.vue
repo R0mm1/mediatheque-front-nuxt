@@ -1,5 +1,5 @@
 <template>
-  <EntityLayout v-model="activeTab" :tabs="tabs">
+  <EntityLayout v-model="activeTab" :tabs="tabs" @edit-button-pressed="toggleEditMode">
     <template v-slot:entity-layout-title>
       {{ title }}
     </template>
@@ -7,7 +7,7 @@
       <HeaderAuthorsList :authors="authors" />
     </template>
     <template v-slot:entity-layout-content>
-      <MainTab v-if="activeTab === 'details'" :book-module="bookModule" />
+      <MainTab v-if="activeTab === 'details'" :book-module="bookModule" :edit-mode-on="switchEditModeOn" />
       <div v-if="activeTab === 'social'">
         <SocialTab :book-module="bookModule" />
       </div>
@@ -40,6 +40,9 @@ import bookElectronicModule from '~/assets/ts/store/book/BookElectronicModule'
 })
 export default class PaperBook extends Vue {
   @Prop({ type: Number, required: false }) bookId!: number|null;
+  @Prop({ type: Boolean, required: false, default: false }) editModeOn!:boolean;
+
+  switchEditModeOn: boolean = false;
   loaded: boolean = false;
   activeTab: string = 'details';
   bookModule = bookPaperModule;
@@ -61,7 +64,7 @@ export default class PaperBook extends Vue {
   }
 
   get authors () {
-    const authors = bookElectronicModule.book.authors
+    const authors = bookPaperModule.book.authors
 
     return typeof authors === 'undefined' ? [] : authors
   }
@@ -103,7 +106,12 @@ export default class PaperBook extends Vue {
       })
   }
 
+  toggleEditMode () {
+    this.switchEditModeOn = !this.switchEditModeOn
+  }
+
   created () {
+    this.switchEditModeOn = this.editModeOn
     this.reloadBook()
   }
 }

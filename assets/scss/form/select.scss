@@ -26,7 +26,15 @@
         border: none;
         height: 100%;
         background: top;
+
+        @include inputTextStyle;
       }
+    }
+
+    .select-readonly{
+      @include inputTextStyle;
+      height: $standardHeight;
+      line-height: $standardHeight;
     }
   }
 }

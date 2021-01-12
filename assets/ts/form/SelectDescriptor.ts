@@ -10,6 +10,7 @@ export default class SelectDescriptor extends AbstractDescriptor {
     searchable: boolean = SelectDescriptor.defaultSearchable;
     defaultValue?: string;
     noDefaultStyle: boolean = false;
+    editModeOn: boolean = true;
 
     constructor (name: string, label: string = '') {
       super(name)
