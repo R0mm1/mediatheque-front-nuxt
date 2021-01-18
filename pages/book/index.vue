@@ -20,10 +20,6 @@ import { container } from 'tsyringe'
 import Column from 'assets/ts/list/Column'
 import DataSubProperty from 'assets/ts/list/DataSubProperty'
 import RowAction from 'assets/ts/list/RowAction'
-
-import store from 'assets/js/store'
-
-import BookModule from 'assets/js/store/book'
 import LeftActionBarElement from 'assets/ts/list/LeftActionBarElement'
 import LeftActionBarProperties from 'assets/ts/list/LeftActionBarProperties'
 import LeftActionBarFormSelectDescriptor from 'assets/ts/list/LeftActionBarFormSelectDescriptor'
@@ -37,10 +33,6 @@ import List from '~/components/list/List'
 
 const requestService = container.resolve(RequestService)
 const config = require('../../mediatheque.json')
-
-if (!store.state.book) {
-  store.registerModule('book', BookModule)
-}
 
 export default {
   name: 'Book',
@@ -183,8 +175,7 @@ export default {
       }
       this.isPopupDisplayed = false
     }
-  },
-  store
+  }
 }
 </script>
 
