@@ -1,13 +1,10 @@
 import { Action, getModule, Module, Mutation, VuexModule } from 'vuex-module-decorators'
 import Vue from 'vue'
-import { container } from 'tsyringe'
 import store from '~/assets/ts/store/store'
 import Column, { ColumnSort } from '~/assets/ts/list/Column'
 import Filter from '~/assets/ts/list/Filter'
-import RequestService from '~/assets/ts/service/RequestService'
 import LeftActionBarElement from '~/assets/ts/list/LeftActionBarElement'
-
-const requestService = container.resolve(RequestService)
+import { QueryParamsInterface } from '~/assets/ts/objects/Request'
 
 @Module({ dynamic: true, name: 'list', store, namespaced: true })
 class ListModule extends VuexModule {
@@ -20,6 +17,8 @@ class ListModule extends VuexModule {
 
   _searchQuery: string = '';
 
+  _queryParams: QueryParamsInterface = {}
+
   _labElements: LeftActionBarElement[]=[];
   _labFilters: Filter[]=[];
 
@@ -31,8 +30,16 @@ class ListModule extends VuexModule {
     return this._searchQuery
   }
 
+  get queryParams () {
+    return this._queryParams
+  }
+
   @Mutation setSearchQuery (searchQuery: string) {
     this._searchQuery = searchQuery
+  }
+
+  @Mutation setQueryParams (queryParams: QueryParamsInterface) {
+    this._queryParams = queryParams
   }
 
   @Mutation setColumn (column: Column) {
@@ -83,14 +90,10 @@ class ListModule extends VuexModule {
   }
 
   @Action({ rawError: true })
-  computeSearchString ({ getFromCache = true, apiEndpoint = '' }: { getFromCache?: boolean, apiEndpoint?: string }) {
-    if (getFromCache && this._searchQuery.length > 0) {
-      return Promise.resolve(this._searchQuery)
+  computeQueryParams ({ getFromCache = true }: { getFromCache?: boolean }) {
+    if (getFromCache && Object.keys(this._queryParams).length > 0) {
+      return Promise.resolve(this._queryParams)
     } else {
-      if (apiEndpoint.length === 0) {
-        throw new Error("Can't build query string, api endpoint not provided")
-      }
-
       const sort: { [index: string]: string } = {}
       const search: { [index: string]: string } = {}
 
@@ -113,21 +116,17 @@ class ListModule extends VuexModule {
         }
       })
 
-      const request = requestService.createRequest(apiEndpoint)
-        .setQueryParams({
-          order: sort,
-          itemsPerPage: this._paginationRowsPerPage,
-          page: this._paginationCurrentPage,
-          ...search,
-          ...customFilters
-        })
+      this.setQueryParams({
+        order: sort,
+        itemsPerPage: this._paginationRowsPerPage,
+        page: this._paginationCurrentPage,
+        ...search,
+        ...customFilters
+      })
 
-      const url = request.getUrlBuilder().buildUrl()
-      this.setSearchQuery(url)
-      return Promise.resolve(url)
+      return Promise.resolve(this.queryParams)
     }
   }
 }
 
-const listModule = getModule(ListModule)
-export default listModule
+export default getModule(ListModule)

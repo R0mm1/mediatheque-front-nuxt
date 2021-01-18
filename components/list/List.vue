@@ -55,6 +55,7 @@ import PaginationHelper from '~/assets/js/paginationHelper.js'
 import Filter from '~/assets/ts/list/Filter'
 import listModule from '~/assets/ts/store/ListModule'
 import RequestService from '~/assets/ts/service/RequestService'
+import { HydraCollection } from '~/assets/ts/models/HydraInterfaces'
 
 const requestService = container.resolve(RequestService)
 
@@ -99,13 +100,13 @@ export default class List extends Vue {
       listModule.setPaginationCurrentPage(1)
     }
 
-    listModule.computeSearchString({ getFromCache: fromCache, apiEndpoint: this.apiEndpoint })
+    listModule.computeQueryParams({ getFromCache: fromCache })
       .then(() => {
-        return requestService.execute(
-          requestService.createRequest(listModule.searchQuery).setSkipUrlBuilding(true)
+        return requestService.execute<any & HydraCollection<any>>(
+          requestService.createRequest(this.apiEndpoint).setQueryParams(listModule.queryParams)
         )
       })
-      .then((data: { [index: string]: any }) => {
+      .then((data) => {
         this.listData = data['hydra:member']
         PaginationHelper.setRawResponse(data)
         this.isPaginationEnabled = PaginationHelper.hasPagination()
