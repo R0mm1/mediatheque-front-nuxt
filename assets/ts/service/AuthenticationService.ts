@@ -1,5 +1,6 @@
 import { autoInjectable, singleton } from 'tsyringe'
 
+import { AxiosResponse } from 'axios'
 import Request from '~/assets/ts/objects/Request'
 
 const config = require('../../../mediatheque.json')
@@ -16,6 +17,7 @@ export default class AuthenticationService {
         username,
         password
       })
+      request.setBaseUrl('http://' + config.api.endpoint + config.api.commonUrlBase)
       return request.trigger()
         .then((response) => {
           if (response.status !== 200) {
@@ -24,7 +26,7 @@ export default class AuthenticationService {
             return Promise.resolve(response)
           }
         })
-        .then(response => response.json())
+        .then(response => Promise.resolve(response.data))
         .then((response: any) => this.handleTokensInResponse(response))
     }
 
@@ -54,8 +56,7 @@ export default class AuthenticationService {
       })
 
       return request.trigger()
-        .then(response => response.json())
-        .then((response: any) => this.handleTokensInResponse(response))
+        .then((response: AxiosResponse) => this.handleTokensInResponse(response.data))
     }
 
     protected handleTokensInResponse (response: any) {
