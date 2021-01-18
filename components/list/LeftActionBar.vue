@@ -42,8 +42,11 @@ import listModule from '~/assets/ts/store/ListModule'
 import LeftActionBarFormSelectDescriptor from '~/assets/ts/list/LeftActionBarFormSelectDescriptor'
 import Filter from '~/assets/ts/list/Filter'
 import MedInputSelect from '~/components/form/elements/MedInputSelect.vue'
+import MedInputButton from '~/components/form/elements/MedInputButton.vue'
 
-@Component({})
+@Component({
+  components: { MedInputSelect, MedInputButton }
+})
 export default class LeftActionBar extends Vue {
   @Prop(Object) leftActionBarProperties!: LeftActionBarProperties;
 

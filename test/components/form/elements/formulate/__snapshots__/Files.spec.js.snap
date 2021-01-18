@@ -1,0 +1,80 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Files is rendering correctly when specifying all props 1`] = `
+<div
+  class="formulate-input-element formulate-input-element--files"
+  data-type="files"
+>
+  <simplelist-stub
+    actions="[object Object],[object Object]"
+    elements="[object Object]"
+  />
+   
+  <div
+    class="files_buttons"
+  >
+    <!---->
+  </div>
+   
+  <!---->
+   
+  <input
+    name="electronicBook"
+    type="file"
+  />
+</div>
+`;
+
+exports[`Files is rendering correctly when specifying only required props 1`] = `
+<div
+  class="formulate-input-element formulate-input-element--files"
+  data-type="files"
+>
+  <simplelist-stub
+    actions=""
+    elements="[object Object]"
+  />
+   
+  <div
+    class="files_buttons"
+  >
+    <medinputbutton-stub
+      buttondescriptor="[object Object]"
+    />
+  </div>
+   
+  <!---->
+   
+  <input
+    name=""
+    type="file"
+  />
+</div>
+`;
+
+exports[`Files is triggering click on input file when clicking add button 1`] = `
+<div
+  class="formulate-input-element formulate-input-element--files"
+  data-type="files"
+>
+  <simplelist-stub
+    actions=""
+    elements=""
+  />
+   
+  <div
+    class="files_buttons"
+  >
+    <medinputbutton-stub
+      buttondescriptor="[object Object]"
+    />
+  </div>
+   
+  <!---->
+   
+  <input
+    name=""
+    type="file"
+  />
+</div>
+`;

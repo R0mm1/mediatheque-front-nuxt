@@ -28,7 +28,7 @@
 
 <script>
 
-import ButtonDescriptor from 'assets/ts/form/ButtonDescriptor'
+import ButtonDescriptor from '@/assets/ts/form/ButtonDescriptor'
 
 export default {
   name: 'FormContainer',

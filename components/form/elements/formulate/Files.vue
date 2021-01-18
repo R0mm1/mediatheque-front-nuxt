@@ -36,7 +36,7 @@ export default class Files extends Vue {
   @Prop({ default: '', type: String })name!:string;
   @Prop({ default: null, type: Number })maxFiles!:number|null;
   @Prop({ default: null, type: Function })downloadAction!:null | ((bookId: string)=>any)
-  @Prop({ type: Array, required: true })files!:any[];
+  @Prop({ type: Array, required: true })files!:MedFile[];
   @Prop({ type: Function, required: true }) onFileAdded!:((file: MedFile)=>any)
   @Prop({ type: Function })onFileRemoved?:(()=>any)
 
@@ -80,7 +80,7 @@ export default class Files extends Vue {
 
   get listElements () {
     return this.files.map((medFile) => {
-      return new Element(medFile.id, medFile.name, medFile)
+      return new Element(medFile.id ?? '', medFile.name, medFile)
     })
   }
 

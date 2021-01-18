@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MedInputButton is rendering correctly 1`] = `
+<formulateinput-stub
+  errorbehavior="blur"
+  formulatevalue=""
+  imagebehavior="preview"
+  label=""
+  label-class=""
+  limit="Infinity"
+  minimum="0"
+  name="testButton"
+  preventwindowdrops="true"
+  title=""
+  type="button"
+  uploadbehavior="live"
+  validationmessages="[object Object]"
+  validationrules="[object Object]"
+  wrapper-class="med_input_button,style_normal"
+>
+  <!---->
+  
+  
+
+</formulateinput-stub>
+`;

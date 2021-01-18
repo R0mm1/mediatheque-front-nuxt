@@ -135,10 +135,10 @@ export default class List extends Vue {
     return listModule.columns
   }
 
-  @Watch('columns', { deep: true })columnsChanged () {
+  @Watch('columns', { deep: true })columnsChanged (columns: Column[]) {
     if (!this.isLoading) {
       const filteredQuery = this.removeParamsFromQuery([SortQueryParamPrefix, SearchQueryParamPrefix])
-      Object.values(this.columns).forEach((column: Column) => {
+      Object.values(columns).forEach((column: Column) => {
         if (column.sortState !== Column.sortNone) {
           filteredQuery.push([SortQueryParamPrefix + column.dataField, column.sortState])
         }

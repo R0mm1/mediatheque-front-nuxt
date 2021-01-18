@@ -1,0 +1,138 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LeftActionBar is rendered correctly 1`] = `
+<div
+  id="leftActionBar"
+>
+  <div
+    id="labColorBar"
+  />
+   
+  <div
+    id="labElements"
+  >
+    <div
+      class="leftActionBarElement labe-button"
+    >
+      <div
+        class="leftActionBarElementIcon fas fa-plus"
+      />
+       
+      <div
+        class="leftActionBarElementText"
+      >
+        <medinputbutton-stub
+          buttondescriptor="[object Object]"
+        />
+         
+        <!---->
+         
+        <!---->
+      </div>
+    </div>
+    <div
+      class="leftActionBarElement labe-leftActionBarSeparator"
+    >
+      <div
+        class="leftActionBarElementIcon fas fa-plus"
+      />
+       
+      <div
+        class="leftActionBarElementText"
+      >
+        <!---->
+         
+        <!---->
+         
+        <div
+          class="leftActionBarSeparatorText"
+        >
+          
+          Ajouter
+        
+        </div>
+      </div>
+    </div>
+    <div
+      class="leftActionBarElement labe-button"
+    >
+      <div
+        class="leftActionBarElementIcon fas fa-scroll"
+      />
+       
+      <div
+        class="leftActionBarElementText"
+      >
+        <medinputbutton-stub
+          buttondescriptor="[object Object]"
+        />
+         
+        <!---->
+         
+        <!---->
+      </div>
+    </div>
+    <div
+      class="leftActionBarElement labe-button"
+    >
+      <div
+        class="leftActionBarElementIcon fas fa-tablet-alt"
+      />
+       
+      <div
+        class="leftActionBarElementText"
+      >
+        <medinputbutton-stub
+          buttondescriptor="[object Object]"
+        />
+         
+        <!---->
+         
+        <!---->
+      </div>
+    </div>
+    <div
+      class="leftActionBarElement labe-leftActionBarSeparator"
+    >
+      <div
+        class="leftActionBarElementIcon fas fa-sliders-h"
+      />
+       
+      <div
+        class="leftActionBarElementText"
+      >
+        <!---->
+         
+        <!---->
+         
+        <div
+          class="leftActionBarSeparatorText"
+        >
+          
+          Filtres
+        
+        </div>
+      </div>
+    </div>
+    <div
+      class="leftActionBarElement labe-leftActionBarFormSelect"
+    >
+      <div
+        class="leftActionBarElementIcon fas fa-book"
+      />
+       
+      <div
+        class="leftActionBarElementText"
+      >
+        <!---->
+         
+        <medinputselect-stub
+          selectdescriptor="[object Object]"
+        />
+         
+        <!---->
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -1,0 +1,636 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`List is rendered correctly 1`] = `
+<span
+  id="vueListContainer"
+>
+  <div
+    id="leftActionBar"
+  >
+    <div
+      id="labColorBar"
+    />
+     
+    <div
+      id="labElements"
+    >
+      <div
+        class="leftActionBarElement labe-leftActionBarSeparator"
+      >
+        <div
+          class="leftActionBarElementIcon fas fa-plus"
+        />
+         
+        <div
+          class="leftActionBarElementText"
+        >
+          <!---->
+           
+          <!---->
+           
+          <div
+            class="leftActionBarSeparatorText"
+          >
+            
+          Ajouter
+        
+          </div>
+        </div>
+      </div>
+      <div
+        class="leftActionBarElement labe-button"
+      >
+        <div
+          class="leftActionBarElementIcon fas fa-scroll"
+        />
+         
+        <div
+          class="leftActionBarElementText"
+        >
+          <div
+            class="formulate-input"
+            data-classification="button"
+            data-type="button"
+          >
+            <div
+              class="formulate-input-wrapper med_input_button style_normal no-def-style"
+            >
+              <!---->
+               
+              <!---->
+               
+              <div
+                class="formulate-input-element formulate-input-element--button"
+                data-type="button"
+              >
+                <button
+                  id="formulate-global-1"
+                  name="addPaper"
+                  title="Livre papier"
+                  type="button"
+                >
+                  <i
+                    aria-hidden="false"
+                    class="fas fa-scroll"
+                  />
+                  
+  Livre papier
+
+                </button>
+              </div>
+               
+              <!---->
+            </div>
+             
+            <!---->
+             
+            <!---->
+          </div>
+           
+          <!---->
+           
+          <!---->
+        </div>
+      </div>
+      <div
+        class="leftActionBarElement labe-button"
+      >
+        <div
+          class="leftActionBarElementIcon fas fa-tablet-alt"
+        />
+         
+        <div
+          class="leftActionBarElementText"
+        >
+          <div
+            class="formulate-input"
+            data-classification="button"
+            data-type="button"
+          >
+            <div
+              class="formulate-input-wrapper med_input_button style_normal no-def-style"
+            >
+              <!---->
+               
+              <!---->
+               
+              <div
+                class="formulate-input-element formulate-input-element--button"
+                data-type="button"
+              >
+                <button
+                  id="formulate-global-2"
+                  name="addElectronic"
+                  title="Epub"
+                  type="button"
+                >
+                  <i
+                    aria-hidden="false"
+                    class="fas fa-tablet-alt"
+                  />
+                  
+  Epub
+
+                </button>
+              </div>
+               
+              <!---->
+            </div>
+             
+            <!---->
+             
+            <!---->
+          </div>
+           
+          <!---->
+           
+          <!---->
+        </div>
+      </div>
+      <div
+        class="leftActionBarElement labe-leftActionBarSeparator"
+      >
+        <div
+          class="leftActionBarElementIcon fas fa-sliders-h"
+        />
+         
+        <div
+          class="leftActionBarElementText"
+        >
+          <!---->
+           
+          <!---->
+           
+          <div
+            class="leftActionBarSeparatorText"
+          >
+            
+          Filtres
+        
+          </div>
+        </div>
+      </div>
+      <div
+        class="leftActionBarElement labe-leftActionBarFormSelect"
+      >
+        <div
+          class="leftActionBarElementIcon fas fa-book"
+        />
+         
+        <div
+          class="leftActionBarElementText"
+        >
+          <!---->
+           
+          <div
+            class="formulate-input"
+            data-classification="select"
+            data-has-value="true"
+            data-type="select"
+          >
+            <div
+              class="formulate-input-wrapper med_select no-def-style"
+            >
+              <!---->
+               
+              <!---->
+               
+              <div
+                class="formulate-input-element formulate-input-element--select"
+                data-type="select"
+              >
+                <select
+                  id="formulate-global-3"
+                >
+                  <!---->
+                   
+                  <option
+                    value="all"
+                  >
+                    Tous
+                  </option>
+                  <option
+                    value="paper"
+                  >
+                    Papier
+                  </option>
+                  <option
+                    value="electronic"
+                  >
+                    Epub
+                  </option>
+                </select>
+              </div>
+               
+              <!---->
+            </div>
+             
+            <!---->
+             
+            <!---->
+          </div>
+           
+          <!---->
+        </div>
+      </div>
+    </div>
+  </div>
+   
+  <div
+    id="vueListContent"
+  >
+    <div
+      class=""
+      id="vueList"
+    >
+      <div
+        class="list-header"
+      >
+        <div
+          class="cell"
+        >
+          <div
+            class="headerRow"
+          >
+            <div
+              class="headerRowLabel"
+            >
+              
+        Titre
+      
+            </div>
+             
+            <button
+              class="headerTogglePopupButton fas fa-ellipsis-h"
+            />
+             
+            <div
+              class="buttonGroup"
+            >
+              <button
+                class="headerSortButtonUp fas fa-sort-up"
+              />
+               
+              <button
+                class="headerSortButtonDown fas fa-sort-down"
+              />
+            </div>
+          </div>
+           
+          <!---->
+        </div>
+        <div
+          class="cell"
+        >
+          <div
+            class="headerRow"
+          >
+            <div
+              class="headerRowLabel"
+            >
+              
+        Année
+      
+            </div>
+             
+            <button
+              class="headerTogglePopupButton fas fa-ellipsis-h"
+            />
+             
+            <div
+              class="buttonGroup"
+            >
+              <button
+                class="headerSortButtonUp fas fa-sort-up"
+              />
+               
+              <button
+                class="headerSortButtonDown fas fa-sort-down"
+              />
+            </div>
+          </div>
+           
+          <!---->
+        </div>
+        <div
+          class="cell"
+        >
+          <div
+            class="headerRow"
+          >
+            <div
+              class="headerRowLabel"
+            >
+              
+        Langue
+      
+            </div>
+             
+            <button
+              class="headerTogglePopupButton fas fa-ellipsis-h"
+            />
+             
+            <div
+              class="buttonGroup"
+            >
+              <button
+                class="headerSortButtonUp fas fa-sort-up"
+              />
+               
+              <button
+                class="headerSortButtonDown fas fa-sort-down"
+              />
+            </div>
+          </div>
+           
+          <!---->
+        </div>
+        <div
+          class="cell"
+        >
+          <div
+            class="headerRow"
+          >
+            <div
+              class="headerRowLabel"
+            >
+              
+        Auteurs
+      
+            </div>
+             
+            <button
+              class="headerTogglePopupButton fas fa-ellipsis-h"
+            />
+             
+            <div
+              class="buttonGroup"
+            >
+              <button
+                class="headerSortButtonUp fas fa-sort-up"
+              />
+               
+              <button
+                class="headerSortButtonDown fas fa-sort-down"
+              />
+            </div>
+          </div>
+           
+          <!---->
+        </div>
+         
+        <div
+          class="cell"
+        />
+         
+        <div
+          class="list-header-scrollbar-width"
+        />
+      </div>
+       
+      <div
+        id="vueListRows"
+      >
+        <div
+          class="listRow"
+          id="el39"
+        >
+          <div
+            class="listCells"
+          >
+            <div
+              class="cell"
+            >
+              
+      Sharko
+    
+            </div>
+            <div
+              class="cell"
+            >
+              
+      2017
+    
+            </div>
+            <div
+              class="cell"
+            >
+              
+      Français
+    
+            </div>
+            <div
+              class="cell"
+            >
+              
+      Franck Thilliez
+    
+            </div>
+             
+            <div
+              class="listRowCustomActions cell"
+            >
+              <div
+                class="rowCustomAction"
+              >
+                <div
+                  class="formulate-input"
+                  data-classification="button"
+                  data-type="button"
+                >
+                  <div
+                    class="formulate-input-wrapper med_input_button style_normal"
+                  >
+                    <!---->
+                     
+                    <!---->
+                     
+                    <div
+                      class="formulate-input-element formulate-input-element--button"
+                      data-type="button"
+                    >
+                      <button
+                        id="formulate-global-4"
+                        name="download"
+                        title=""
+                        type="button"
+                      >
+                        <i
+                          aria-hidden="false"
+                          class="fas fa-file-download"
+                        />
+                        
+  
+
+                      </button>
+                    </div>
+                     
+                    <!---->
+                  </div>
+                   
+                  <!---->
+                   
+                  <!---->
+                </div>
+                 
+                <!---->
+              </div>
+              <div
+                class="rowCustomAction"
+              >
+                <div
+                  class="formulate-input"
+                  data-classification="button"
+                  data-type="button"
+                >
+                  <div
+                    class="formulate-input-wrapper med_input_button style_normal"
+                  >
+                    <!---->
+                     
+                    <!---->
+                     
+                    <div
+                      class="formulate-input-element formulate-input-element--button"
+                      data-type="button"
+                    >
+                      <button
+                        id="formulate-global-5"
+                        name="delete"
+                        title=""
+                        type="button"
+                      >
+                        <i
+                          aria-hidden="false"
+                          class="far fa-trash-alt"
+                        />
+                        
+  
+
+                      </button>
+                    </div>
+                     
+                    <!---->
+                  </div>
+                   
+                  <!---->
+                   
+                  <!---->
+                </div>
+                 
+                <div
+                  class="customActionConfirm"
+                >
+                  
+    Re-cliquez pour confirmer la suppression
+  
+                </div>
+              </div>
+            </div>
+          </div>
+           
+          <!---->
+        </div>
+        <div
+          class="listRow"
+          id="el45"
+        >
+          <div
+            class="listCells"
+          >
+            <div
+              class="cell"
+            >
+              
+      Sous les vents de Neptune
+    
+            </div>
+            <div
+              class="cell"
+            >
+              
+      2004
+    
+            </div>
+            <div
+              class="cell"
+            >
+              
+      Français
+    
+            </div>
+            <div
+              class="cell"
+            >
+              
+      Fred Vargas
+    
+            </div>
+             
+            <div
+              class="listRowCustomActions cell"
+            >
+              <!---->
+              <div
+                class="rowCustomAction"
+              >
+                <div
+                  class="formulate-input"
+                  data-classification="button"
+                  data-type="button"
+                >
+                  <div
+                    class="formulate-input-wrapper med_input_button style_normal"
+                  >
+                    <!---->
+                     
+                    <!---->
+                     
+                    <div
+                      class="formulate-input-element formulate-input-element--button"
+                      data-type="button"
+                    >
+                      <button
+                        id="formulate-global-6"
+                        name="delete"
+                        title=""
+                        type="button"
+                      >
+                        <i
+                          aria-hidden="false"
+                          class="far fa-trash-alt"
+                        />
+                        
+  
+
+                      </button>
+                    </div>
+                     
+                    <!---->
+                  </div>
+                   
+                  <!---->
+                   
+                  <!---->
+                </div>
+                 
+                <div
+                  class="customActionConfirm"
+                >
+                  
+    Re-cliquez pour confirmer la suppression
+  
+                </div>
+              </div>
+            </div>
+          </div>
+           
+          <!---->
+        </div>
+      </div>
+    </div>
+     
+    <!---->
+  </div>
+</span>
+`;

@@ -12,7 +12,7 @@
 <script lang="ts">
 
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { BookEntity } from 'assets/ts/entity/module'
+import { BookEntity } from '~/assets/ts/entity/module'
 import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
 
 @Component({})

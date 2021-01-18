@@ -1,0 +1,141 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Chips is rendering correctly when specifying all props 1`] = `
+<div
+  class="formulate-input-element formulate-input-element--chips"
+  data-type="chips"
+>
+  <!---->
+   
+  <div
+    class="entities"
+  >
+    <div
+      class="entity"
+    >
+      <div
+        class="entity_label"
+      >
+        
+          John-Doe
+        
+      </div>
+       
+      <div
+        class="entity_delete"
+      >
+        <div
+          class="fas fa-times"
+        />
+      </div>
+    </div>
+    <div
+      class="entity"
+    >
+      <div
+        class="entity_label"
+      >
+        
+          Jane-Doe
+        
+      </div>
+       
+      <div
+        class="entity_delete"
+      >
+        <div
+          class="fas fa-times"
+        />
+      </div>
+    </div>
+  </div>
+   
+  <div
+    class="search_container"
+  >
+    <div
+      class="search_inputs"
+    >
+      <medinputtext-stub
+        textdescriptor="[object Object]"
+        value=""
+      />
+       
+      <medinputbutton-stub
+        buttondescriptor="[object Object]"
+      />
+    </div>
+     
+    <!---->
+  </div>
+</div>
+`;
+
+exports[`Chips is rendering correctly when specifying only required props 1`] = `
+<div
+  class="formulate-input-element formulate-input-element--chips"
+  data-type="chips"
+>
+  <!---->
+   
+  <div
+    class="entities"
+  >
+    <div
+      class="entity"
+    >
+      <div
+        class="entity_label"
+      >
+        
+          John Doe
+        
+      </div>
+       
+      <div
+        class="entity_delete"
+      >
+        <div
+          class="fas fa-times"
+        />
+      </div>
+    </div>
+    <div
+      class="entity"
+    >
+      <div
+        class="entity_label"
+      >
+        
+          Jane Doe
+        
+      </div>
+       
+      <div
+        class="entity_delete"
+      >
+        <div
+          class="fas fa-times"
+        />
+      </div>
+    </div>
+  </div>
+   
+  <div
+    class="search_container"
+  >
+    <div
+      class="search_inputs"
+    >
+      <medinputtext-stub
+        textdescriptor="[object Object]"
+        value=""
+      />
+       
+      <!---->
+    </div>
+     
+    <!---->
+  </div>
+</div>
+`;
