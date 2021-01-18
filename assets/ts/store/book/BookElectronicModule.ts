@@ -1,6 +1,6 @@
 import { Mutation, getModule, Action, Module } from 'vuex-module-decorators'
 import { container } from 'tsyringe'
-import { BookEntity, BookElectronicEntity, FileEntity } from '~/assets/ts/entity/module'
+import { FileEntity } from '~/assets/ts/entity/module'
 import store from '~/assets/ts/store/store'
 import EntityModuleInterface from '~/assets/ts/store/EntityModuleInterface'
 import { BookModule } from '~/assets/ts/store/book/BookModule'
@@ -8,18 +8,19 @@ import HistoryService from '~/assets/ts/service/HistoryService'
 import EntityProxyService from '~/assets/ts/service/EntityProxyService'
 import { bookPaperBaseUrl } from '~/assets/ts/store/book/BookPaperModule'
 import RequestService from '~/assets/ts/service/RequestService'
+import { BookElectronic, BookElectronicItem } from '~/assets/ts/models/BookElectronic'
 
 const requestService = container.resolve(RequestService)
 
 @Module({ dynamic: true, name: 'bookElectronic', store, namespaced: true })
-export class BookElectronicModule extends BookModule implements EntityModuleInterface<BookElectronicEntity> {
+export class BookElectronicModule extends BookModule implements EntityModuleInterface<BookElectronic> {
     static baseUrl: string = '/electronic_books';
 
-    protected proxy: EntityProxyService<BookElectronicEntity> = new EntityProxyService(
+    protected proxy: EntityProxyService<BookElectronic> = new EntityProxyService(
       this.flagService, this.historyService
     );
 
-    book: BookElectronicEntity = new Proxy(this.bookService.getBaseElectronicBook(), this.proxy);
+    book: BookElectronic = new Proxy(this.bookService.getBaseElectronicBook(), this.proxy);
 
     tempNewFile?: File = undefined;
 
@@ -31,7 +32,7 @@ export class BookElectronicModule extends BookModule implements EntityModuleInte
       let promise
       if (typeof this.book.bookFile === 'object' && this.book.bookFile !== null) {
         const request = requestService.createRequest('/book_files/' + this.book.bookFile.id)
-        promise = requestService.execute(request)
+        promise = requestService.execute<any>(request)
           .then(response => new Response(response.body))
           .then(response => response.blob())
           .then(blob => URL.createObjectURL(blob))
@@ -58,13 +59,13 @@ export class BookElectronicModule extends BookModule implements EntityModuleInte
       }
     }
 
-    @Action({ rawError: true }) get (id: number): Promise<BookElectronicEntity | undefined> {
+    @Action({ rawError: true }) get (id: number) {
       this.historyService.init()
-      return super.getBase(id, BookElectronicModule.baseUrl)
-        .then((book: BookEntity) => {
+      return super.getBase<BookElectronicItem>(id, BookElectronicModule.baseUrl)
+        .then((book: BookElectronicItem) => {
           const electronicBook = {
-            hasBookFile: (typeof book.bookFile === 'object'),
-            ...book
+            ...book,
+            hasBookFile: (typeof book.bookFile === 'object')
           }
           this.set(electronicBook)
           return this.book
@@ -79,8 +80,8 @@ export class BookElectronicModule extends BookModule implements EntityModuleInte
         .setBody(this.bookService.prepareForUpload(this.book))
         .addHeader('Content-Type', 'application/json')
 
-      return requestService.execute(request)
-        .then((response: BookElectronicEntity) => {
+      return requestService.execute<BookElectronicItem>(request)
+        .then((response: BookElectronicItem) => {
           response.authors = this.book.authors
           this.set(response)
 
@@ -88,7 +89,7 @@ export class BookElectronicModule extends BookModule implements EntityModuleInte
         })
     }
 
-    @Mutation set (book: BookElectronicEntity) {
+    @Mutation set (book: BookElectronic) {
       this.flagService.reset()
       this.historyService.init()
       this.book = new Proxy(book, this.proxy)

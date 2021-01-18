@@ -74,8 +74,9 @@ export default {
       } else {
         this.downloading = true
         const request = requestService.createRequest(this.cover)
-        request.getUrlBuilder().setSkipCommonUrlBase(true)
-        this.src = requestService.execute(request)
+        this.src = requestService.execute(request, {
+          skipCommonUrlBase: true
+        })
           .then(response => response.blob())
           .then(data => setFile(data))
           .catch((error) => {

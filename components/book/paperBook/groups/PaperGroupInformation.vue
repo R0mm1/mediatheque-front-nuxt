@@ -56,7 +56,7 @@ export default class PaperGroupInformation extends Vue {
 
   getUserListPromise () {
     const request = requestService.createRequest('/users')
-    return requestService.execute(request)
+    return requestService.execute<any>(request)
       .then((response) => {
         const users: { [index: number]: string } = {}
         response['hydra:member'].forEach((user: UserEntity) => {

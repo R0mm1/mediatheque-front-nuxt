@@ -1,6 +1,6 @@
 import { Entity } from '@/assets/ts/entity/Entity'
-import { BookPaperEntity } from '@/assets/ts/entity/BookPaperEntity'
-import { BookElectronicEntity } from '@/assets/ts/entity/BookElectronicEntity'
+import { BookPaper } from '~/assets/ts/models/BookPaper'
+import { BookElectronic } from '~/assets/ts/models/BookElectronic'
 
 export interface BookNotationEntity extends Entity {
 
@@ -8,6 +8,6 @@ export interface BookNotationEntity extends Entity {
     ['@type']?: string;
 
     id?: number;
-    book?: string | BookPaperEntity | BookElectronicEntity;
+    book?: string | BookPaper | BookElectronic;
     note?: Number;
 }

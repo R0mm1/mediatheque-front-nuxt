@@ -178,7 +178,7 @@ export default class Chips extends Vue {
       const request = requestService.createRequest(this.entityURI)
         .setQueryParams(data)
 
-      return requestService.execute(request)
+      return requestService.execute<any>(request)
         .then((response) => {
           this.proposals = {}
           response['hydra:member'].forEach((entity: any) => {

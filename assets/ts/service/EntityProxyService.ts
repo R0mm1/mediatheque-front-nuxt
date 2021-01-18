@@ -2,6 +2,12 @@ import FlagService from '@/assets/ts/service/FlagService'
 import HistoryService from '@/assets/ts/service/HistoryService'
 import EntityModuleFlagInterface from '~/assets/ts/store/EntityModuleFlagInterface'
 
+// For Typescript convenience
+export type EntityProxyServiceInterface<Type> = Type & {
+  isProxy: boolean,
+  target: Type
+};
+
 export default class EntityProxyService<Entity> {
     static isProxy = Symbol('isProxy');
     static target = Symbol('target');

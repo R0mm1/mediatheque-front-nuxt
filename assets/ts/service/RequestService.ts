@@ -1,32 +1,51 @@
 import { singleton, autoInjectable } from 'tsyringe'
 
+import { AxiosResponse, Method } from 'axios'
 import AuthenticationService from '~/assets/ts/service/AuthenticationService'
 import Request from '~/assets/ts/objects/Request'
+import RequestServiceInterface, { ExecuteOptionsInterface } from '~/assets/ts/service/RequestServiceInterface'
 
 const config = require('../../../mediatheque.json')
 
 @autoInjectable()
 @singleton()
-export default class RequestService {
+export default class RequestService implements RequestServiceInterface {
+  protected lastResponse?: AxiosResponse;
+
   // eslint-disable-next-line no-useless-constructor
   constructor (private authenticationService: AuthenticationService) {
   }
 
-  createRequest (url: string, method: string = 'GET') {
+  createRequest (url: string, method: Method = 'GET') {
     return new Request(url, method)
   }
 
-  execute (request: Request, requestCredentialsIfUnauthorized: boolean = false, skipAuthentication: boolean = false) {
+  execute<ExpectedResponseType> (request: Request, options: ExecuteOptionsInterface = {}): Promise<ExpectedResponseType> {
     if (!this.authenticationService.isLoggedIn()) {
       this.goToLoginPage()
     }
 
+    const skipAuthentication = options.skipAuthentication ?? false
     if (!skipAuthentication) {
       request.addHeader('Authorization', 'Bearer ' + this.authenticationService.getToken())
     }
 
-    return request.trigger()
-      .then((response: Response) => this.handleResponse(response, request, requestCredentialsIfUnauthorized))
+    const skipCommonUrlBase = options.skipCommonUrlBase ?? false
+    request.setBaseUrl('http://' + config.api.endpoint + (skipCommonUrlBase ? '' : config.api.commonUrlBase))
+
+    return request.trigger<ExpectedResponseType>()
+      .then(
+        response => this.handleSuccess<ExpectedResponseType>(response),
+        (error) => {
+          const requestCredentialsIfUnauthorized = options.requestCredentialsIfUnauthorized ?? false
+          const response = this.handleFailure<ExpectedResponseType>(error, request, requestCredentialsIfUnauthorized)
+          if (response instanceof Error) {
+            return Promise.reject(response)
+          } else {
+            return Promise.resolve(response)
+          }
+        }
+      )
   }
 
   public sendFile (file: File, url: string, requestCredentialsIfUnauthorized: boolean = false) {
@@ -38,32 +57,42 @@ export default class RequestService {
       .removeHeader('Content-Type') // content type will be automatically set with the correct boundary
       .setBody(formData)
 
-    return request.trigger()
-      .then((response: Response) => this.handleResponse(response, request, requestCredentialsIfUnauthorized))
+    return request.trigger<any>()
+      .then(
+        response => this.handleSuccess(response),
+        (error) => {
+          const response = this.handleFailure(error, request, requestCredentialsIfUnauthorized)
+          if (response instanceof Error) {
+            return Promise.reject(response)
+          } else {
+            return Promise.resolve(response)
+          }
+        }
+      )
   }
 
   protected goToLoginPage () {
     window.location = config.params.login_page
   }
 
-  private handleResponse (response: Response, request: Request, requestCredentialsIfUnauthorized: boolean = false) {
-    if (response.status >= 200 && response.status < 300) {
-      if (this.isResponseContainingJson(response)) {
-        return response.json()
-      } else {
-        return Promise.resolve(response)
-      }
-    } else if (response.status === 401) {
+  private handleSuccess<ExpectedResponseType> (response: AxiosResponse<ExpectedResponseType>): ExpectedResponseType {
+    this.lastResponse = response
+    return response.data
+  }
+
+  private handleFailure<ExpectedResponseType> (error: AxiosResponse, request: Request, requestCredentialsIfUnauthorized: boolean = false): ExpectedResponseType | Error {
+    if (error.status === 401) {
       if (requestCredentialsIfUnauthorized) {
         this.goToLoginPage()
-        return
       }
 
       return this.authenticationService.refreshToken()
         .then(() => {
           // We try again after the token has been refreshed, but if authentication fail again, we go
           // to the login page instead of trying again and again.
-          return this.execute(request, true)
+          return this.execute<ExpectedResponseType>(request, {
+            requestCredentialsIfUnauthorized: true
+          })
         })
         .catch(() => {
           // If we can't obtain a new token with the refresh token, that means it's probably expired,
@@ -71,31 +100,8 @@ export default class RequestService {
           this.goToLoginPage()
         })
     } else {
-      return Promise.reject(new Error(response.statusText))
+      console.log(error)
+      return new Error(error.statusText)
     }
-  }
-
-  /**
-     * Check if the response body contains JSON, based on the 'Content-Type' header. Return undefined
-     * if the header is not present on the response
-     * @param response
-     */
-  private isResponseContainingJson (response: Response): boolean | undefined {
-    const jsonMimeType = ['application/json', 'application/ld+json']
-    const contentType = response.headers.get('Content-Type')
-    let jsonLike = false
-
-    if (contentType === null) {
-      return undefined
-    }
-
-    for (let mimeIterator = 0; mimeIterator < jsonMimeType.length; mimeIterator++) {
-      if (contentType.includes(jsonMimeType[mimeIterator])) {
-        jsonLike = true
-        break
-      }
-    }
-
-    return jsonLike
   }
 }

@@ -46,7 +46,7 @@ class AuthorModule extends VuexModule implements EntityModuleInterface<AuthorEnt
 
     @Action({ rawError: true }) get (id: number): Promise<AuthorEntity | undefined> {
       const request = requestService.createRequest(this.baseUrl + '/' + id)
-      return requestService.execute(request)
+      return requestService.execute<AuthorEntity>(request)
         .then((result) => {
           this.set(result)
           return Promise.resolve(this.author)
@@ -60,7 +60,7 @@ class AuthorModule extends VuexModule implements EntityModuleInterface<AuthorEnt
         .setBody(this.author)
         .addHeader('Content-Type', 'application/json')
 
-      return requestService.execute(request)
+      return requestService.execute<AuthorEntity>(request)
         .then((author: AuthorEntity) => {
           this.set(author)
           return Promise.resolve(author)

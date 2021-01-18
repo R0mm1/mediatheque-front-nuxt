@@ -1,5 +1,6 @@
 import { container } from 'tsyringe'
 import { Action, Mutation, VuexModule } from 'vuex-module-decorators'
+import { Method } from 'axios'
 import {
   AuthorEntity,
   BookEntity, FileEntity,
@@ -39,10 +40,10 @@ export abstract class BookModule extends VuexModule {
       readyToSave: true
     });
 
-    protected getBase (id: number, baseUrl: string): Promise<BookEntity> {
+    protected getBase<HydraItemType> (id: number, baseUrl: string): Promise<HydraItemType> {
       const request = this.requestService.createRequest(baseUrl + '/' + id)
 
-      return this.requestService.execute(request)
+      return this.requestService.execute<HydraItemType>(request)
     }
 
     @Mutation init (): void {
@@ -129,7 +130,7 @@ export abstract class BookModule extends VuexModule {
     }
 
     @Action({ rawError: true })
-    async linkNewCover (file: { file: File, name: string }) {
+    linkNewCover (file: { file: File, name: string }) {
       this.context.commit('setTempNewCover', file.file)
 
       this.flagService.flags.readyToSave = false
@@ -161,7 +162,7 @@ export abstract class BookModule extends VuexModule {
           'book.id': this.book.id
         })
 
-      return this.requestService.execute(request)
+      return this.requestService.execute<any>(request)
         .then((response) => {
           if (response['hydra:member'].length > 0) {
             this.context.commit('setNotation', response['hydra:member'].pop())
@@ -176,7 +177,7 @@ export abstract class BookModule extends VuexModule {
     updateNote (note: Number) {
       const requestBody: BookNotationEntity = {}
       let url = '/book_notations'
-      let method = 'POST'
+      let method:Method = 'POST'
 
       if (this.notation === null) {
         requestBody.book = this.book['@id']

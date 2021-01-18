@@ -1,5 +1,8 @@
-import { BookEntity, BookPaperEntity, BookElectronicEntity, AuthorEntity, GroupEntity } from '@/assets/ts/entity/module'
+import { BookEntity, AuthorEntity, GroupEntity } from '@/assets/ts/entity/module'
 import EntityService from '@/assets/ts/service/EntityService'
+import { BookPaper } from '~/assets/ts/models/BookPaper'
+import { Book } from '~/assets/ts/models/Book'
+import { BookElectronic } from '~/assets/ts/models/BookElectronic'
 
 const config = require('../../../mediatheque.json')
 
@@ -9,7 +12,7 @@ export default class BookService {
 
     entityService: EntityService = new EntityService();
 
-    getBaseBook (): BookEntity {
+    getBaseBook (): Book {
       return {
         cover: null,
         authors: [],
@@ -17,18 +20,16 @@ export default class BookService {
       }
     }
 
-    getBasePaperBook (): BookPaperEntity {
+    getBasePaperBook (): BookPaper {
       return {
-        ...this.getBaseBook(),
-        '@type': BookService.bookPaper
+        ...this.getBaseBook()
       }
     }
 
-    getBaseElectronicBook (): BookElectronicEntity {
+    getBaseElectronicBook (): BookElectronic {
       return {
         ...this.getBaseBook(),
         hasBookFile: false,
-        '@type': BookService.bookElectronic,
         bookFile: null
       }
     }
@@ -45,7 +46,7 @@ export default class BookService {
       return hasAuthor
     }
 
-    prepareForUpload (book: BookPaperEntity | BookElectronicEntity) {
+    prepareForUpload (book: BookPaper | BookElectronic) {
       const bookPrepared: any = {
         ...book,
         cover: this.entityService.getIri(book.cover),
@@ -57,7 +58,7 @@ export default class BookService {
         })
       }
 
-      if (typeof bookPrepared.bookFile !== 'undefined') {
+      if (typeof bookPrepared.bookFile !== 'undefined' && 'bookFile' in book) {
         bookPrepared.bookFile = this.entityService.getIri(book.bookFile)
       }
 

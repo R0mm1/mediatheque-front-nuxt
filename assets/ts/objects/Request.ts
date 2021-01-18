@@ -1,78 +1,89 @@
-import UrlBuilder from '@/assets/ts/objects/UrlBuilder'
+import axios, { Method, AxiosRequestConfig } from 'axios'
+import RequestInterface from '~/assets/ts/objects/RequestInterface'
 
-const Headers = require('fetch-headers')
+export interface QueryParamsInterface {
+  [index: string]: string | number | QueryParamsInterface;
+}
 
-export default class Request {
-    protected headers: Headers = new Headers({ 'Content-Type': 'application/json' });
+export default class Request implements RequestInterface {
+  protected headers: { [index: string]: string } = { 'Content-Type': 'application/json' };
 
-    protected urlBuilder: UrlBuilder;
+  protected method: Method;
 
-    protected method: string;
+  protected body: any;
 
-    protected body: any;
+  protected skipUrlBuilding = false;
 
-    protected skipUrlBuilding = false;
+  protected url: string;
 
-    constructor (url: string, method: string = 'GET') {
-      this.urlBuilder = new UrlBuilder(url)
-      this.method = method
+  protected queryParams: QueryParamsInterface = {};
+
+  protected baseUrl: string | undefined;
+
+  constructor (url: string, method: Method = 'GET') {
+    this.url = url
+    this.method = method
+  }
+
+  getMethod () {
+    return this.method
+  }
+
+  getUrl () {
+    return this.url
+  }
+
+  setBody (body: any) {
+    this.body = body
+    return this
+  }
+
+  getBody () {
+    return this.body
+  }
+
+  setQueryParams (queryParams: QueryParamsInterface) {
+    this.queryParams = queryParams
+    return this
+  }
+
+  addHeader (name: string, value: string) {
+    this.headers[name] = value
+    return this
+  }
+
+  removeHeader (name: string) {
+    delete this.headers[name]
+    return this
+  }
+
+  getHeaders () {
+    return this.headers
+  }
+
+  setSkipUrlBuilding (skipUrlBuilding: boolean) {
+    this.skipUrlBuilding = skipUrlBuilding
+    return this
+  }
+
+  setBaseUrl (baseUrl: string) {
+    this.baseUrl = baseUrl
+    return this
+  }
+
+  trigger<ExpectedReturnType> () {
+    const axiosOptions: AxiosRequestConfig = {
+      url: this.url,
+      method: this.method,
+      data: this.body,
+      params: this.queryParams,
+      headers: this.headers
     }
 
-    getMethod () {
-      return this.method
+    if (typeof this.baseUrl !== 'undefined') {
+      axiosOptions.baseURL = this.baseUrl
     }
 
-    getUrl () {
-      return this.urlBuilder.getUrl()
-    }
-
-    setBody (body: any) {
-      if (typeof body !== 'string' && !(body instanceof FormData)) { body = JSON.stringify(body) }
-      this.body = body
-      return this
-    }
-
-    getBody () {
-      return this.body
-    }
-
-    setQueryParams (queryParams: UrlBuilderQueryParamInterface) {
-      this.urlBuilder.setQueryParams(queryParams)
-      return this
-    }
-
-    addHeader (name: string, value: string, replaceIfExists: boolean = true) {
-      if (this.headers.has(name) && replaceIfExists) {
-        this.headers.set(name, value)
-      } else {
-        this.headers.append(name, value)
-      }
-      return this
-    }
-
-    removeHeader (name: string) {
-      this.headers.delete(name)
-      return this
-    }
-
-    getHeaders () {
-      return this.headers
-    }
-
-    setSkipUrlBuilding (skipUrlBuilding: boolean) {
-      this.skipUrlBuilding = skipUrlBuilding
-      return this
-    }
-
-    getUrlBuilder () {
-      return this.urlBuilder
-    }
-
-    trigger () {
-      return fetch(this.skipUrlBuilding ? this.urlBuilder.getUrl() : this.urlBuilder.buildUrl(), {
-        method: this.method,
-        headers: this.headers,
-        body: this.body
-      })
-    }
+    return axios.request<ExpectedReturnType>(axiosOptions)
+  }
 }

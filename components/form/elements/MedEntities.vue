@@ -140,7 +140,7 @@ export default class MedEntities extends Vue {
       const request = requestService.createRequest(this.entitiesDescriptor.entityURI)
         .setQueryParams(data)
 
-      return requestService.execute(request)
+      return requestService.execute<any>(request)
         .then((response) => {
           this.proposals = {}
           response['hydra:member'].forEach((entity: any) => {

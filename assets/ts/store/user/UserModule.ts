@@ -16,7 +16,7 @@ class UserModule extends VuexModule implements EntityModuleInterface<UserEntity>
 
     @Action({ rawError: true }) get (id: number): Promise<UserEntity | undefined> {
       const request = requestService.createRequest(this.baseUrl + '/' + id)
-      return requestService.execute(request)
+      return requestService.execute<any>(request)
         .then((result) => {
           this.set(result)
           return Promise.resolve(result)
@@ -30,7 +30,7 @@ class UserModule extends VuexModule implements EntityModuleInterface<UserEntity>
         .setBody(this.user)
         .addHeader('Content-Type', 'application/json')
 
-      return requestService.execute(request)
+      return requestService.execute<any>(request)
         .then((user: UserEntity) => {
           this.set(user)
           return Promise.resolve(user)
@@ -43,7 +43,7 @@ class UserModule extends VuexModule implements EntityModuleInterface<UserEntity>
 
     @Action({ rawError: true }) getLoggedIn (): Promise<UserEntity | undefined> {
       const request = requestService.createRequest(this.baseUrl + '/loggedIn')
-      return requestService.execute(request)
+      return requestService.execute<any>(request)
         .then((result) => {
           this.set(result)
           return Promise.resolve(result)
