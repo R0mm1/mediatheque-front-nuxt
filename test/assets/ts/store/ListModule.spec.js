@@ -4,24 +4,6 @@ import Column from '~/assets/ts/list/Column'
 import DataSubProperty from '~/assets/ts/list/DataSubProperty'
 import Filter from '~/assets/ts/list/Filter'
 
-expect.extend({
-  urlToHaveQueryParam (url, paramName, paramValue) {
-    const usp = new URLSearchParams()
-    usp.append(paramName, paramValue)
-    if (url.includes(usp.toString())) {
-      return {
-        message: () => `epxected ${url} not to contain query param ${paramName} with value ${paramValue}`,
-        pass: true
-      }
-    } else {
-      return {
-        message: () => `epxected ${url} to contain query param ${paramName} with value ${paramValue}`,
-        pass: false
-      }
-    }
-  }
-})
-
 describe('ListModule', function () {
   const columns = [
     new Column('title', 'Titre'),
@@ -115,7 +97,7 @@ describe('ListModule', function () {
     expect(bookTypeFilter).toEqual(newFilterBookType)
   })
 
-  test('is well generating the search string', () => {
+  test('is well generating the query params', () => {
     const dataField = columns[0].dataField
     expect(listModule.columns[dataField]).toBeDefined()
     listModule.columns[dataField].searchString = 'this is a search string'
@@ -129,7 +111,7 @@ describe('ListModule', function () {
     expect(listModule.queryParams.order.theTitle).toBeDefined()
     expect(listModule.queryParams.order.theTitle).toEqual('ASC')
 
-    // // Check it contains custom filters
+    // Check it contains custom filters
     expect(listModule.queryParams.otherCustomFilter).toBeDefined()
     expect(listModule.queryParams.otherCustomFilter).toEqual('customFilterValue')
 

@@ -57,8 +57,6 @@ import listModule from '~/assets/ts/store/ListModule'
 import RequestService from '~/assets/ts/service/RequestService'
 import { HydraCollection } from '~/assets/ts/models/HydraInterfaces'
 
-const requestService = container.resolve(RequestService)
-
 @Component({
   components: {
     Row: () => import('~/components/list/Row.vue'),
@@ -72,6 +70,7 @@ export default class List extends Vue {
   isPaginationEnabled: boolean = false;
   paginationTotalPages?: Number;
   isLoading: boolean = true;
+  requestService: RequestService = container.resolve(RequestService)
 
   @Prop(Array) cols!: Column[];
   @Prop(String) apiEndpoint!: string;
@@ -102,8 +101,8 @@ export default class List extends Vue {
 
     listModule.computeQueryParams({ getFromCache: fromCache })
       .then(() => {
-        return requestService.execute<any & HydraCollection<any>>(
-          requestService.createRequest(this.apiEndpoint).setQueryParams(listModule.queryParams)
+        return this.requestService.execute<any & HydraCollection<any>>(
+          this.requestService.createRequest(this.apiEndpoint).setQueryParams(listModule.queryParams)
         )
       })
       .then((data) => {

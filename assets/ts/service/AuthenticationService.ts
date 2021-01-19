@@ -43,7 +43,7 @@ export default class AuthenticationService {
       return localStorage.getItem(this.tokenKey)
     }
 
-    refreshToken (): any {
+    refreshToken () {
       const refreshToken = localStorage.getItem(this.refreshTokenKey)
 
       if (refreshToken === null) {

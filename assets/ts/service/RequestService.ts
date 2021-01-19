@@ -1,9 +1,10 @@
 import { singleton, autoInjectable } from 'tsyringe'
 
-import { AxiosResponse, Method } from 'axios'
+import { AxiosResponse, AxiosError, Method } from 'axios'
 import AuthenticationService from '~/assets/ts/service/AuthenticationService'
 import Request from '~/assets/ts/objects/Request'
 import RequestServiceInterface, { ExecuteOptionsInterface } from '~/assets/ts/service/RequestServiceInterface'
+import Navigator from '~/assets/ts/objects/Navigator'
 
 const config = require('../../../mediatheque.json')
 
@@ -23,6 +24,7 @@ export default class RequestService implements RequestServiceInterface {
   execute<ExpectedResponseType> (request: Request, options: ExecuteOptionsInterface = {}): Promise<ExpectedResponseType> {
     if (!this.authenticationService.isLoggedIn()) {
       this.goToLoginPage()
+      return Promise.reject(new Error('Redirection to login page'))
     }
 
     const skipAuthentication = options.skipAuthentication ?? false
@@ -42,7 +44,7 @@ export default class RequestService implements RequestServiceInterface {
           if (response instanceof Error) {
             return Promise.reject(response)
           } else {
-            return Promise.resolve(response)
+            return response
           }
         }
       )
@@ -72,7 +74,7 @@ export default class RequestService implements RequestServiceInterface {
   }
 
   protected goToLoginPage () {
-    window.location = config.params.login_page
+    Navigator.navigate(config.params.login_page)
   }
 
   private handleSuccess<ExpectedResponseType> (response: AxiosResponse<ExpectedResponseType>): ExpectedResponseType {
@@ -80,28 +82,31 @@ export default class RequestService implements RequestServiceInterface {
     return response.data
   }
 
-  private handleFailure<ExpectedResponseType> (error: AxiosResponse, request: Request, requestCredentialsIfUnauthorized: boolean = false): ExpectedResponseType | Error {
-    if (error.status === 401) {
+  private handleFailure<ExpectedResponseType> (error: AxiosError, request: Request, requestCredentialsIfUnauthorized: boolean = false) {
+    if (error.response?.status === 401 || error.request?.status === 401) {
       if (requestCredentialsIfUnauthorized) {
         this.goToLoginPage()
+        return Promise.reject(new Error('Redirection to login page'))
       }
 
       return this.authenticationService.refreshToken()
-        .then(() => {
-          // We try again after the token has been refreshed, but if authentication fail again, we go
-          // to the login page instead of trying again and again.
-          return this.execute<ExpectedResponseType>(request, {
-            requestCredentialsIfUnauthorized: true
-          })
-        })
-        .catch(() => {
-          // If we can't obtain a new token with the refresh token, that means it's probably expired,
-          // so we go to the login page.
-          this.goToLoginPage()
-        })
+        .then(
+          () => {
+            // We try again after the token has been refreshed, but if authentication fail again, we go
+            // to the login page instead of trying again and again.
+            return this.execute<ExpectedResponseType>(request, {
+              requestCredentialsIfUnauthorized: true
+            })
+          },
+          () => {
+            // If we can't obtain a new token with the refresh token, that means it's probably expired,
+            // so we go to the login page.
+            this.goToLoginPage()
+            return Promise.reject(new Error('Redirection to login page'))
+          }
+        )
     } else {
-      console.log(error)
-      return new Error(error.statusText)
+      return new Error(error.message)
     }
   }
 }

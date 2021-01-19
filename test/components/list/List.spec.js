@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import List from '@/components/list/List'
 import { createLocalVue, mount } from '@vue/test-utils'
 import '~/plugins/vueFormulate'
+import { container } from 'tsyringe'
 import Column from '~/assets/ts/list/Column'
 import DataSubProperty from '~/assets/ts/list/DataSubProperty'
 import LeftActionBarProperties from '~/assets/ts/list/LeftActionBarProperties'
@@ -12,12 +13,26 @@ import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
 import LeftActionBarFormSelectDescriptor from '~/assets/ts/list/LeftActionBarFormSelectDescriptor'
 import RowAction from '~/assets/ts/list/RowAction'
 import BookService from '~/assets/ts/service/BookService'
+import AuthenticationService from '~/assets/ts/service/AuthenticationService'
+import RequestService from '~/assets/ts/service/RequestService'
+
+jest.mock('~/assets/ts/objects/Navigator')
+jest.mock('~/assets/ts/service/AuthenticationService', () => {
+  return jest.fn().mockImplementation(() => {
+    return {
+      isLoggedIn: jest.fn().mockReturnValue(true),
+      getToken: jest.fn().mockReturnValue('123')
+    }
+  })
+})
 
 const axios = require('axios')
 const MockAdapter = require('axios-mock-adapter')
+const axiosMock = new MockAdapter(axios)
 
 describe('List', () => {
-  const axiosMock = new MockAdapter(axios)
+  const authenticationService = container.resolve(AuthenticationService)
+  container.registerInstance(AuthenticationService, authenticationService)
 
   axiosMock.onGet(/.*\/books$/).reply(200, {
     '@context': '/api/contexts/Book',
@@ -128,6 +143,11 @@ describe('List', () => {
           .setNeedConfirm(true, 'Re-cliquez pour confirmer la suppression')
       ],
       detailsComponentPath: 'book/BookListRowDetails.vue'
+    },
+    data: () => {
+      return {
+        requestService: container.resolve(RequestService)
+      }
     }
   })
 
