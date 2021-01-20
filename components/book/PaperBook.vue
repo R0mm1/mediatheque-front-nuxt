@@ -91,6 +91,7 @@ export default class PaperBook extends Vue {
   }
 
   save () {
+    const isNew = typeof bookPaperModule.book.id === 'undefined'
     bookPaperModule.save(false)
       .then(() => {
         this.$toasted.show('Le livre a été sauvegardé', {
@@ -99,6 +100,12 @@ export default class PaperBook extends Vue {
           icon: 'fa-check'
         })
         this.$emit('book-saved')
+
+        if (isNew) {
+          this.$router.push({
+            path: '/book/paper/' + bookPaperModule.book.id
+          })
+        }
       })
       .catch((error) => {
         console.error(error)

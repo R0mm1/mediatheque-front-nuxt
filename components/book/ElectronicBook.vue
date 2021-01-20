@@ -90,6 +90,7 @@ export default class ElectronicBook extends Vue {
   }
 
   save () {
+    const isNew = typeof bookElectronicModule.book.id === 'undefined'
     bookElectronicModule.save(false)
       .then(() => {
         this.$toasted.show('Le livre a été sauvegardé', {
@@ -98,6 +99,12 @@ export default class ElectronicBook extends Vue {
           icon: 'fa-check'
         })
         this.$emit('book-saved')
+
+        if (isNew) {
+          this.$router.push({
+            path: '/book/electronic/' + bookElectronicModule.book.id
+          })
+        }
       })
       .catch((error) => {
         console.error(error)
