@@ -1,4 +1,4 @@
-import axios, { Method, AxiosRequestConfig } from 'axios'
+import axios, { Method, AxiosRequestConfig, ResponseType } from 'axios'
 import RequestInterface from '~/assets/ts/objects/RequestInterface'
 
 export interface QueryParamsInterface {
@@ -19,6 +19,8 @@ export default class Request implements RequestInterface {
   protected queryParams: QueryParamsInterface = {};
 
   protected baseUrl: string | undefined;
+
+  protected responseType: ResponseType = 'json'
 
   constructor (url: string, method: Method = 'GET') {
     this.url = url
@@ -71,13 +73,19 @@ export default class Request implements RequestInterface {
     return this
   }
 
+  setResponseType (responseType: ResponseType) {
+    this.responseType = responseType
+    return this
+  }
+
   trigger<ExpectedReturnType> () {
     const axiosOptions: AxiosRequestConfig = {
       url: this.url,
       method: this.method,
       data: this.body,
       params: this.queryParams,
-      headers: this.headers
+      headers: this.headers,
+      responseType: this.responseType
     }
 
     if (typeof this.baseUrl !== 'undefined') {

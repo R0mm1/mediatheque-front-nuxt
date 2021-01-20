@@ -31,10 +31,8 @@ export class BookElectronicModule extends BookModule implements EntityModuleInte
 
       let promise
       if (typeof this.book.bookFile === 'object' && this.book.bookFile !== null) {
-        const request = requestService.createRequest('/book_files/' + this.book.bookFile.id)
-        promise = requestService.execute<any>(request)
-          .then(response => new Response(response.body))
-          .then(response => response.blob())
+        const request = requestService.createRequest('/book_files/' + this.book.bookFile.id).setResponseType('blob')
+        promise = requestService.execute<Blob>(request)
           .then(blob => URL.createObjectURL(blob))
       } else if (typeof state.tempNewFile !== 'undefined') {
         promise = new Promise((resolve) => {

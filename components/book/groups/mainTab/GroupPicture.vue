@@ -73,11 +73,10 @@ export default {
         this.src = setFile(this.cover)
       } else {
         this.downloading = true
-        const request = requestService.createRequest(this.cover)
+        const request = requestService.createRequest(this.cover).setResponseType('blob')
         this.src = requestService.execute(request, {
           skipCommonUrlBase: true
         })
-          .then(response => response.blob())
           .then(data => setFile(data))
           .catch((error) => {
             console.error(error)

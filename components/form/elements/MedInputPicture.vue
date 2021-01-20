@@ -19,24 +19,6 @@
         <MedInputButton :button-descriptor="buttonUploadDescriptor" @click.native="displayFileChooser" />
         <MedInputButton :button-descriptor="buttonDownloadDescriptor" @click.native="download" />
         <MedInputButton :button-descriptor="buttonDeleteDescriptor" @click.native="clear" />
-
-        <!--        <InputButton-->
-        <!--          label-custom-classes="fas fa-file-upload"-->
-        <!--          b-style="negative"-->
-        <!--          @click.native="displayFileChooser"-->
-        <!--        />-->
-        <!--        <InputButton-->
-        <!--          label-custom-classes="fas fa-file-download"-->
-        <!--          b-style="negative"-->
-        <!--          :disabled="!hasPictureLoaded"-->
-        <!--          @click.native="download"-->
-        <!--        />-->
-        <!--        <InputButton-->
-        <!--          label-custom-classes="fas fa-trash-alt"-->
-        <!--          b-style="negative"-->
-        <!--          :disabled="!hasPictureLoaded"-->
-        <!--          @click.native="clear"-->
-        <!--        />-->
       </div>
       <input ref="inputFile" type="file" :name="name" @change="reloadPreview">
     </template>

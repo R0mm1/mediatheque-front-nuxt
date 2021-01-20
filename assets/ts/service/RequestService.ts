@@ -58,6 +58,7 @@ export default class RequestService implements RequestServiceInterface {
       .addHeader('Authorization', 'Bearer ' + this.authenticationService.getToken())
       .removeHeader('Content-Type') // content type will be automatically set with the correct boundary
       .setBody(formData)
+      .setBaseUrl('http://' + config.api.endpoint + config.api.commonUrlBase)
 
     return request.trigger<any>()
       .then(
