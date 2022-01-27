@@ -1,13 +1,12 @@
 {
   "api": {
-    "endpoint": "###ENDPOINT###",
+    "endpoint": "{{API_ENDPOINT}}",
     "commonUrlBase": "/api",
     "paths": {
       "security_refresh_token": "/security/token/refresh"
     }
   },
   "auth": {
-    "introspection_endpoint": "{{INTROSPECTION_ENDPOINT}}",
     "userinfo_endpoint": "{{USERINFO_ENDPOINT}}",
     "authorization_endpoint": "{{AUTHORIZATION_ENDPOINT}}",
     "token_endpoint": "{{TOKEN_ENDPOINT}}",
@@ -23,6 +22,6 @@
     }
   },
   "params": {
-    "fontawesome_kit_name": ""
+    "fontawesome_kit_name": "{{FONT_AWESOME_KIT_NAME}}"
   }
 }
