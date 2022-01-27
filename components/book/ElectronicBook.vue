@@ -33,9 +33,11 @@ import GroupInformation from '~/components/book/groups/mainTab/GroupInformation.
 import MainTab from '~/components/book/electronicBook/MainTab.vue'
 import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
 import MedInputButton from '~/components/form/elements/MedInputButton.vue'
+import HeaderAuthorsList from '~/components/book/elements/HeaderAuthorsList.vue'
+import SocialTab from '~/components/book/electronicBook/SocialTab.vue'
 
 @Component({
-  components: { MedInputButton, MainTab, GroupInformation, EntityLayout }
+  components: { MedInputButton, MainTab, GroupInformation, EntityLayout, HeaderAuthorsList, SocialTab }
 })
 export default class ElectronicBook extends Vue {
   @Prop({ type: Number, required: false }) bookId!: number | null;

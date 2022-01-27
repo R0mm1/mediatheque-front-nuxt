@@ -1,6 +1,7 @@
 export interface UserEntity {
     ['@id']?: string;
 
-    id?: number;
-    username?: string;
+    id?: string;
+    firstname?: string;
+    lastname?: string;
 }

@@ -21,6 +21,11 @@
         background-color: $shade3;
         border-color: $shade3;
       }
+
+      a {
+        text-decoration: none;
+        color: initial;
+      }
     }
   }
 }

@@ -45,11 +45,6 @@ export class BookPaperModule extends BookModule implements EntityModuleInterface
     }
 
     @Action({ rawError: true }) save (bookTypeChanged: boolean = false) {
-      if (typeof this.book.owner === 'string' && this.book.owner.match(/api\/users\/loggedIn\?id=\d*/)) {
-        const id = this.book.owner.split('id=').pop()
-        this.book.owner = '/api/users/' + id
-      }
-
       const method = this.bookService.isPersisted(this.book) ? 'PUT' : 'POST'
       const url = (bookTypeChanged ? bookElectronicBaseUrl : BookPaperModule.baseUrl) +
             (method === 'PUT' ? ('/' + this.book.id) : '')

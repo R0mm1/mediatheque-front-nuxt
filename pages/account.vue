@@ -1,98 +1,102 @@
 <template>
-  <Group custom-class="change_password">
+  <Group custom-class="user_info">
     <template #group_name>
-      Modifier le mot de passe
+      Informations
     </template>
 
     <template #group_content>
       <Loader v-if="isLoading" />
 
-      <template v-if="!isLoading">
-        <FormContainer validate-label="Modifier" :validate-action="save" :validation-method="isValid">
-          <template v-if="!isLoading" #form_body>
-            <MedInputText v-model="passwd" :text-descriptor="passwdPasswordDescriptor" />
-            <MedInputText v-model="passwdRepeat" :text-descriptor="passwdRepeatPasswordDescriptor" />
-          </template>
+      <div v-if="!isLoading && error">
+        Une erreur est survenue. Ouvrez la console pour obtenir plus d'informations.
+      </div>
 
-          <template #action_cancel>
-            <span />
-          </template>
-        </FormContainer>
+      <template v-if="!isLoading">
+        <MedInputText v-model="firstname" :text-descriptor="firstnameTextDescriptor" />
+        <MedInputText v-model="lastname" :text-descriptor="lastnameTextDescriptor" />
+        <MedInputText v-model="email" :text-descriptor="emailTextDescriptor" />
       </template>
+    </template>
+
+    <template #group_footer>
+      <MedInputButton :button-descriptor="logoutButtonDescriptor" @click.native="logout" />
+      <MedInputButton :button-descriptor="manageAccountDescriptor" />
     </template>
   </Group>
 </template>
 
 <script lang="ts">
 
-import { Component, Vue, Watch } from 'vue-property-decorator'
-import userModule from '~/assets/ts/store/user/UserModule'
+import { container } from 'tsyringe'
+import { Component, Vue } from 'vue-property-decorator'
+import UserinfoService from '~/assets/ts/service/auth/UserinfoService'
+// import userModule from '~/assets/ts/store/user/UserModule'
 import TextDescriptor from '~/assets/ts/form/TextDescriptor'
+import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
+import ButtonHrefDescriptor from '~/assets/ts/form/ButtonHrefDescriptor'
 import Group from '~/components/page/Group.vue'
 import Loader from '~/components/widgets/Loader.vue'
 import FormContainer from '~/components/form/FormContainer.vue'
 import MedInputText from '~/components/form/elements/MedInputText.vue'
+import MedInputButton from '~/components/form/elements/MedInputButton.vue'
+import LogoutService from '~/assets/ts/service/auth/LogoutService'
+
+import config from '~/mediatheque.json'
+
+const userinfoService = container.resolve(UserinfoService)
+const logoutService = container.resolve(LogoutService)
 
 @Component({
-  components: { Group, Loader, FormContainer, MedInputText }
+  components: { Group, Loader, FormContainer, MedInputText, MedInputButton }
 })
 export default class AccountPage extends Vue {
-  passwd: string|null=null
-  passwdRepeat: string|null= null
-  hasError: boolean = true
+  isLoading: boolean = true;
+  error: boolean = false;
+  firstname: string | null = null;
+  lastname: string | null = null;
+  email: string | null = null;
 
-  checkPasswd () {
-    this.hasError = this.passwdRepeat !== null && this.passwd !== this.passwdRepeat
-  }
+  firstnameTextDescriptor = (new TextDescriptor('firstname')).setEditModeOn(false).setLabel('Prénom')
+  lastnameTextDescriptor = (new TextDescriptor('lastname').setEditModeOn(false).setLabel('Nom'));
+  emailTextDescriptor = (new TextDescriptor('email').setEditModeOn(false).setLabel('Email'));
 
-  isValid () {
-    return this.passwdRepeat !== null && !this.hasError
-  }
+  logoutButtonDescriptor = (new ButtonDescriptor('logout', 'Se déconnecter'));
+  manageAccountDescriptor = (new ButtonDescriptor('manageAccount', 'Gérer mon compte'))
+    .setHref(
+      (new ButtonHrefDescriptor(config.auth.account_management_web_ui))
+        .setTarget('_blank')
+    );
 
-  save () {
-    if (this.passwd !== null) {
-      userModule.setPassword(this.passwd)
-    }
-  }
-
-  get userId () {
-    return userModule.user.id
-  }
-
-  get isLoading () {
-    return typeof this.userId !== 'undefined' && this.userId.toString().length === 0
-  }
-
-  get passwdPasswordDescriptor () {
-    return new TextDescriptor('passwd')
-      .setLabel('Mot de passe')
-      .setType(TextDescriptor.typePassword)
-  }
-
-  get passwdRepeatPasswordDescriptor () {
-    return new TextDescriptor('passwdRepeat')
-      .setLabel('Répéter')
-      .setType(TextDescriptor.typePassword)
-  }
-
-  @Watch('passwd')
-  passwdChanged () {
-    this.checkPasswd()
-  }
-
-  @Watch('passwdRepeat')
-  passwdRepeatChanged () {
-    this.checkPasswd()
+  logout () {
+    logoutService.logout()
   }
 
   mounted () {
-    userModule.getLoggedIn()
+    userinfoService.getUserInfos()
+      .then((response) => {
+        const data = response.data
+
+        this.firstname = data.given_name
+        this.lastname = data.family_name
+        this.email = data.email
+      })
+      .catch((error) => {
+        console.error(error)
+        this.error = true
+      })
+      .finally(() => {
+        this.isLoading = false
+      })
   }
 }
 </script>
 
 <style lang="scss">
-.group_change_password{
-  max-width: 420px;
+.group_user_info {
+  max-height: 200px;
+
+  .group_footer .formulate-input {
+    margin-right: 3px;
+  }
 }
 </style>

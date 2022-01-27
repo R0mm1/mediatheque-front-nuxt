@@ -81,5 +81,6 @@ export default {
       '~/assets/scss/breakpoints.scss',
       '~/assets/scss/colors.scss'
     ]
-  }
+  },
+  ssr: false
 }

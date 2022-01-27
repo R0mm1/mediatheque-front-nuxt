@@ -100,10 +100,7 @@ export abstract class BookModule extends VuexModule {
       }
     }
 
-    @Mutation setOwner (owner: UserEntity | string | number | undefined) {
-      if (typeof owner === 'number') {
-        owner = '/api/users/' + owner
-      }
+    @Mutation setOwner (owner: string|undefined) {
       this.book.owner = owner
     }
 

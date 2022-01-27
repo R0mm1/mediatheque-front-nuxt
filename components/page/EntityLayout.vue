@@ -22,9 +22,10 @@
 import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator'
 import Tabs, { TabData } from '~/components/widgets/Tabs.vue'
 import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
+import MedInputButton from "~/components/form/elements/MedInputButton.vue";
 
 @Component({
-  components: { Tabs }
+  components: { Tabs, MedInputButton }
 })
 export default class EntityLayout extends Vue {
   @Prop({ type: Array, required: true }) tabs!: TabData[];

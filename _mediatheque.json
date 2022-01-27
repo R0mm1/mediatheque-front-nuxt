@@ -7,8 +7,13 @@
     }
   },
   "auth": {
-    "client_id": "###CLIENTID###",
-    "client_secret": "###CLIENTSECRET###"
+    "introspection_endpoint": "{{INTROSPECTION_ENDPOINT}}",
+    "userinfo_endpoint": "{{USERINFO_ENDPOINT}}",
+    "authorization_endpoint": "{{AUTHORIZATION_ENDPOINT}}",
+    "token_endpoint": "{{TOKEN_ENDPOINT}}",
+    "end_session_endpoint": "{{END_SESSION_ENDPOINT}}",
+    "account_management_web_ui": "{{ACCOUNT_MANAGEMENT_WEB_UI}}",
+    "client_id": "{{CLIENT_ID}}"
   },
   "default": {
     "page": "/book",
@@ -18,7 +23,6 @@
     }
   },
   "params": {
-    "login_page": "/login",
     "fontawesome_kit_name": ""
   }
 }

@@ -38,12 +38,10 @@ export default class PaperGroupInformation extends Vue {
       return owner.id
     }
     return undefined
-  };
+  }
 
-  set ownerId (ownerId: (string|number|undefined)) {
-    bookPaperModule.setOwner(
-      typeof ownerId === 'string' ? parseInt(ownerId) : ownerId
-    )
+  set ownerId (ownerId: string|undefined) {
+    bookPaperModule.setOwner(ownerId)
   }
 
   get formSelectOwnerDescriptor () {
@@ -58,12 +56,12 @@ export default class PaperGroupInformation extends Vue {
     const request = requestService.createRequest('/users')
     return requestService.execute<any>(request)
       .then((response) => {
-        const users: { [index: number]: string } = {}
+        const users: { [index: string]: string } = {}
         response['hydra:member'].forEach((user: UserEntity) => {
-          if (typeof user.id === 'undefined') {
+          if (typeof user['@id'] === 'undefined') {
             return
           }
-          users[user.id] = user.username ?? ''
+          users[user['@id']] = (user.firstname ?? '') + (user.lastname ?? '')
         })
         return Promise.resolve(users)
       })

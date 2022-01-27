@@ -14,8 +14,11 @@
 import { Vue, Component, Prop } from 'vue-property-decorator'
 import { BookEntity } from '~/assets/ts/entity/module'
 import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
+import MedInputButton from "~/components/form/elements/MedInputButton.vue";
 
-@Component({})
+@Component({
+  components: { MedInputButton }
+})
 export default class BookListRowDetails extends Vue {
   @Prop({ type: Object, required: true }) data!: BookEntity;
 

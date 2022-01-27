@@ -56,9 +56,16 @@ body {
 </style>
 <script>
 import 'reflect-metadata'
+import { container } from 'tsyringe'
+import LoginWorkflowService from 'assets/ts/service/auth/LoginWorkflowService'
 import Header from '~/components/header/Header'
+
+const loginWorkflowService = container.resolve(LoginWorkflowService)
+
 export default {
   components: { Header },
-  layout: 'login'
+  middleware () {
+    loginWorkflowService.start()
+  }
 }
 </script>

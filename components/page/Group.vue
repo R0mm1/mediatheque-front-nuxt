@@ -14,6 +14,10 @@
     <div class="group_content">
       <slot name="group_content" />
     </div>
+
+    <div class="group_footer">
+      <slot name="group_footer" />
+    </div>
   </div>
 </template>
 
@@ -75,6 +79,10 @@ export default {
     .group_content {
         position: relative;
         flex: 1;
+    }
+
+    .group_footer{
+      display: flex;
     }
 </style>
 

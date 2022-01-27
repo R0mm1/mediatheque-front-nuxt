@@ -33,10 +33,11 @@ import MainTab from '~/components/book/paperBook/MainTab.vue'
 import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
 import MedInputButton from '~/components/form/elements/MedInputButton.vue'
 import EntityLayout from '~/components/page/EntityLayout.vue'
-import bookElectronicModule from '~/assets/ts/store/book/BookElectronicModule'
+import HeaderAuthorsList from '~/components/book/elements/HeaderAuthorsList.vue'
+import SocialTab from '~/components/book/paperBook/SocialTab.vue'
 
 @Component({
-  components: { MedInputButton, MainTab, GroupInformation, EntityLayout }
+  components: { MedInputButton, MainTab, GroupInformation, EntityLayout, HeaderAuthorsList, SocialTab }
 })
 export default class PaperBook extends Vue {
   @Prop({ type: Number, required: false }) bookId!: number|null;

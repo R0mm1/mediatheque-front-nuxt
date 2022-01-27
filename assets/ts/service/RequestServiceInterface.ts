@@ -2,8 +2,6 @@ import { Method } from 'axios'
 import Request from '~/assets/ts/objects/Request'
 
 export interface ExecuteOptionsInterface {
-  requestCredentialsIfUnauthorized?: boolean
-  skipAuthentication?: boolean,
   skipCommonUrlBase?: boolean
 }
 

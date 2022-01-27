@@ -1,4 +1,5 @@
 import AbstractDescriptor from '@/assets/ts/form/AbstractDescriptor'
+import ButtonHrefDescriptor from '~/assets/ts/form/ButtonHrefDescriptor'
 
 export type ButtonStyle = 'normal' | 'negative';
 export type ButtonRoundedCorner = Boolean | Number; // Number to specify the value to use in CSS, true to use default value, false to deactivate
@@ -16,6 +17,7 @@ export default class ButtonDescriptor extends AbstractDescriptor {
   customClasses: string[] = [];
   style: ButtonStyle = 'normal';
   noDefaultStyle: boolean = false;
+  href?: ButtonHrefDescriptor = undefined;
 
   constructor (name: string, value?: string, type?: string) {
     super(name)
@@ -44,6 +46,11 @@ export default class ButtonDescriptor extends AbstractDescriptor {
 
   setNoDefaultStyle (noDefaultStyle: boolean) {
     this.noDefaultStyle = noDefaultStyle
+    return this
+  }
+
+  setHref (href: ButtonHrefDescriptor) {
+    this.href = href
     return this
   }
 }
