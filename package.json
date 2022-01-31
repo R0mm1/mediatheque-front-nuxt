@@ -20,7 +20,7 @@
     "chart.js": "^2.9.4",
     "ckeditor4-vue": "^1.2.0",
     "fetch-headers": "^2.0.0",
-    "nuxt": "^2.14.0",
+    "nuxt": "^2.15.8",
     "reflect-metadata": "^0.1.13",
     "tsyringe": "^4.3.0",
     "v-tooltip": "^2.1.1",
