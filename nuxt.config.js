@@ -1,5 +1,3 @@
-import config from './mediatheque.json'
-
 export default {
   /*
   ** Nuxt target
@@ -21,7 +19,7 @@ export default {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
     ],
     script: [
-      { src: 'https://kit.fontawesome.com/' + config.params.fontawesome_kit_name + '.js', crossOrigin: 'anonymous' }
+      { src: 'https://kit.fontawesome.com/' + process.env.FONT_AWESOME_KIT_NAME + '.js', crossOrigin: 'anonymous' }
     ]
   },
   /*
@@ -77,5 +75,29 @@ export default {
       '~/assets/scss/colors.scss'
     ]
   },
-  ssr: false
+  ssr: false,
+  publicRuntimeConfig: {
+    api: {
+      endpoint: process.env.API_ENDPOINT || 'err-missing-api-endpoint',
+      commonUrlBase: '' // todo: remove
+    },
+    auth: {
+      userinfo_endpoint: process.env.USERINFO_ENDPOINT || 'err-missing-userinfo-endpoint',
+      authorization_endpoint: process.env.AUTHORIZATION_ENDPOINT || 'err-missing-authorization-endpoint',
+      token_endpoint: process.env.TOKEN_ENDPOINT || 'err-missing-token-endpoint',
+      end_session_endpoint: process.env.END_SESSION_ENDPOINT || 'err-missing-end-session-endpoint',
+      account_management_web_ui: process.env.ACCOUNT_MANAGEMENT_WEB_UI || 'err-missing-account-management-web-ui',
+      client_id: process.env.CLIENT_ID || 'err-missing-client-id'
+    },
+    default: {
+      page: '/book',
+      notification_settings: {
+        duration: 1500,
+        iconPack: 'fontawesome'
+      }
+    }
+  },
+  privateRuntimeConfig: {
+    fontawesome_kit_name: process.env.FONT_AWESOME_KIT_NAME || 'err-missing-font-awesome-kit-name'
+  }
 }
