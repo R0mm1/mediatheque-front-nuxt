@@ -31,11 +31,11 @@
     "vue-property-decorator": "^9.1.2",
     "vue-stars": "^2.0.0",
     "vuejs-paginate": "^2.1.0",
-    "vuex-module-decorators": "^2.0.0"
+    "vuex-module-decorators": "^2.0.0",
+    "@nuxt/typescript-build": "^2.1.0"
   },
   "devDependencies": {
     "@nuxt/types": "^2.15.8",
-    "@nuxt/typescript-build": "^2.1.0",
     "@nuxtjs/eslint-config": "^8.0.0",
     "@nuxtjs/eslint-config-typescript": "^8.0.0",
     "@nuxtjs/eslint-module": "^3.0.2",
