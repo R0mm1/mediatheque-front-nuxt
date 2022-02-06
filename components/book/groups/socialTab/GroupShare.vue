@@ -1,9 +1,9 @@
 <template>
   <Group>
-    <template v-slot:group_name>
+    <template #group_name>
       Partager le livre
     </template>
-    <template v-slot:group_content>
+    <template #group_content>
       Partagez le livre avec le lien suivant:
       <MedInputTextWithButton v-model="shareLink" :text-with-button-descriptor="shareLinkTextWithButtonDescriptor" />
     </template>

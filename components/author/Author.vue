@@ -17,7 +17,6 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import EntityLayout from '~/components/page/EntityLayout.vue'
 import { TabData } from '~/components/widgets/Tabs.vue'
 import authorModule from '~/assets/ts/store/AuthorModule'
-import config from '~/mediatheque.json'
 import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
 import MainTab from '~/components/author/groups/MainTab.vue'
 
@@ -25,15 +24,15 @@ import MainTab from '~/components/author/groups/MainTab.vue'
   components: { EntityLayout, MainTab }
 })
 export default class Author extends Vue {
-  @Prop({ type: Number, required: true }) authorId!:number|null;
+  @Prop({ type: Number, required: true }) authorId!:number|null
 
-  activeTab: string = 'author';
+  activeTab: string = 'author'
   readonly tabs: TabData[] = [
     {
       id: 'author',
       label: "L'auteur"
     }
-  ];
+  ]
 
   get lastname () {
     return authorModule.author.lastname
@@ -56,7 +55,7 @@ export default class Author extends Vue {
     authorModule.save()
       .then(() => {
         this.$toasted.show("L'auteur a été sauvegardé", {
-          ...config.default.notification_settings,
+          ...this.$config.default.notification_settings,
           type: 'success',
           icon: 'fa-check'
         })

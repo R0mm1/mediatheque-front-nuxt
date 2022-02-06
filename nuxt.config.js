@@ -32,6 +32,7 @@ export default {
   ** https://nuxtjs.org/guide/plugins
   */
   plugins: [
+    '@/plugins/tsyringe',
     '@/plugins/vueFormulate',
     '@/plugins/vuePaginate.client',
     '@/plugins/vueTooltip.client',
@@ -79,7 +80,6 @@ export default {
   publicRuntimeConfig: {
     api: {
       endpoint: process.env.API_ENDPOINT || 'err-missing-api-endpoint',
-      commonUrlBase: '' // todo: remove
     },
     auth: {
       userinfo_endpoint: process.env.USERINFO_ENDPOINT || 'err-missing-userinfo-endpoint',

@@ -3,7 +3,7 @@
     <GroupPicture :book-module="bookModule" />
     <GroupSummary :book-module="bookModule" :edit-mode-on="editModeOn" class="groupSummary" />
     <Column class="third-col">
-      <template v-slot:column_content>
+      <template #column_content>
         <ElectronicGroupInformation :book-store="bookModule" :edit-mode-on="editModeOn" />
         <GroupReferences :book-module="bookModule" @group-wanna-open-book="onGroupWannaOpenBook" />
       </template>
@@ -12,10 +12,10 @@
 </template>
 
 <script>
-import Column from '@/components/page/Column'
 import GroupPicture from '../groups/mainTab/GroupPicture'
 import GroupSummary from '../groups/mainTab/GroupSummary'
 import GroupReferences from '../groups/mainTab/GroupReferences'
+import Column from '@/components/page/Column'
 import ElectronicGroupInformation from '~/components/book/electronicBook/groups/ElectronicGroupInformation'
 
 export default {

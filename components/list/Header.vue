@@ -53,10 +53,10 @@ import listModule from '~/assets/ts/store/ListModule'
   }
 })
 export default class Header extends Vue {
-  @Prop(Boolean) hasRowAction!: Boolean;
+  @Prop(Boolean) hasRowAction!: Boolean
 
-  listDisplayPopup: { [index: string]: boolean } = {};
-  listHasPopupNotice: { [index: string]: boolean } = {};
+  listDisplayPopup: { [index: string]: boolean } = {}
+  listHasPopupNotice: { [index: string]: boolean } = {}
 
   toggleRowTwo (dataField: string) {
     if (typeof this.listDisplayPopup[dataField] === 'undefined') {

@@ -1,9 +1,9 @@
 import MedFile from '~/assets/ts/objects/MedFile'
 
 export default class FilesDescriptor {
-  label: string = '';
-  name: string = '';
-  maxFiles: number | null = null;
+  label: string = ''
+  name: string = ''
+  maxFiles: number | null = null
   downloadAction: null | (() => any) = null
   onFileAdded: ((medFile: MedFile) => any) = () => null
   onFileRemoved: (() => any) = () => null

@@ -36,11 +36,11 @@ import RowAction from '~/assets/ts/list/RowAction'
   }
 })
 export default class Row extends Vue {
-  rowId: any;
+  rowId: any
 
-  @Prop(Object) dataRow: any;
-  @Prop(Array) cols!: Column[];
-  @Prop(Array) rowActions!: RowAction[];
+  @Prop(Object) dataRow: any
+  @Prop(Array) cols!: Column[]
+  @Prop(Array) rowActions!: RowAction[]
 
   get elementId () {
     return 'el' + (this.dataRow.id ? this.dataRow.id : Math.random().toString())
@@ -120,12 +120,12 @@ export default class Row extends Vue {
     this.detailsOpened = false
   }
 
-  openingDetailsTimeout: number | null = null;
+  openingDetailsTimeout: number | null = null
 
-  detailsOpened: boolean = false;
+  detailsOpened: boolean = false
 
-  @Prop({ type: String, default: null }) detailsComponentPath!: string | null;
-  detailsComponent: any = null;
+  @Prop({ type: String, default: null }) detailsComponentPath!: string | null
+  detailsComponent: any = null
 
   get hasDetailsComponent () {
     return this.detailsComponentPath !== null

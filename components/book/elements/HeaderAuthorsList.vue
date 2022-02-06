@@ -18,7 +18,7 @@ import { AuthorEntity } from '../../../assets/ts/entity/AuthorEntity'
 
 @Component({})
 export default class HeaderAuthorsList extends Vue {
-  @Prop({ type: Array, default: [] }) authors!: AuthorEntity[];
+  @Prop({ type: Array, default: [] }) authors!: AuthorEntity[]
 
   goToAuthorPage (authorId: number) {
     this.$router.push({

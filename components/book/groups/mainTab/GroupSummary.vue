@@ -1,11 +1,11 @@
 <template>
   <client-only>
     <Group id="groupBookSummary">
-      <template v-slot:group_name>
+      <template #group_name>
         Résumé
       </template>
 
-      <template v-slot:group_content>
+      <template #group_content>
         <MedWysiwyg
           id="wysiwygSummary"
           name="summary"

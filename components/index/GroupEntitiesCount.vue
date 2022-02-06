@@ -1,9 +1,9 @@
 <template>
   <Group>
-    <template v-slot:group_name>
+    <template #group_name>
       Entités dans la base
     </template>
-    <template v-slot:group_content>
+    <template #group_content>
       <div class="group-ec-books">
         <div class="book-total">
           {{ bookTotal }}
@@ -30,8 +30,6 @@ import anime from 'animejs'
 import Group from '~/components/page/Group.vue'
 import RequestService from '~/assets/ts/service/RequestService'
 
-const requestService = container.resolve(RequestService)
-
 export default {
   name: 'GroupEntitiesCount',
   components: { Group },
@@ -44,6 +42,7 @@ export default {
     }
   },
   mounted () {
+    const requestService = container.resolve(RequestService)
     const request = requestService.createRequest('/stats')
     request.setQueryParams({
       authorsCount: '',

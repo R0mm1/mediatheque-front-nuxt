@@ -1,9 +1,9 @@
 export default class LeftActionBarSeparator {
-    label?: string;
-    faIcon?: string;
+  label?: string
+  faIcon?: string
 
-    constructor (label?: string, faIcon?: string) {
-      this.label = label
-      this.faIcon = faIcon
-    }
+  constructor (label?: string, faIcon?: string) {
+    this.label = label
+    this.faIcon = faIcon
+  }
 }

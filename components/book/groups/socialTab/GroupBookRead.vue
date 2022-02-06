@@ -1,18 +1,18 @@
 <template>
   <Group>
-    <template v-slot:group_name>
+    <template #group_name>
       J'ai lu ce livre
     </template>
-    <template v-slot:group_content>
+    <template #group_content>
       <div id="loader-container">
         <Loader v-if="isNotationLoading" type="s" />
       </div>
       <client-only>
         <vue-stars v-if="!isNotationLoading" v-model="cNote" :max="10">
-          <template v-slot:activeLabel>
+          <template #activeLabel>
             <i class="fas fa-star" />
           </template>
-          <template v-slot:inactiveLabel>
+          <template #inactiveLabel>
             <i class="far fa-star" />
           </template>
         </vue-stars>
@@ -24,8 +24,6 @@
 <script>
 import Group from '@/components/page/Group'
 import Loader from '@/components/widgets/Loader'
-
-const config = require('@/mediatheque')
 
 export default {
   name: 'GroupBookRead',
@@ -51,7 +49,7 @@ export default {
           })
           .catch((error) => {
             this.$toasted.show("Une erreur est survenue lors de l'enregistrement de la note", {
-              ...config.default.notification_settings,
+              ...this.$config.default.notification_settings,
               type: 'error',
               icon: 'fa-times'
             })
@@ -71,7 +69,7 @@ export default {
       })
       .catch((error) => {
         this.$toasted.show('Une erreur est survenue lors du chargement de la note', {
-          ...config.default.notification_settings,
+          ...this.$config.default.notification_settings,
           type: 'error',
           icon: 'fa-times'
         })

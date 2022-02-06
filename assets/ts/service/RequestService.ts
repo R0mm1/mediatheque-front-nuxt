@@ -1,25 +1,29 @@
-import { singleton, autoInjectable, container } from 'tsyringe'
+import { singleton, autoInjectable, inject } from 'tsyringe'
 
 import { AxiosResponse, AxiosError, Method } from 'axios'
 import Request from '~/assets/ts/objects/Request'
-import RequestServiceInterface, { ExecuteOptionsInterface } from '~/assets/ts/service/RequestServiceInterface'
+import RequestServiceInterface from '~/assets/ts/service/RequestServiceInterface'
+import Tokens from '~/assets/ts/config/Public'
+import Api from '~/assets/ts/config/public/Api'
 import LoginWorkflowService from '~/assets/ts/service/auth/LoginWorkflowService'
-
-const config = require('../../../mediatheque.json')
-const loginWorkflowService = container.resolve(LoginWorkflowService)
 
 @autoInjectable()
 @singleton()
 export default class RequestService implements RequestServiceInterface {
-  protected lastResponse?: AxiosResponse;
+  protected lastResponse?: AxiosResponse
+
+  constructor (
+    @inject(Tokens.api) private configApi: Api,
+    private loginWorkflowService: LoginWorkflowService
+  ) {
+  }
 
   createRequest (url: string, method: Method = 'GET') {
     return new Request(url, method)
   }
 
-  execute<ExpectedResponseType> (request: Request, options: ExecuteOptionsInterface = {}): Promise<ExpectedResponseType> {
-    const skipCommonUrlBase = options.skipCommonUrlBase ?? false
-    request.setBaseUrl(config.api.endpoint + (skipCommonUrlBase ? '' : config.api.commonUrlBase))
+  execute<ExpectedResponseType> (request: Request): Promise<ExpectedResponseType> {
+    request.setBaseUrl(this.configApi.endpoint)
 
     request.addHeader('Authorization', 'Bearer ' + window.sessionStorage.getItem('access_token'))
 
@@ -45,7 +49,7 @@ export default class RequestService implements RequestServiceInterface {
       .addHeader('Authorization', 'Bearer ' + window.sessionStorage.getItem('access_token'))
       .removeHeader('Content-Type') // content type will be automatically set with the correct boundary
       .setBody(formData)
-      .setBaseUrl(config.api.endpoint + config.api.commonUrlBase)
+      .setBaseUrl(this.configApi.endpoint)
 
     return request.trigger<any>()
       .then(
@@ -68,7 +72,7 @@ export default class RequestService implements RequestServiceInterface {
 
   private handleFailure<ExpectedResponseType> (error: AxiosError, request: Request) {
     if (error.response?.status === 401 || error.request?.status === 401) {
-      return loginWorkflowService.start()
+      return this.loginWorkflowService.start()
         .then(
           () => {
             // If we get there because the refresh token worked, we try the request again

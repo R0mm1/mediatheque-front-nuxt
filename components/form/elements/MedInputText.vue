@@ -21,11 +21,11 @@ import FormElement from '~/components/form/FormElement.vue'
   components: { FormElement }
 })
 export default class MedInputText extends Vue {
-  @Prop(Object) textDescriptor!: TextDescriptor;
+  @Prop(Object) textDescriptor!: TextDescriptor
 
-  @Prop(String) value?: string;
+  @Prop(String) value?: string
 
-  bindValue?: string = '';
+  bindValue?: string = ''
 
   @Watch('value') updateBindValue (newVal: string) {
     this.bindValue = newVal

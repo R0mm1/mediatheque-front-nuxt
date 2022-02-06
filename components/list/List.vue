@@ -66,23 +66,23 @@ import { HydraCollection } from '~/assets/ts/models/HydraInterfaces'
   }
 })
 export default class List extends Vue {
-  listData: {}[] = [];
-  isPaginationEnabled: boolean = false;
-  paginationTotalPages?: Number;
-  isLoading: boolean = true;
+  listData: {}[] = []
+  isPaginationEnabled: boolean = false
+  paginationTotalPages?: Number
+  isLoading: boolean = true
   requestService: RequestService = container.resolve(RequestService)
 
-  @Prop(Array) cols!: Column[];
-  @Prop(String) apiEndpoint!: string;
+  @Prop(Array) cols!: Column[]
+  @Prop(String) apiEndpoint!: string
 
   @Prop({ type: Object, default: () => new LeftActionBarProperties() })
-  leftActionBarProperties!: LeftActionBarProperties;
+    leftActionBarProperties!: LeftActionBarProperties
 
   @Prop({ type: Array, default: () => [] })
-  rowActions!: RowAction[];
+    rowActions!: RowAction[]
 
   @Prop({ type: String, default: null })
-  detailsComponentPath!: string | null;
+    detailsComponentPath!: string | null
 
   get hasRowAction () {
     return this.rowActions.length > 0

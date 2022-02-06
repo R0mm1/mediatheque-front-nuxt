@@ -8,15 +8,13 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
+import { container } from 'tsyringe'
 import GroupInformation from '@/components/book/groups/mainTab/GroupInformation.vue'
 import MedInputSelect from '@/components/form/elements/MedInputSelect.vue'
 import SelectDescriptor from '@/assets/ts/form/SelectDescriptor'
 import bookPaperModule from '@/assets/ts/store/book/BookPaperModule'
-import { container } from 'tsyringe'
 import { UserEntity } from '~/assets/ts/entity/UserEntity'
 import RequestService from '~/assets/ts/service/RequestService'
-
-const requestService = container.resolve(RequestService)
 
 @Component({
   components: {
@@ -25,9 +23,9 @@ const requestService = container.resolve(RequestService)
   }
 })
 export default class PaperGroupInformation extends Vue {
-  @Prop({ type: Boolean, required: true }) editModeOn!:boolean;
+  @Prop({ type: Boolean, required: true }) editModeOn!:boolean
 
-  bookPaperModule = bookPaperModule;
+  bookPaperModule = bookPaperModule
 
   get ownerId () {
     const owner = bookPaperModule.book.owner
@@ -53,6 +51,7 @@ export default class PaperGroupInformation extends Vue {
   }
 
   getUserListPromise () {
+    const requestService = container.resolve(RequestService)
     const request = requestService.createRequest('/users')
     return requestService.execute<any>(request)
       .then((response) => {

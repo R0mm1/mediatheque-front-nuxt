@@ -1,10 +1,10 @@
 <template>
   <FormElement :name="name" container-custom-classes="form_element_picture">
-    <template v-slot:element_label>
+    <template #element_label>
       <span />
     </template>
 
-    <template v-slot:element_content>
+    <template #element_content>
       <div
         class="picture_preview"
         :style="'background-image: url('+pictureSrc+')'"

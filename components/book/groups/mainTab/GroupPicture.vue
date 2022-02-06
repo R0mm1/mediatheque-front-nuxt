@@ -1,9 +1,9 @@
 <template>
   <Group custom-class="picture">
-    <template v-slot:group_name>
+    <template #group_name>
       Couverture
     </template>
-    <template v-slot:group_content>
+    <template #group_content>
       <InputPicture name="picture" :src="src" @picture-changed="pictureChanged" />
     </template>
   </Group>
@@ -14,8 +14,6 @@ import { container } from 'tsyringe'
 import Group from '@/components/page/Group'
 import InputPicture from '@/components/form/elements/MedInputPicture'
 import RequestService from '@/assets/ts/service/RequestService'
-
-const requestService = container.resolve(RequestService)
 
 export default {
   name: 'GroupPicture',
@@ -73,6 +71,7 @@ export default {
         this.src = setFile(this.cover)
       } else {
         this.downloading = true
+        const requestService = container.resolve(RequestService)
         const request = requestService.createRequest(this.cover).setResponseType('blob')
         this.src = requestService.execute(request, {
           skipCommonUrlBase: true

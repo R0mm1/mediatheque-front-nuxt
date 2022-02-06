@@ -1,10 +1,10 @@
 <template>
   <client-only>
     <Group custom-class="information">
-      <template v-slot:group_name>
+      <template #group_name>
         Informations
       </template>
-      <template v-slot:group_content>
+      <template #group_content>
         <MedInputText v-model="title" :text-descriptor="formInputTextDescriptors.title" />
 
         <MedChips :chips-descriptor="formChipsAuthorsDescriptor" @entity-removed="authorRemoved" @entity-added="authorAdded" />
@@ -38,13 +38,13 @@ import { BookElectronicModule } from '~/assets/ts/store/book/BookElectronicModul
   components: { MedChips, MedInputSelect, MedEntities, MedInputText, Group }
 })
 export default class GroupInformation extends Vue {
-  @Prop({ type: Object, required: true }) bookModule!: BookPaperModule | BookElectronicModule;
-  @Prop({ type: Boolean, required: true }) editModeOn!:boolean;
+  @Prop({ type: Object, required: true }) bookModule!: BookPaperModule | BookElectronicModule
+  @Prop({ type: Boolean, required: true }) editModeOn!:boolean
 
   newAuthor = {
     firstname: undefined,
     lastname: undefined
-  };
+  }
 
   formInputTextDescriptors = {
     title: new TextDescriptor('title').setLabel('Titre').setEditModeOn(this.editModeOn),
@@ -56,7 +56,7 @@ export default class GroupInformation extends Vue {
       firstname: new TextDescriptor('firstname').setLabel('Prénom'),
       lastname: new TextDescriptor('lastname').setLabel('Nom')
     }
-  };
+  }
 
   get title () {
     return this.bookModule.book.title

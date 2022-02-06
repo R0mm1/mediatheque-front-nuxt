@@ -23,7 +23,7 @@ import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
 
 @Component({})
 export default class MedInputButton extends Vue {
-  @Prop(Object) buttonDescriptor!: ButtonDescriptor;
+  @Prop(Object) buttonDescriptor!: ButtonDescriptor
 
   get customClasses () {
     const classes = this.buttonDescriptor.customClasses

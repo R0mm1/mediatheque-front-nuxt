@@ -1,18 +1,18 @@
 <template>
   <EntityLayout v-model="activeTab" :tabs="tabs" @edit-button-pressed="toggleEditMode">
-    <template v-slot:entity-layout-title>
+    <template #entity-layout-title>
       {{ title }}
     </template>
-    <template v-slot:entity-layout-title-note>
+    <template #entity-layout-title-note>
       <HeaderAuthorsList :authors="authors" />
     </template>
-    <template v-slot:entity-layout-content>
+    <template #entity-layout-content>
       <MainTab v-if="activeTab === 'details'" :book-module="bookModule" :edit-mode-on="switchEditModeOn" />
       <div v-if="activeTab === 'social'">
         <SocialTab :book-module="bookModule" />
       </div>
     </template>
-    <template v-slot:entity-layout-footer>
+    <template #entity-layout-footer>
       <MedInputButton
         v-if="isModified"
         :button-descriptor="saveBookButtonDescriptor"
@@ -24,7 +24,6 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import config from '@/mediatheque.json'
 import { TabData } from '~/components/widgets/Tabs.vue'
 
 import bookPaperModule from '~/assets/ts/store/book/BookPaperModule'
@@ -40,13 +39,13 @@ import SocialTab from '~/components/book/paperBook/SocialTab.vue'
   components: { MedInputButton, MainTab, GroupInformation, EntityLayout, HeaderAuthorsList, SocialTab }
 })
 export default class PaperBook extends Vue {
-  @Prop({ type: Number, required: false }) bookId!: number|null;
-  @Prop({ type: Boolean, required: false, default: false }) editModeOn!:boolean;
+  @Prop({ type: Number, required: false }) bookId!: number|null
+  @Prop({ type: Boolean, required: false, default: false }) editModeOn!:boolean
 
-  switchEditModeOn: boolean = false;
-  loaded: boolean = false;
-  activeTab: string = 'details';
-  bookModule = bookPaperModule;
+  switchEditModeOn: boolean = false
+  loaded: boolean = false
+  activeTab: string = 'details'
+  bookModule = bookPaperModule
 
   readonly tabs: TabData[] = [
     {
@@ -58,7 +57,7 @@ export default class PaperBook extends Vue {
       label: 'Social',
       disable: true
     }
-  ];
+  ]
 
   get title () {
     return bookPaperModule.book?.title
@@ -96,7 +95,7 @@ export default class PaperBook extends Vue {
     bookPaperModule.save(false)
       .then(() => {
         this.$toasted.show('Le livre a été sauvegardé', {
-          ...config.default.notification_settings,
+          ...this.$config.default.notification_settings,
           type: 'success',
           icon: 'fa-check'
         })

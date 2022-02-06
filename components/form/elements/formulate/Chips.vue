@@ -48,10 +48,10 @@
 
           <div v-if="isFormCreationDisplayed" class="creation_container">
             <FormContainer :validate-action="formCreationSubmit" :cancel-action="closeFormCreation">
-              <template v-slot:form_title>
+              <template #form_title>
                 {{ formCreationTitle }}
               </template>
-              <template v-slot:form_body>
+              <template #form_body>
                 <FormulateForm v-model="formCreationData" :schema="formCreationSchema" />
                 <slot name="form_creation_body" />
               </template>
@@ -65,9 +65,9 @@
 
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator'
+import { container } from 'tsyringe'
 import ClickOutside from 'vue-click-outside'
 import RequestService from '@/assets/ts/service/RequestService'
-import { container } from 'tsyringe'
 import MedInputText from '~/components/form/elements/MedInputText.vue'
 import MedInputButton from '~/components/form/elements/MedInputButton.vue'
 import TextDescriptor from '~/assets/ts/form/TextDescriptor'
@@ -75,22 +75,20 @@ import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
 import Loader from '~/components/widgets/Loader.vue'
 import FormContainer from '~/components/form/FormContainer.vue'
 
-const requestService = container.resolve(RequestService)
-
 @Component({
   components: { FormContainer, Loader, MedInputButton, MedInputText },
   directives: { 'click-outside': ClickOutside }
 })
 export default class Chips extends Vue {
-  @Prop({ type: Object, required: true }) context!: any;
+  @Prop({ type: Object, required: true }) context!: any
 
-  @Prop({ type: Array, required: true }) entities!:any[];
+  @Prop({ type: Array, required: true }) entities!:any[]
 
-  @Prop({ type: Array, required: true }) entityFields!:string[];
+  @Prop({ type: Array, required: true }) entityFields!:string[]
 
-  @Prop({ type: String, required: false, default: ' ' }) fieldsSeparator!:string;
+  @Prop({ type: String, required: false, default: ' ' }) fieldsSeparator!:string
 
-  @Prop({ type: Boolean, required: false, default: true }) editModeOn!:boolean;
+  @Prop({ type: Boolean, required: false, default: true }) editModeOn!:boolean
 
   getEntityLabel (entity: any) {
     const elements:any[] = []
@@ -104,12 +102,12 @@ export default class Chips extends Vue {
 
   // --- Stuff for creation of a new entity --- //
 
-  isFormCreationDisplayed= false;
-  formCreationData: {[index: string]: any} = {};
+  isFormCreationDisplayed = false
+  formCreationData: {[index: string]: any} = {}
 
-  @Prop({ type: Function, required: false, default: null })formCreationValidationAction!:null|((formCreationData:any)=>Promise<any>);
-  @Prop({ type: String, required: false, default: '' })formCreationTitle!:string;
-  @Prop({ type: Array, required: false, default: () => [] })formCreationSchema!:any[];
+  @Prop({ type: Function, required: false, default: null })formCreationValidationAction!:null|((formCreationData:any)=>Promise<any>)
+  @Prop({ type: String, required: false, default: '' })formCreationTitle!:string
+  @Prop({ type: Array, required: false, default: () => [] })formCreationSchema!:any[]
 
   get isCreationAvailable () {
     return (typeof this.formCreationValidationAction === 'function')
@@ -151,14 +149,14 @@ export default class Chips extends Vue {
 
   // --- Search existing entity and add it --- //
 
-  @Prop({ type: String, required: true }) searchFieldPlaceholder!:string;
-  @Prop({ type: String, required: true }) searchParam!:string;
-  @Prop({ type: String, required: true }) entityURI!:string;
+  @Prop({ type: String, required: true }) searchFieldPlaceholder!:string
+  @Prop({ type: String, required: true }) searchParam!:string
+  @Prop({ type: String, required: true }) entityURI!:string
 
-  searching= false;
-  searchString: string = '';
-  isProposalsDisplayed= false;
-  proposals= {};
+  searching = false
+  searchString: string = ''
+  isProposalsDisplayed = false
+  proposals = {}
 
   get searchFieldDescriptor () {
     return new TextDescriptor('searchValue').setPlaceholder(this.searchFieldPlaceholder)
@@ -174,6 +172,8 @@ export default class Chips extends Vue {
       this.searching = true
       const data: {[index: string]: string} = {}
       data[this.searchParam] = newVal
+
+      const requestService = container.resolve(RequestService)
 
       const request = requestService.createRequest(this.entityURI)
         .setQueryParams(data)

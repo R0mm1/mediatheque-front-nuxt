@@ -1,8 +1,8 @@
 export default class MedFile {
-  file: false | File | string = false;
-  name: string = '';
-  id: string|null = null;
-  isNew: boolean = false;
+  file: false | File | string = false
+  name: string = ''
+  id: string|null = null
+  isNew: boolean = false
 
   setFile (file: File|string) {
     this.file = file

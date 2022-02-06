@@ -18,11 +18,11 @@ import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
   components: { MedInputButton }
 })
 export default class CustomAction extends Vue {
-  @Prop(Object) rowAction!: RowAction;
-  @Prop(Object) rowData!: object;
+  @Prop(Object) rowAction!: RowAction
+  @Prop(Object) rowData!: object
 
-  clickCounter: number = 0;
-  confirmDisplayed: boolean = false;
+  clickCounter: number = 0
+  confirmDisplayed: boolean = false
 
   get buttonDescriptor (): ButtonDescriptor {
     return new ButtonDescriptor(this.rowAction.id, this.rowAction.label, 'button').setFaIcon(this.rowAction.iconClassname)

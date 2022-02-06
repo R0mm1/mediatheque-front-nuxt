@@ -5,7 +5,7 @@
     container-custom-classes="form_element_entities"
     label-custom-classes="entities_label"
   >
-    <template v-slot:element_content>
+    <template #element_content>
       <div v-for="(entity, index) in entitiesDescriptor.entities" :key="entity.id" class="entity">
         <div class="entity_label">
           {{ getEntityLabel(entity) }}
@@ -55,10 +55,10 @@
 
             <div v-if="isFormCreationDisplayed" class="creation_container">
               <FormContainer :validate-action="formCreationSubmited" :cancel-action="closeFormCreation">
-                <template v-slot:form_title>
+                <template #form_title>
                   {{ entitiesDescriptor.formCreationTitle }}
                 </template>
-                <template v-slot:form_body>
+                <template #form_body>
                   <slot name="form_creation_body" />
                 </template>
               </FormContainer>
@@ -71,10 +71,10 @@
 </template>
 
 <script lang="ts">
-import ClickOutside from 'vue-click-outside'
 
 import { container } from 'tsyringe'
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import ClickOutside from 'vue-click-outside'
 import EntitiesDescriptor from '@/assets/ts/form/EntitiesDescriptor'
 import MedInputText from '@/components/form/elements/MedInputText.vue'
 import RequestService from '@/assets/ts/service/RequestService'
@@ -84,21 +84,19 @@ import TextDescriptor from '@/assets/ts/form/TextDescriptor'
 import MedInputButton from '@/components/form/elements/MedInputButton.vue'
 import FormContainer from '@/components/form/FormContainer.vue'
 
-const requestService = container.resolve(RequestService)
-
 @Component({
   components: { FormContainer, MedInputButton, MedInputText, Loader },
   directives: { 'click-outside': ClickOutside }
 })
 export default class MedEntities extends Vue {
-  @Prop({ type: Object, required: true }) entitiesDescriptor!:EntitiesDescriptor;
+  @Prop({ type: Object, required: true }) entitiesDescriptor!:EntitiesDescriptor
 
-  proposals= {};
-  isProposalsDisplayed= false;
-  isFormCreationDisplayed= false;
-  searchString= '';
-  searching= false;
-  entities = [];
+  proposals = {}
+  isProposalsDisplayed = false
+  isFormCreationDisplayed = false
+  searchString = ''
+  searching = false
+  entities = []
 
   get countProposals () {
     return Object.keys(this.proposals).length
@@ -136,6 +134,7 @@ export default class MedEntities extends Vue {
       this.searching = true
       const data: {[index: string]: string} = {}
       data[this.entitiesDescriptor.searchParam] = newVal
+      const requestService = container.resolve(RequestService)
 
       const request = requestService.createRequest(this.entitiesDescriptor.entityURI)
         .setQueryParams(data)

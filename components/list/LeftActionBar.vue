@@ -48,7 +48,7 @@ import MedInputButton from '~/components/form/elements/MedInputButton.vue'
   components: { MedInputSelect, MedInputButton }
 })
 export default class LeftActionBar extends Vue {
-  @Prop(Object) leftActionBarProperties!: LeftActionBarProperties;
+  @Prop(Object) leftActionBarProperties!: LeftActionBarProperties
 
   get labElements () {
     const elements = []
@@ -90,7 +90,7 @@ export default class LeftActionBar extends Vue {
 
   // This boolean will be used to prevent the watcher to update the forms elements after the filters have been updated
   // if the modification is coming from those same forms elements
-  preventAutoFilterUpdate: boolean = false;
+  preventAutoFilterUpdate: boolean = false
 
   get customFilters () {
     return listModule._customFilters

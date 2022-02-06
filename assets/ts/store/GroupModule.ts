@@ -6,21 +6,19 @@ import { BookEntity } from '~/assets/ts/entity/module'
 import EntityService from '~/assets/ts/service/EntityService'
 import RequestService from '~/assets/ts/service/RequestService'
 
-const requestService = container.resolve(RequestService)
-
 @Module({ dynamic: true, name: 'group', store, namespaced: true })
 class GroupModule extends VuexModule {
-    private baseGroup = {
-      books: []
-    };
+  private baseGroup = {
+    books: []
+  }
 
-    private entityService = new EntityService();
+  private entityService = new EntityService()
 
-    group: GroupEntity = { ...this.baseGroup };
+  group: GroupEntity = { ...this.baseGroup }
 
     @Mutation setComment (comment: string) {
-      this.group.comment = comment
-    }
+    this.group.comment = comment
+  }
 
     @Mutation addBook (bookIRI: string) {
       this.group.books.push(bookIRI)
@@ -35,6 +33,7 @@ class GroupModule extends VuexModule {
     }
 
     @Action({ rawError: true }) list (queryArgs: { [index: string]: { [index: string]: string } | string }) {
+      const requestService = container.resolve(RequestService)
       const request = requestService.createRequest('/reference_groups')
         .setQueryParams(queryArgs)
 
@@ -42,6 +41,7 @@ class GroupModule extends VuexModule {
     }
 
     @Action save () {
+      const requestService = container.resolve(RequestService)
       const group = JSON.parse(JSON.stringify(this.group))
 
       const method = typeof group.id !== 'undefined' ? 'PUT' : 'POST'

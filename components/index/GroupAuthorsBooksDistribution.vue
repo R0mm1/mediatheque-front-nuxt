@@ -1,9 +1,9 @@
 <template>
   <Group>
-    <template v-slot:group_name>
+    <template #group_name>
       Top 10 des auteurs dans la base
     </template>
-    <template v-slot:group_content>
+    <template #group_content>
       <div class="group-abd-pie-container">
         <div class="group-abd-pie-title">
           Les auteurs les plus présents dans la base, par nombre de livres
@@ -19,8 +19,6 @@ import { container } from 'tsyringe'
 import Group from '~/components/page/Group.vue'
 import VerticalBar from '~/components/widgets/charts/VerticalBar.vue'
 import RequestService from '~/assets/ts/service/RequestService'
-
-const requestService = container.resolve(RequestService)
 
 export default {
   name: 'GroupAuthorsBooksDistribution',
@@ -42,6 +40,7 @@ export default {
     }
   },
   mounted () {
+    const requestService = container.resolve(RequestService)
     const request = requestService.createRequest('/stats')
     request.setQueryParams({
       authorsBooksDistribution: ''

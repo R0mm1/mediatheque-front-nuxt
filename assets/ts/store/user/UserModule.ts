@@ -5,27 +5,27 @@ import EntityModuleInterface from '~/assets/ts/store/EntityModuleInterface'
 import { UserEntity } from '~/assets/ts/entity/UserEntity'
 import RequestService from '~/assets/ts/service/RequestService'
 
-const requestService = container.resolve(RequestService)
-
 @Module({ dynamic: true, name: 'author', store, namespaced: true })
 class UserModule extends VuexModule implements EntityModuleInterface<UserEntity> {
-    protected baseUrl: string = '/users';
-    protected baseUser: UserEntity = {};
+  protected baseUrl: string = '/users'
+  protected baseUser: UserEntity = {}
 
-    user: UserEntity = this.baseUser;
+  user: UserEntity = this.baseUser
 
     @Action({ rawError: true }) get (id: number): Promise<UserEntity | undefined> {
-      const request = requestService.createRequest(this.baseUrl + '/' + id)
-      return requestService.execute<any>(request)
-        .then((result) => {
-          this.set(result)
-          return Promise.resolve(result)
-        })
-    }
+    const requestService = container.resolve(RequestService)
+    const request = requestService.createRequest(this.baseUrl + '/' + id)
+    return requestService.execute<any>(request)
+      .then((result) => {
+        this.set(result)
+        return Promise.resolve(result)
+      })
+  }
 
     @Action save (): Promise<boolean | UserEntity> {
       const method = typeof this.user.id === 'undefined' ? 'POST' : 'PUT'
       const url = this.baseUrl + (method === 'PUT' ? '/' + this.user.id : '')
+      const requestService = container.resolve(RequestService)
       const request = requestService.createRequest(url, method)
         .setBody(this.user)
         .addHeader('Content-Type', 'application/json')
@@ -42,6 +42,7 @@ class UserModule extends VuexModule implements EntityModuleInterface<UserEntity>
     }
 
     @Action({ rawError: true }) getLoggedIn (): Promise<UserEntity | undefined> {
+      const requestService = container.resolve(RequestService)
       const request = requestService.createRequest(this.baseUrl + '/loggedIn')
       return requestService.execute<any>(request)
         .then((result) => {
@@ -51,6 +52,7 @@ class UserModule extends VuexModule implements EntityModuleInterface<UserEntity>
     }
 
     @Action({ rawError: true }) setPassword (newPassword: string) {
+      const requestService = container.resolve(RequestService)
       const request = requestService.createRequest(this.baseUrl + '/' + this.user.id, 'PUT')
         .setBody({
           plainPassword: newPassword

@@ -1,6 +1,6 @@
+import { AuthorEntity, FileEntity, UserEntity } from './module'
 import { GroupEntity } from '@/assets/ts/entity/GroupEntity'
 import { Entity } from '@/assets/ts/entity/Entity'
-import { AuthorEntity, FileEntity, UserEntity } from './module'
 
 export interface BookEntity extends Entity {
 

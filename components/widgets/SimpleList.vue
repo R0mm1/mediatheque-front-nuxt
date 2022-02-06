@@ -16,21 +16,21 @@
 </template>
 
 <script lang="ts">
-import MedInputButton from '@/components/form/elements/MedInputButton.vue'
 import { Component, Prop, Vue } from 'vue-property-decorator'
+import MedInputButton from '@/components/form/elements/MedInputButton.vue'
 import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
 
 @Component({
   components: { MedInputButton }
 })
 export default class SimpleList extends Vue {
-  @Prop({ type: Array, default: () => [] }) elements!:Element<any>[];
-  @Prop({ type: Array, default: () => [] }) actions!:Action[];
+  @Prop({ type: Array, default: () => [] }) elements!:Element<any>[]
+  @Prop({ type: Array, default: () => [] }) actions!:Action[]
 }
 
 export class Action {
-  buttonDescriptor: ButtonDescriptor;
-  action: ((...args: any[])=>any);
+  buttonDescriptor: ButtonDescriptor
+  action: ((...args: any[])=>any)
 
   constructor (buttonDescriptor: ButtonDescriptor, action: ((...args: any[])=>any)) {
     this.buttonDescriptor = buttonDescriptor
@@ -41,9 +41,9 @@ export class Action {
 }
 
 export class Element<ExtraType> {
-  id:string;
-  content: string;
-  extra: ExtraType;
+  id:string
+  content: string
+  extra: ExtraType
   constructor (id: string, content: string, extra: ExtraType) {
     this.id = id
     this.content = content

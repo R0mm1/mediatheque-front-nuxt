@@ -2,10 +2,10 @@ import TextDescriptor from '~/assets/ts/form/TextDescriptor'
 import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
 
 export default class TextWithButtonDescriptor {
-  textDescriptor: TextDescriptor;
-  buttonDescriptor?:ButtonDescriptor;
+  textDescriptor: TextDescriptor
+  buttonDescriptor?:ButtonDescriptor
 
-  withCopyContentButton: boolean = false;
+  withCopyContentButton: boolean = false
 
   constructor (textDescriptor: TextDescriptor) {
     this.textDescriptor = textDescriptor

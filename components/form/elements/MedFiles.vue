@@ -20,8 +20,8 @@ import FilesDescriptor from '@/assets/ts/form/FilesDescriptor'
 
 @Component({})
 export default class MedFiles extends Vue {
-  @Prop({ type: Object, required: true }) filesDescriptor!: FilesDescriptor;
-  @Prop({ type: Array, required: true }) files!: File[];
+  @Prop({ type: Object, required: true }) filesDescriptor!: FilesDescriptor
+  @Prop({ type: Array, required: true }) files!: File[]
 }
 </script>
 

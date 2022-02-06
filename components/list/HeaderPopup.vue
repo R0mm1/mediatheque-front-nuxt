@@ -27,12 +27,12 @@ import listModule from '~/assets/ts/store/ListModule'
   components: { MedInputTextWithButton, MedInputButton, MedInputText }
 })
 export default class HeaderPopup extends Vue {
-  @Prop(Object) column!: Column;
-  @Prop({ type: Boolean, default: false }) isDisplayed!: boolean;
+  @Prop(Object) column!: Column
+  @Prop({ type: Boolean, default: false }) isDisplayed!: boolean
 
-  textWithButtonDescriptor!: TextWithButtonDescriptor;
+  textWithButtonDescriptor!: TextWithButtonDescriptor
 
-  searchString: string = '';
+  searchString: string = ''
 
   @Emit('list-header-search')
   search () {

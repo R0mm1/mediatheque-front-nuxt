@@ -1,6 +1,6 @@
 <template>
   <Group custom-class="references">
-    <template v-slot:group_name>
+    <template #group_name>
       Groupes
     </template>
 
@@ -8,7 +8,7 @@
       <MedInputButton :button-descriptor="displayFormDataButtonDescriptor" @click.native="toggleDisplayFormData" />
     </template>
 
-    <template v-slot:group_content>
+    <template #group_content>
       <Accordion :blocs="blocs">
         <SimpleList
           v-for="bloc in blocs"
@@ -21,16 +21,16 @@
 
       <div v-if="groupFormDisplayed" class="group_manage">
         <FormContainer :validate-action="validateGroupLinking">
-          <template v-slot:form_title>
+          <template #form_title>
             Ajouter à un groupe existant
           </template>
-          <template v-slot:form_body>
+          <template #form_body>
             <MedInputSelect
               v-model="addToExistingGroup"
               :select-descriptor="existingGroupsSelectDescriptor"
             />
           </template>
-          <template v-slot:action_cancel>
+          <template #action_cancel>
             <span />
           </template>
         </FormContainer>
@@ -40,10 +40,10 @@
           :validate-action="validateGroupCreation"
           :cancel-action="toggleDisplayFormData"
         >
-          <template v-slot:form_title>
+          <template #form_title>
             Créer un nouveau groupe
           </template>
-          <template v-slot:form_body>
+          <template #form_body>
             <MedInputText v-model="newGroupComment" :text-descriptor="commentInputTextDescriptor" />
           </template>
         </FormContainer>

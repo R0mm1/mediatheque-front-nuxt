@@ -11,5 +11,8 @@ module.exports = {
   plugins: [
   ],
   // add your custom rules here
-  rules: {}
+  rules: {
+    'no-useless-constructor': 'off',
+    '@typescript-eslint/no-useless-constructor': ['error']
+  }
 }

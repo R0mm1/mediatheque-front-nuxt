@@ -1,15 +1,15 @@
 import AbstractDescriptor from '~/assets/ts/form/AbstractDescriptor'
 
 export default class TextDescriptor extends AbstractDescriptor {
-  static readonly typeText = 'text';
-  static readonly typePassword = 'password';
+  static readonly typeText = 'text'
+  static readonly typePassword = 'password'
 
-  placeholder: string = '';
-  disabled: boolean = false;
-  noDefaultStyle: boolean = false;
-  withCopyContentButton: boolean = false;
-  type: ('text'|'password') = TextDescriptor.typeText;
-  editModeOn: boolean = true;
+  placeholder: string = ''
+  disabled: boolean = false
+  noDefaultStyle: boolean = false
+  withCopyContentButton: boolean = false
+  type: ('text'|'password') = TextDescriptor.typeText
+  editModeOn: boolean = true
 
   // eslint-disable-next-line no-useless-constructor
   public constructor (name: string) {

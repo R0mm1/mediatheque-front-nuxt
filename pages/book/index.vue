@@ -31,9 +31,6 @@ import BookStoreService from 'assets/ts/service/BookStoreService'
 import LeftActionBarSeparatorDescriptor from 'assets/ts/list/LeftActionBarSeparatorDescriptor'
 import List from '~/components/list/List'
 
-const requestService = container.resolve(RequestService)
-const config = require('../../mediatheque.json')
-
 export default {
   name: 'Book',
   components: {
@@ -112,12 +109,13 @@ export default {
     const bookId = (urlParts.length > 1) ? urlParts[1] : null
 
     if (bookId !== null) {
+      const requestService = container.resolve(RequestService)
       const request = requestService.createRequest('/books/' + bookId)
       requestService.execute(request)
         .then(book => this.setBook(book))
         .catch((error) => {
           this.$toasted.show("L'identifiant " + bookId + ' ne correspond à aucun livre', {
-            ...config.default.notification_settings,
+            ...this.$config.default.notification_settings,
             type: 'error',
             icon: 'fa-times'
           })
@@ -156,7 +154,7 @@ export default {
           })
             .catch((error) => {
               this.$toasted.show(error, {
-                ...config.default.notification_settings,
+                ...this.$config.default.notification_settings,
                 type: 'error',
                 icon: 'fa-times'
               })

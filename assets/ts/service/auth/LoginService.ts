@@ -1,11 +1,15 @@
-import { autoInjectable, singleton } from 'tsyringe'
+import { autoInjectable, inject, singleton } from 'tsyringe'
 import axios from 'axios'
-
-const config = require('../../../../mediatheque.json')
+import Tokens from '~/assets/ts/config/Public'
+import Auth from '~/assets/ts/config/public/Auth'
+import Default from '~/assets/ts/config/public/Default'
 
 @autoInjectable()
 @singleton()
 export default class LoginService {
+  constructor (@inject(Tokens.auth) private configAuth: Auth, @inject(Tokens.default) private configDefault: Default) {
+  }
+
   login () {
     if (window.sessionStorage.getItem('code_verifier') === null) {
       // The code exchange step hasn't been played yet
@@ -29,12 +33,12 @@ export default class LoginService {
 
         const args = new URLSearchParams({
           response_type: 'code',
-          client_id: config.auth.client_id,
+          client_id: this.configAuth.client_id,
           code_challenge_method: 'S256',
           code_challenge: codeChallenge,
           redirect_uri: redirectUri
         })
-        window.location.href = config.auth.authorization_endpoint + '/?' + args
+        window.location.href = this.configAuth.authorization_endpoint + '/?' + args
       })
       .catch((error) => {
         console.error(error)
@@ -57,9 +61,9 @@ export default class LoginService {
     }
 
     return axios.post(
-      config.auth.token_endpoint,
+      this.configAuth.token_endpoint,
       (new URLSearchParams({
-        client_id: config.auth.client_id,
+        client_id: this.configAuth.client_id,
         code_verifier: codeVerifier,
         grant_type: 'authorization_code',
         redirect_uri: location.href.replace(location.search, ''),
@@ -78,7 +82,7 @@ export default class LoginService {
         if (authenticationRedirect !== null) {
           window.location.href = authenticationRedirect
         } else {
-          window.location.href = location.protocol + '//' + location.host + config.default.page
+          window.location.href = location.protocol + '//' + location.host + this.configDefault.page
         }
       })
       .finally(() => window.sessionStorage.removeItem('code_verifier'))

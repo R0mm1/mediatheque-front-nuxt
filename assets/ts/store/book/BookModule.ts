@@ -16,39 +16,38 @@ import HistoryService from '~/assets/ts/service/HistoryService'
 import RequestService from '~/assets/ts/service/RequestService'
 
 export abstract class BookModule extends VuexModule {
-    static EVENT_BOOK_SAVED = 'book-saved';
+  static EVENT_BOOK_SAVED = 'book-saved'
 
-    static baseUrl: string = '/books';
+  static baseUrl: string = '/books'
 
-    protected bookService: BookService = new BookService();
+  protected bookService: BookService = new BookService()
 
-    protected eventService: EventService = EventService.getService();
+  protected eventService: EventService = EventService.getService()
 
-    protected requestService = container.resolve(RequestService);
+  historyService: HistoryService = new HistoryService()
 
-    historyService: HistoryService = new HistoryService();
+  book: BookEntity = this.bookService.getBaseBook()
 
-    book: BookEntity = this.bookService.getBaseBook();
+  tempNewCover: File | null = null // Can't use undefined instead of null otherwise the attribute won't appear on the state
 
-    tempNewCover: File | null = null; // Can't use undefined instead of null otherwise the attribute won't appear on the state
+  // The notation given to the book by the user
+  notation: BookNotationEntity | null = null
 
-    // The notation given to the book by the user
-    notation: BookNotationEntity | null = null;
+  flagService: FlagService<EntityModuleFlagInterface> = new FlagService({
+    isModified: false,
+    readyToSave: true
+  })
 
-    flagService: FlagService<EntityModuleFlagInterface> = new FlagService({
-      isModified: false,
-      readyToSave: true
-    });
+  protected getBase<HydraItemType> (id: number, baseUrl: string): Promise<HydraItemType> {
+    const requestService = container.resolve(RequestService)
+    const request = requestService.createRequest(baseUrl + '/' + id)
 
-    protected getBase<HydraItemType> (id: number, baseUrl: string): Promise<HydraItemType> {
-      const request = this.requestService.createRequest(baseUrl + '/' + id)
-
-      return this.requestService.execute<HydraItemType>(request)
-    }
+    return requestService.execute<HydraItemType>(request)
+  }
 
     @Mutation init (): void {
-      this.notation = null
-    }
+    this.notation = null
+  }
 
     @Mutation setHistoryService (historyService: HistoryService) {
       this.historyService = historyService
@@ -128,11 +127,12 @@ export abstract class BookModule extends VuexModule {
 
     @Action({ rawError: true })
     linkNewCover (file: { file: File, name: string }) {
+      const requestService = container.resolve(RequestService)
       this.context.commit('setTempNewCover', file.file)
 
       this.flagService.flags.readyToSave = false
 
-      return this.requestService.sendFile(file.file, '/book/covers')
+      return requestService.sendFile(file.file, '/book/covers')
         .then((response: Response) => {
           this.context.commit('setCover', response)
           this.flagService.flags.readyToSave = true
@@ -146,6 +146,7 @@ export abstract class BookModule extends VuexModule {
 
     @Action({ rawError: true })
     getNotation () {
+      const requestService = container.resolve(RequestService)
       if (this.notation !== null) {
         return Promise.resolve(this.notation)
       }
@@ -154,12 +155,12 @@ export abstract class BookModule extends VuexModule {
         return
       }
 
-      const request = this.requestService.createRequest('/book_notations')
+      const request = requestService.createRequest('/book_notations')
         .setQueryParams({
           'book.id': this.book.id
         })
 
-      return this.requestService.execute<any>(request)
+      return requestService.execute<any>(request)
         .then((response) => {
           if (response['hydra:member'].length > 0) {
             this.context.commit('setNotation', response['hydra:member'].pop())
@@ -172,6 +173,7 @@ export abstract class BookModule extends VuexModule {
 
     @Action({ rawError: true })
     updateNote (note: Number) {
+      const requestService = container.resolve(RequestService)
       const requestBody: BookNotationEntity = {}
       let url = '/book_notations'
       let method:Method = 'POST'
@@ -185,10 +187,10 @@ export abstract class BookModule extends VuexModule {
         url += '/' + this.notation.id
       }
 
-      const request = this.requestService.createRequest(url, method)
+      const request = requestService.createRequest(url, method)
         .setBody(requestBody)
         .addHeader('Content-Type', 'application/json')
-      return this.requestService.execute(request)
+      return requestService.execute(request)
         .then((response) => {
           this.context.commit('setNotation', response)
           return Promise.resolve(response)
@@ -197,11 +199,12 @@ export abstract class BookModule extends VuexModule {
 
     @Action({ rawError: true })
     deleteBook () {
+      const requestService = container.resolve(RequestService)
       if (typeof this.book.id === 'undefined') {
         return Promise.reject(new Error('There is no existing loaded book'))
       }
 
-      const request = this.requestService.createRequest('/books/' + this.book.id, 'DELETE')
-      return this.requestService.execute(request)
+      const request = requestService.createRequest('/books/' + this.book.id, 'DELETE')
+      return requestService.execute(request)
     }
 }

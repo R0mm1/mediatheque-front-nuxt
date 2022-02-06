@@ -21,9 +21,9 @@ import MedFiles from '~/components/form/elements/MedFiles.vue'
   }
 })
 export default class PaperGroupInformation extends Vue {
-  @Prop({ type: Boolean, required: true }) editModeOn!:boolean;
+  @Prop({ type: Boolean, required: true }) editModeOn!:boolean
 
-  bookElectronicModule = bookElectronicModule;
+  bookElectronicModule = bookElectronicModule
 
   get filesDescriptor () {
     return new FilesDescriptor()

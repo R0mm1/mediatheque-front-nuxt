@@ -8,11 +8,11 @@ import { container } from 'tsyringe'
 
 import LoginService from '~/assets/ts/service/auth/LoginService'
 
-const loginService = container.resolve(LoginService)
 
 export default Vue.extend({
   layout: 'login',
   created () {
+    const loginService = container.resolve(LoginService)
     loginService.login()
   }
 })

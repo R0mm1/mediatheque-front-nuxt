@@ -31,11 +31,11 @@ import TextWithButtonDescriptor from '~/assets/ts/form/TextWithButtonDescriptor'
   components: { MedInputButton, MedInputText }
 })
 export default class MedInputTextWithButton extends Vue {
-  @Prop({ type: Object, required: true }) textWithButtonDescriptor!: TextWithButtonDescriptor;
+  @Prop({ type: Object, required: true }) textWithButtonDescriptor!: TextWithButtonDescriptor
 
-  @Prop(String) value?: string;
+  @Prop(String) value?: string
 
-  bindValue?: string = '';
+  bindValue?: string = ''
 
   copyContentTooltipConfig = {
     content: 'Copié!',

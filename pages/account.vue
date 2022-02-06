@@ -29,7 +29,7 @@
 
 import { container } from 'tsyringe'
 import { Component, Vue } from 'vue-property-decorator'
-import UserinfoService from '~/assets/ts/service/auth/UserinfoService'
+// import UserinfoService from '~/assets/ts/service/auth/UserinfoService'
 // import userModule from '~/assets/ts/store/user/UserModule'
 import TextDescriptor from '~/assets/ts/form/TextDescriptor'
 import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
@@ -40,39 +40,35 @@ import FormContainer from '~/components/form/FormContainer.vue'
 import MedInputText from '~/components/form/elements/MedInputText.vue'
 import MedInputButton from '~/components/form/elements/MedInputButton.vue'
 import LogoutService from '~/assets/ts/service/auth/LogoutService'
-
-import config from '~/mediatheque.json'
-
-const userinfoService = container.resolve(UserinfoService)
-const logoutService = container.resolve(LogoutService)
+import UserinfoService from '~/assets/ts/service/auth/UserinfoService'
 
 @Component({
   components: { Group, Loader, FormContainer, MedInputText, MedInputButton }
 })
 export default class AccountPage extends Vue {
-  isLoading: boolean = true;
-  error: boolean = false;
-  firstname: string | null = null;
-  lastname: string | null = null;
-  email: string | null = null;
+  isLoading: boolean = true
+  error: boolean = false
+  firstname: string | null = null
+  lastname: string | null = null
+  email: string | null = null
 
   firstnameTextDescriptor = (new TextDescriptor('firstname')).setEditModeOn(false).setLabel('Prénom')
-  lastnameTextDescriptor = (new TextDescriptor('lastname').setEditModeOn(false).setLabel('Nom'));
-  emailTextDescriptor = (new TextDescriptor('email').setEditModeOn(false).setLabel('Email'));
+  lastnameTextDescriptor = (new TextDescriptor('lastname').setEditModeOn(false).setLabel('Nom'))
+  emailTextDescriptor = (new TextDescriptor('email').setEditModeOn(false).setLabel('Email'))
 
-  logoutButtonDescriptor = (new ButtonDescriptor('logout', 'Se déconnecter'));
+  logoutButtonDescriptor = (new ButtonDescriptor('logout', 'Se déconnecter'))
   manageAccountDescriptor = (new ButtonDescriptor('manageAccount', 'Gérer mon compte'))
     .setHref(
-      (new ButtonHrefDescriptor(config.auth.account_management_web_ui))
+      (new ButtonHrefDescriptor(this.$config.auth.account_management_web_ui))
         .setTarget('_blank')
-    );
+    )
 
   logout () {
-    logoutService.logout()
+    container.resolve(LogoutService).logout()
   }
 
   mounted () {
-    userinfoService.getUserInfos()
+    container.resolve(UserinfoService).getUserInfos()
       .then((response) => {
         const data = response.data
 

@@ -20,14 +20,14 @@ import SelectDescriptor from '../../../assets/ts/form/SelectDescriptor'
 
 @Component({})
 export default class MedSelect extends Vue {
-  @Prop({ type: Object, required: true }) selectDescriptor!: SelectDescriptor;
-  @Prop(String) value?: string;
+  @Prop({ type: Object, required: true }) selectDescriptor!: SelectDescriptor
+  @Prop(String) value?: string
 
-  options: { [index: string]: string } = {};
+  options: { [index: string]: string } = {}
 
-  bindValue?: string = '';
+  bindValue?: string = ''
 
-  noInputEventEmission: boolean = false;
+  noInputEventEmission: boolean = false
 
   get customClasses () {
     const classes = ['med_select']

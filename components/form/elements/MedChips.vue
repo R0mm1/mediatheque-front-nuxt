@@ -26,7 +26,7 @@ import ChipsDescriptor from 'assets/ts/form/ChipsDescriptor'
 
 @Component
 export default class MedChips extends Vue {
-  @Prop({ type: Object, required: true }) chipsDescriptor!: ChipsDescriptor;
+  @Prop({ type: Object, required: true }) chipsDescriptor!: ChipsDescriptor
 
   @Emit('entity-removed')
   entityRemoved (payload: any) {

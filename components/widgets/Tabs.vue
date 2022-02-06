@@ -22,10 +22,10 @@ export interface TabData {
 
 @Component
 export default class Tabs extends Vue {
-  @Prop({ type: Array, default: () => [] }) tabs!: TabData[];
-  @Prop({ type: String, default: () => [] }) value!: string;
+  @Prop({ type: Array, default: () => [] }) tabs!: TabData[]
+  @Prop({ type: String, default: () => [] }) value!: string
 
-  active: string | null = null;
+  active: string | null = null
 
   tabChanged (id: string) {
     this.active = id

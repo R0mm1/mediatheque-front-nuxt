@@ -6,19 +6,19 @@ export interface QueryParamsInterface {
 }
 
 export default class Request implements RequestInterface {
-  protected headers: { [index: string]: string } = { 'Content-Type': 'application/json' };
+  protected headers: { [index: string]: string } = { 'Content-Type': 'application/json' }
 
-  protected method: Method;
+  protected method: Method
 
-  protected body: any;
+  protected body: any
 
-  protected skipUrlBuilding = false;
+  protected skipUrlBuilding = false
 
-  protected url: string;
+  protected url: string
 
-  protected queryParams: QueryParamsInterface = {};
+  protected queryParams: QueryParamsInterface = {}
 
-  protected baseUrl: string | undefined;
+  protected baseUrl: string | undefined
 
   protected responseType: ResponseType = 'json'
 

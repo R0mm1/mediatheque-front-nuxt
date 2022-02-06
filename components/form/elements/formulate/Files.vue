@@ -31,12 +31,12 @@ import MedFile from '~/assets/ts/objects/MedFile'
   components: { Loader, MedInputButton, SimpleList }
 })
 export default class Files extends Vue {
-  @Prop({ type: Object, required: true }) context!: any;
+  @Prop({ type: Object, required: true }) context!: any
 
-  @Prop({ default: '', type: String })name!:string;
-  @Prop({ default: null, type: Number })maxFiles!:number|null;
+  @Prop({ default: '', type: String })name!:string
+  @Prop({ default: null, type: Number })maxFiles!:number|null
   @Prop({ default: null, type: Function })downloadAction!:null | ((bookId: string)=>any)
-  @Prop({ type: Array, required: true })files!:MedFile[];
+  @Prop({ type: Array, required: true })files!:MedFile[]
   @Prop({ type: Function, required: true }) onFileAdded!:((file: MedFile)=>any)
   @Prop({ type: Function })onFileRemoved?:(()=>any)
 

@@ -6,7 +6,7 @@
     :label-custom-classes="labelCustomClasses"
     :no-label="noLabel"
   >
-    <template v-slot:element_content>
+    <template #element_content>
       <div v-if="!editModeOn" v-html="editorData" />
       <ckeditor v-if="editModeOn" v-model="editorData" :config="editorConfig" />
     </template>

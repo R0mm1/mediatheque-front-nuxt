@@ -9,28 +9,26 @@ import EntityProxyService from '~/assets/ts/service/EntityProxyService'
 import HistoryService from '~/assets/ts/service/HistoryService'
 import RequestService from '~/assets/ts/service/RequestService'
 
-const requestService = container.resolve(RequestService)
-
 @Module({ dynamic: true, name: 'author', store, namespaced: true })
 class AuthorModule extends VuexModule implements EntityModuleInterface<AuthorEntity> {
-    protected baseUrl = '/authors';
-    protected baseAuthor = {
-      books: []
-    };
+  protected baseUrl = '/authors'
+  protected baseAuthor = {
+    books: []
+  }
 
-    author: AuthorEntity = this.baseAuthor;
+  author: AuthorEntity = this.baseAuthor
 
-    flagService = new FlagService<EntityModuleFlagInterface>({
-      isModified: false,
-      readyToSave: true
-    });
+  flagService = new FlagService<EntityModuleFlagInterface>({
+    isModified: false,
+    readyToSave: true
+  })
 
-    proxy = new EntityProxyService(this.flagService, new HistoryService());
+  proxy = new EntityProxyService(this.flagService, new HistoryService())
 
     @Mutation new () {
-      this.author = new Proxy<AuthorEntity>(this.baseAuthor, this.proxy)
-      this.flagService.reset()
-    }
+    this.author = new Proxy<AuthorEntity>(this.baseAuthor, this.proxy)
+    this.flagService.reset()
+  }
 
     @Mutation set (entity: AuthorEntity): void {
       this.author = new Proxy<AuthorEntity>(entity, this.proxy)
@@ -45,7 +43,8 @@ class AuthorModule extends VuexModule implements EntityModuleInterface<AuthorEnt
     }
 
     @Action({ rawError: true }) get (id: number): Promise<AuthorEntity | undefined> {
-      const request = requestService.createRequest(this.baseUrl + '/' + id)
+      const request = container.resolve(RequestService).createRequest(this.baseUrl + '/' + id)
+      const requestService = container.resolve(RequestService)
       return requestService.execute<AuthorEntity>(request)
         .then((result) => {
           this.set(result)
@@ -56,6 +55,7 @@ class AuthorModule extends VuexModule implements EntityModuleInterface<AuthorEnt
     @Action save (): Promise<AuthorEntity | boolean> {
       const method = typeof this.author.id === 'undefined' ? 'POST' : 'PUT'
       const url = this.baseUrl + (method === 'PUT' ? '/' + this.author.id : '')
+      const requestService = container.resolve(RequestService)
       const request = requestService.createRequest(url, method)
         .setBody(this.author)
         .addHeader('Content-Type', 'application/json')

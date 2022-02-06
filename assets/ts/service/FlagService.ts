@@ -1,13 +1,13 @@
 export default class FlagService<FlagInterface> {
-    _initialState: FlagInterface;
-    flags: FlagInterface;
+  _initialState: FlagInterface
+  flags: FlagInterface
 
-    constructor (flags: FlagInterface) {
-      this._initialState = { ...flags }
-      this.flags = flags
-    }
+  constructor (flags: FlagInterface) {
+    this._initialState = { ...flags }
+    this.flags = flags
+  }
 
-    reset () {
-      this.flags = { ...this._initialState }
-    }
+  reset () {
+    this.flags = { ...this._initialState }
+  }
 }

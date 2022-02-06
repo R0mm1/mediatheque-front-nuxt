@@ -8,19 +8,19 @@ import { QueryParamsInterface } from '~/assets/ts/objects/Request'
 
 @Module({ dynamic: true, name: 'list', store, namespaced: true })
 class ListModule extends VuexModule {
-  _columns: { [index: string]: Column } = {};
+  _columns: { [index: string]: Column } = {}
 
-  _paginationRowsPerPage: number = 30;
-  _paginationCurrentPage: number = 1;
+  _paginationRowsPerPage: number = 30
+  _paginationCurrentPage: number = 1
 
-  _customFilters: Filter[] = [];
+  _customFilters: Filter[] = []
 
-  _searchQuery: string = '';
+  _searchQuery: string = ''
 
   _queryParams: QueryParamsInterface = {}
 
-  _labElements: LeftActionBarElement[]=[];
-  _labFilters: Filter[]=[];
+  _labElements: LeftActionBarElement[] = []
+  _labFilters: Filter[] = []
 
   get columns () {
     return this._columns

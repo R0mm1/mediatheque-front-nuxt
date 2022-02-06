@@ -1,19 +1,22 @@
-import { singleton, autoInjectable, container } from 'tsyringe'
+import { singleton, autoInjectable } from 'tsyringe'
 import UserinfoService from '~/assets/ts/service/auth/UserinfoService'
 import LoginService from '~/assets/ts/service/auth/LoginService'
 import RefreshTokenService from '~/assets/ts/service/auth/RefreshTokenService'
 
-const userinfoService = container.resolve(UserinfoService)
-const refreshTokenService = container.resolve(RefreshTokenService)
-const loginService = container.resolve(LoginService)
-
 @autoInjectable()
 @singleton()
 export default class LoginWorkflowService {
+  constructor (
+    private userinfoService: UserinfoService,
+    private refreshTokenService: RefreshTokenService,
+    private loginService: LoginService
+  ) {
+  }
+
   start () {
-    return userinfoService.getUserInfos()
-      .catch(() => refreshTokenService.refresh()
-        .catch(() => loginService.login())
+    return this.userinfoService.getUserInfos()
+      .catch(() => this.refreshTokenService.refresh()
+        .catch(() => this.loginService.login())
       )
   }
 }

@@ -8,9 +8,9 @@ type FormElementDescriptorType = (LeftActionBarFormSelectDescriptor | ButtonDesc
 type CallbackType = (...args: any[]) => FilterValue
 
 export default class LeftActionBarElement {
-  type: ElementType;
-  callback: CallbackType;
-  formElementDescriptor: FormElementDescriptorType;
+  type: ElementType
+  callback: CallbackType
+  formElementDescriptor: FormElementDescriptorType
 
   constructor (type: ElementType, callback: CallbackType, formElementDescriptor: FormElementDescriptorType) {
     this.type = type

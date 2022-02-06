@@ -8,7 +8,7 @@
       <MedInputButton :button-descriptor="editButtonDescriptor" @click.native="editButtonPressed" />
     </div>
     <Tabs v-model="activeTab" :tabs="tabs">
-      <template v-slot:tab-content>
+      <template #tab-content>
         <slot name="entity-layout-content" />
       </template>
     </Tabs>
@@ -22,16 +22,16 @@
 import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator'
 import Tabs, { TabData } from '~/components/widgets/Tabs.vue'
 import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
-import MedInputButton from "~/components/form/elements/MedInputButton.vue";
+import MedInputButton from '~/components/form/elements/MedInputButton.vue'
 
 @Component({
   components: { Tabs, MedInputButton }
 })
 export default class EntityLayout extends Vue {
-  @Prop({ type: Array, required: true }) tabs!: TabData[];
-  @Prop({ type: String, required: true }) value!: string;
+  @Prop({ type: Array, required: true }) tabs!: TabData[]
+  @Prop({ type: String, required: true }) value!: string
 
-  activeTab: string|null = null;
+  activeTab: string|null = null
 
   @Watch('activeTab') activeTabChange () {
     this.$emit('input', this.activeTab)
