@@ -99,5 +99,8 @@ export default {
   },
   privateRuntimeConfig: {
     fontawesome_kit_name: process.env.FONT_AWESOME_KIT_NAME || 'err-missing-font-awesome-kit-name'
+  },
+  server: {
+    host: '0.0.0.0'
   }
 }
