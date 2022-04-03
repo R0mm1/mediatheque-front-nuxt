@@ -1,13 +1,13 @@
 <template>
-  <EntityLayout v-model="activeTab" :tabs="tabs">
+  <EntityLayout v-model="activeTab" :tabs="tabs" @edit-button-pressed="toggleEditMode">
     <template #entity-layout-title>
       {{ firstname }} {{ lastname }}
     </template>
     <template #entity-layout-content>
-      <MainTab />
+      <MainTab :edit-mode-on="switchEditModeOn"/>
     </template>
     <template #entity-layout-footer>
-      <MedInputButton v-if="isModified" :button-descriptor="saveButtonDescriptor" @click.native="save" />
+      <MedInputButton v-if="isModified" :button-descriptor="saveButtonDescriptor" @click.native="save"/>
     </template>
   </EntityLayout>
 </template>
@@ -19,18 +19,25 @@ import { TabData } from '~/components/widgets/Tabs.vue'
 import authorModule from '~/assets/ts/store/AuthorModule'
 import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
 import MainTab from '~/components/author/groups/MainTab.vue'
+import MedInputButton from '~/components/form/elements/MedInputButton.vue'
 
 @Component({
-  components: { EntityLayout, MainTab }
+  components: {
+    EntityLayout,
+    MainTab,
+    MedInputButton
+  }
 })
 export default class Author extends Vue {
-  @Prop({ type: Number, required: true }) authorId!:number|null
+  @Prop() authorId!: number | null
+
+  switchEditModeOn: boolean = false
 
   activeTab: string = 'author'
   readonly tabs: TabData[] = [
     {
       id: 'author',
-      label: "L'auteur"
+      label: 'L\'auteur'
     }
   ]
 
@@ -51,10 +58,14 @@ export default class Author extends Vue {
     return authorModule.flagService.flags.isModified
   }
 
+  toggleEditMode () {
+    this.switchEditModeOn = !this.switchEditModeOn
+  }
+
   save () {
     authorModule.save()
       .then(() => {
-        this.$toasted.show("L'auteur a été sauvegardé", {
+        this.$toasted.show('L\'auteur a été sauvegardé', {
           ...this.$config.default.notification_settings,
           type: 'success',
           icon: 'fa-check'
@@ -63,12 +74,13 @@ export default class Author extends Vue {
       })
       .catch((error) => {
         console.error(error)
-        alert("Une erreur s'est produite et l'auteur n'a pas pu être sauvegardé")
+        alert('Une erreur s\'est produite et l\'auteur n\'a pas pu être sauvegardé')
       })
   }
 
   created () {
     if (this.authorId === null) {
+      this.switchEditModeOn = true
       authorModule.new()
     } else {
       authorModule.get(this.authorId)
