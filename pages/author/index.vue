@@ -1,5 +1,5 @@
 <template>
-  <Author :author-id="null"/>
+  <Author :author-id="null" />
 </template>
 
 <script lang="ts">

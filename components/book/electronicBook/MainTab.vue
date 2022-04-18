@@ -1,11 +1,11 @@
 <template>
   <div id="book-main-tab">
-    <GroupPicture :book-module="bookModule" />
+    <GroupPicture :book-module="bookModule" :edit-mode-on="editModeOn"/>
     <GroupSummary :book-module="bookModule" :edit-mode-on="editModeOn" class="groupSummary" />
     <Column class="third-col">
       <template #column_content>
         <ElectronicGroupInformation :book-store="bookModule" :edit-mode-on="editModeOn" />
-        <GroupReferences :book-module="bookModule" @group-wanna-open-book="onGroupWannaOpenBook" />
+        <GroupReferences :book-module="bookModule" :edit-mode-on="editModeOn" @group-wanna-open-book="onGroupWannaOpenBook" />
       </template>
     </Column>
   </div>

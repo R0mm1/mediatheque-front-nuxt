@@ -9,7 +9,7 @@
         Tout les livres de {{ authorFullName }} présents dans la médiathèque:
       </div>
 
-      <SimpleList :elements="simpleListElements" :actions="simpleListRowAction"/>
+      <SimpleList :elements="simpleListElements" :actions="simpleListRowAction" />
     </template>
   </Group>
 </template>

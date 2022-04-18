@@ -4,10 +4,10 @@
       {{ firstname }} {{ lastname }}
     </template>
     <template #entity-layout-content>
-      <MainTab :edit-mode-on="switchEditModeOn"/>
+      <MainTab :edit-mode-on="switchEditModeOn" />
     </template>
     <template #entity-layout-footer>
-      <MedInputButton v-if="isModified" :button-descriptor="saveButtonDescriptor" @click.native="save"/>
+      <MedInputButton v-if="isModified" :button-descriptor="saveButtonDescriptor" @click.native="save" />
     </template>
   </EntityLayout>
 </template>

@@ -15,7 +15,7 @@
           <i class="far fa-image" />
         </div>
       </div>
-      <div class="picture_buttons">
+      <div class="picture_buttons" v-if="withManipulationButtons">
         <MedInputButton :button-descriptor="buttonUploadDescriptor" @click.native="displayFileChooser" />
         <MedInputButton :button-descriptor="buttonDownloadDescriptor" @click.native="download" />
         <MedInputButton :button-descriptor="buttonDeleteDescriptor" @click.native="clear" />
@@ -37,7 +37,8 @@ export default {
   props: {
     name: { type: String, default: '' },
     src: { type: Promise, required: true },
-    autofillSrcOnChange: { type: Boolean, default: false }
+    autofillSrcOnChange: { type: Boolean, default: false },
+    withManipulationButtons: { type: Boolean, default: true }
   },
   data () {
     return {

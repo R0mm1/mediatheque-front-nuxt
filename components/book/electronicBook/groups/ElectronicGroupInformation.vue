@@ -57,7 +57,7 @@ export default class PaperGroupInformation extends Vue {
       filesArray.push(
         new MedFile()
           .setFile(bookElectronicModule.book.bookFile.path)
-          .setName(bookElectronicModule.book.bookFile.path)
+          .setName(bookElectronicModule.ebookFilename)
           .setId(bookElectronicModule.book.bookFile.id.toString())
           .setIsNew(false)
       )

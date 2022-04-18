@@ -18,12 +18,16 @@ export default class RequestService implements RequestServiceInterface {
   ) {
   }
 
+  getApiEndpoint () {
+    return this.configApi.endpoint
+  }
+
   createRequest (url: string, method: Method = 'GET') {
     return new Request(url, method)
   }
 
   execute<ExpectedResponseType> (request: Request): Promise<ExpectedResponseType> {
-    request.setBaseUrl(this.configApi.endpoint)
+    request.setBaseUrl(this.getApiEndpoint())
 
     request.addHeader('Authorization', 'Bearer ' + window.sessionStorage.getItem('access_token'))
 

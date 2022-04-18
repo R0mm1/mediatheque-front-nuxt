@@ -8,14 +8,12 @@
         <Loader v-if="isNotationLoading" type="s" />
       </div>
       <client-only>
-        <vue-stars v-if="!isNotationLoading" v-model="cNote" :max="10">
-          <template #activeLabel>
-            <i class="fas fa-star" />
-          </template>
-          <template #inactiveLabel>
-            <i class="far fa-star" />
-          </template>
-        </vue-stars>
+        <StarsRatings
+          v-if="!isNotationLoading"
+          v-model="cNote"
+          :star-size="20"
+          :max-rating="10"
+        ></StarsRatings>
       </client-only>
     </template>
   </Group>

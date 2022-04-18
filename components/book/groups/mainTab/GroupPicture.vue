@@ -4,7 +4,7 @@
       Couverture
     </template>
     <template #group_content>
-      <InputPicture name="picture" :src="src" @picture-changed="pictureChanged" />
+      <InputPicture name="picture" :src="src" :with-manipulation-buttons="editModeOn" @picture-changed="pictureChanged" />
     </template>
   </Group>
 </template>
@@ -18,7 +18,10 @@ import RequestService from '@/assets/ts/service/RequestService'
 export default {
   name: 'GroupPicture',
   components: { InputPicture, Group },
-  props: { bookModule: { type: Object, required: true } },
+  props: {
+    bookModule: { type: Object, required: true },
+    editModeOn: { type: Boolean, required: true }
+  },
   data () {
     return {
       src: Promise.resolve(''),

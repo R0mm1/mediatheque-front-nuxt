@@ -4,7 +4,7 @@
       Groupes
     </template>
 
-    <template slot="group_customActions">
+    <template #group_customActions v-if="editModeOn">
       <MedInputButton :button-descriptor="displayFormDataButtonDescriptor" @click.native="toggleDisplayFormData" />
     </template>
 
@@ -76,7 +76,8 @@ export default {
   name: 'GroupReferences',
   components: { MedInputSelect, MedInputText, MedInputButton, FormContainer, SimpleList, Accordion, Group },
   props: {
-    bookModule: { type: Object, required: true }
+    bookModule: { type: Object, required: true },
+    editModeOn: { type: Boolean, required: true }
   },
   data () {
     return {

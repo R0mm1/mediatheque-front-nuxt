@@ -5,8 +5,8 @@
     </template>
 
     <template #group_content>
-      <MedInputText v-model="firstname" :text-descriptor="firstnameTextDescriptor"/>
-      <MedInputText v-model="lastname" :text-descriptor="lastnameTextDescriptor"/>
+      <MedInputText v-model="firstname" :text-descriptor="firstnameTextDescriptor" />
+      <MedInputText v-model="lastname" :text-descriptor="lastnameTextDescriptor" />
     </template>
   </Group>
 </template>
