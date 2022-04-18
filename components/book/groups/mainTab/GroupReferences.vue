@@ -184,6 +184,10 @@ export default {
           // Re-init the groupModule to clear the form
           groupModule.init()
 
+          // Display save button
+          // eslint-disable-next-line vue/no-mutating-props
+          this.bookModule.flagService.flags.isModified = true
+
           // Hide the popup
           this.groupFormDisplayed = false
         })
@@ -205,6 +209,10 @@ export default {
 
       // Add the group on the list of groups to be linked to the book on saving
       this.relatedGroups.push(group)
+
+      // Display save button
+      // eslint-disable-next-line vue/no-mutating-props
+      this.bookModule.flagService.flags.isModified = true
 
       // Hide the popup
       this.groupFormDisplayed = false

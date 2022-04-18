@@ -31,9 +31,9 @@ export default class PaperGroupInformation extends Vue {
     const owner = bookPaperModule.book.owner
 
     if (typeof owner === 'string') {
-      return owner.split('/').pop()?.split('=').pop()
+      return owner
     } else if (typeof owner === 'object' && owner !== null) {
-      return owner.id
+      return owner['@id']
     }
     return undefined
   }
@@ -60,7 +60,7 @@ export default class PaperGroupInformation extends Vue {
           if (typeof user['@id'] === 'undefined') {
             return
           }
-          users[user['@id']] = (user.firstname ?? '') + (user.lastname ?? '')
+          users[user['@id']] = (user.firstname ?? '') + ' ' + (user.lastname ?? '')
         })
         return Promise.resolve(users)
       })

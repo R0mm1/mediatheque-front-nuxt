@@ -26,13 +26,19 @@ export default class PaperGroupInformation extends Vue {
   bookElectronicModule = bookElectronicModule
 
   get filesDescriptor () {
-    return new FilesDescriptor()
+    const filesDescriptor = new FilesDescriptor()
       .setMaxFiles(1)
       .setName('electronicBook')
       .setLabel('Livre')
       .setOnFileAdded(this.setElectronicBook.bind(this))
-      .setOnFileRemoved(this.removeElectronicBook.bind(this))
       .setDownloadAction(this.downloadEbook.bind(this))
+
+    if (this.editModeOn) {
+      filesDescriptor
+        .setOnFileRemoved(this.removeElectronicBook.bind(this))
+    }
+
+    return filesDescriptor
   }
 
   setElectronicBook (file: MedFile) {

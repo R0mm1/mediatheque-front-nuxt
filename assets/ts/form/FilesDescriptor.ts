@@ -6,7 +6,7 @@ export default class FilesDescriptor {
   maxFiles: number | null = null
   downloadAction: null | (() => any) = null
   onFileAdded: ((medFile: MedFile) => any) = () => null
-  onFileRemoved: (() => any) = () => null
+  onFileRemoved: (() => any) | null = null
 
   setLabel (label: string) {
     this.label = label

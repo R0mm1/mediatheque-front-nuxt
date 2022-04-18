@@ -5,7 +5,6 @@ import {
   AuthorEntity,
   BookEntity, FileEntity,
   GroupEntity,
-  UserEntity,
   BookNotationEntity
 } from '~/assets/ts/entity/module'
 import BookService from '~/assets/ts/service/BookService'
