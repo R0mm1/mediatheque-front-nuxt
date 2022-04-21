@@ -24,6 +24,10 @@
             @change.native="eventOccurred(labElement, $event.target.value)"
           />
 
+          <NuxtLink v-if="isLink(labElement)" :to="labElement.formElementDescriptor.to">
+            {{ labElement.formElementDescriptor.label }}
+          </NuxtLink>
+
           <div v-if="isSeparator(labElement)" class="leftActionBarSeparatorText">
             {{ labElement.formElementDescriptor.label }}
           </div>
@@ -43,6 +47,7 @@ import LeftActionBarFormSelectDescriptor from '~/assets/ts/list/LeftActionBarFor
 import Filter from '~/assets/ts/list/Filter'
 import MedInputSelect from '~/components/form/elements/MedInputSelect.vue'
 import MedInputButton from '~/components/form/elements/MedInputButton.vue'
+import LeftActionBarLinkDescriptor from '~/assets/ts/list/LeftActionBarLinkDescriptor'
 
 @Component({
   components: { MedInputSelect, MedInputButton }
@@ -78,6 +83,10 @@ export default class LeftActionBar extends Vue {
 
   isSeparator (element: LeftActionBarElement) {
     return element.formElementDescriptor.descriptorType === 'LeftActionBarSeparatorDescriptor'
+  }
+
+  isLink (element: LeftActionBarElement) {
+    return element.formElementDescriptor.descriptorType === LeftActionBarLinkDescriptor.descriptorType
   }
 
   getClass (element: LeftActionBarElement) {
@@ -228,6 +237,13 @@ export default class LeftActionBar extends Vue {
         }
       }
 
+    }
+
+    a{
+      font-size: .9rem;
+      text-decoration: none;
+      color: inherit;
+      padding-left: 4px;
     }
   }
 

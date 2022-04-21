@@ -23,13 +23,13 @@ import RowAction from 'assets/ts/list/RowAction'
 import LeftActionBarElement from 'assets/ts/list/LeftActionBarElement'
 import LeftActionBarProperties from 'assets/ts/list/LeftActionBarProperties'
 import LeftActionBarFormSelectDescriptor from 'assets/ts/list/LeftActionBarFormSelectDescriptor'
-import ButtonDescriptor from 'assets/ts/form/ButtonDescriptor'
 import RequestService from 'assets/ts/service/RequestService'
 import BookService from 'assets/ts/service/BookService'
 import bookElectronicModule from 'assets/ts/store/book/BookElectronicModule'
 import BookStoreService from 'assets/ts/service/BookStoreService'
 import LeftActionBarSeparatorDescriptor from 'assets/ts/list/LeftActionBarSeparatorDescriptor'
 import List from '~/components/list/List'
+import LeftActionBarLinkDescriptor from 'assets/ts/list/LeftActionBarLinkDescriptor'
 
 export default {
   name: 'Book',
@@ -69,23 +69,13 @@ export default {
         ),
         new LeftActionBarElement(
           'element',
-          () => {
-            this.$router.push({
-              path: '/book/paper'
-            })
-            return null
-          },
-          new ButtonDescriptor('addPaper', 'Livre papier').setFaIcon('fas fa-scroll').setNoDefaultStyle(true)
+          () => null,
+          new LeftActionBarLinkDescriptor('addPaper', 'Livre papier', '/book/paper').setFaIcon('fas fa-scroll')
         ),
         new LeftActionBarElement(
           'element',
-          () => {
-            this.$router.push({
-              path: '/book/electronic'
-            })
-            return null
-          },
-          new ButtonDescriptor('addElectronic', 'Epub').setFaIcon('fas fa-tablet-alt').setNoDefaultStyle(true)
+          () => null,
+          new LeftActionBarLinkDescriptor('addElectronic', 'Epub', '/book/electronic').setFaIcon('fas fa-tablet-alt')
         ),
         new LeftActionBarElement(
           'separator',
@@ -114,7 +104,7 @@ export default {
       requestService.execute(request)
         .then(book => this.setBook(book))
         .catch((error) => {
-          this.$toasted.show("L'identifiant " + bookId + ' ne correspond à aucun livre', {
+          this.$toasted.show('L\'identifiant ' + bookId + ' ne correspond à aucun livre', {
             ...this.$config.default.notification_settings,
             type: 'error',
             icon: 'fa-times'
