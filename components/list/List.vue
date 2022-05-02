@@ -19,7 +19,7 @@
             :cols="cols"
             :row-actions="rowActions"
             :details-component-path="detailsComponentPath"
-            @click.native="$emit('list-action-set', dataRow)"
+            @click.native="callback(dataRow)"
           />
         </div>
         <template v-else>
@@ -83,6 +83,8 @@ export default class List extends Vue {
 
   @Prop({ type: String, default: null })
     detailsComponentPath!: string | null
+
+  @Prop({ type: Function, required: true }) callback!: Function
 
   get hasRowAction () {
     return this.rowActions.length > 0

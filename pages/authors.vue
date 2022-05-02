@@ -5,7 +5,7 @@
         ref="list"
         api-endpoint="/authors"
         :cols="cols"
-        @list-action-set="setAuthor"
+        :callback="setAuthor"
         @list-action-add="newAuthor"
       />
     </div>
@@ -30,14 +30,10 @@ export default {
   },
   methods: {
     setAuthor (author) {
-      this.$router.push({
-        path: '/author/' + author.id
-      })
+      window.location.href = '/author/' + author.id
     },
     newAuthor () {
-      this.$router.push({
-        path: '/author/'
-      })
+      window.location.href = '/author/'
     }
   }
 }
