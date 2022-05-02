@@ -9,7 +9,12 @@ import { bookElectronicBaseUrl } from '~/assets/ts/store/book/BookElectronicModu
 import { BookPaper, BookPaperItem } from '~/assets/ts/models/BookPaper'
 import RequestService from '~/assets/ts/service/RequestService'
 
-@Module({ dynamic: true, name: 'bookPaper', store, namespaced: true })
+@Module({
+  dynamic: true,
+  name: 'bookPaper',
+  store,
+  namespaced: true
+})
 export class BookPaperModule extends BookModule implements EntityModuleInterface<BookPaper> {
   static baseUrl: string = '/paper_books'
 
@@ -19,52 +24,52 @@ export class BookPaperModule extends BookModule implements EntityModuleInterface
 
   book: BookPaper = new Proxy(this.bookService.getBasePaperBook(), this.proxy)
 
-    @Mutation set (book: BookPaper) {
+  @Mutation set (book: BookPaper) {
     this.flagService.reset()
     this.historyService.init()
     this.book = new Proxy(book, this.proxy)
   }
 
-    @Mutation init (): void {
-      super.init()
-      this.flagService.reset()
-      this.historyService.init()
-      this.book = new Proxy(this.bookService.getBasePaperBook(), this.proxy)
-    }
+  @Mutation init (): void {
+    super.init()
+    this.flagService.reset()
+    this.historyService.init()
+    this.book = new Proxy(this.bookService.getBasePaperBook(), this.proxy)
+  }
 
-    @Mutation setHistoryService (historyService: HistoryService) {
-      super.setHistoryService(historyService)
-      this.proxy.historyService = historyService
-    }
+  @Mutation setHistoryService (historyService: HistoryService) {
+    super.setHistoryService(historyService)
+    this.proxy.historyService = historyService
+  }
 
-    @Action({ rawError: true }) get (id: number) {
-      this.historyService.init()
-      return super.getBase<BookPaperItem>(id, BookPaperModule.baseUrl)
-        .then((bookPaper) => {
-          this.set(bookPaper)
-          return this.book
-        })
-    }
+  @Action({ rawError: true }) get (id: number) {
+    this.historyService.init()
+    return super.getBase<BookPaperItem>(id, BookPaperModule.baseUrl)
+      .then((bookPaper) => {
+        this.set(bookPaper)
+        return this.book
+      })
+  }
 
-    @Action({ rawError: true }) save (bookTypeChanged: boolean = false) {
-      const requestService = container.resolve(RequestService)
-      const method = this.bookService.isPersisted(this.book) ? 'PUT' : 'POST'
-      const url = (bookTypeChanged ? bookElectronicBaseUrl : BookPaperModule.baseUrl) +
-            (method === 'PUT' ? ('/' + this.book.id) : '')
+  @Action({ rawError: true }) save (bookTypeChanged: boolean = false) {
+    const requestService = container.resolve(RequestService)
+    const method = this.bookService.isPersisted(this.book) ? 'PUT' : 'POST'
+    const url = (bookTypeChanged ? bookElectronicBaseUrl : BookPaperModule.baseUrl) +
+      (method === 'PUT' ? ('/' + this.book.id) : '')
 
-      const request = requestService.createRequest(url, method)
-        .addHeader('Content-Type', 'application/json')
-        .setBody(this.bookService.prepareForUpload(this.book))
+    const request = requestService.createRequest(url, method)
+      .addHeader('Content-Type', 'application/json')
+      .setBody(this.bookService.prepareForUpload(this.book))
 
-      return requestService.execute<BookPaperItem>(request)
-        .then((response: BookPaperItem) => {
-          response.authors = this.book.authors
-          this.set(response)
+    return requestService.execute<BookPaperItem>(request)
+      .then((response: BookPaperItem) => {
+        response.authors = this.book.authors
+        this.set(response)
 
-          this.eventService.trigger(BookPaperModule.EVENT_BOOK_SAVED)
-          return response
-        })
-    }
+        this.eventService.trigger(BookPaperModule.EVENT_BOOK_SAVED)
+        return response
+      })
+  }
 }
 
 export default getModule(BookPaperModule)

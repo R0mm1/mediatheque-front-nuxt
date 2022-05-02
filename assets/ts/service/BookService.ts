@@ -12,6 +12,7 @@ export default class BookService {
 
   getBaseBook (): Book {
     return {
+      title: '',
       cover: null,
       authors: [],
       groups: []

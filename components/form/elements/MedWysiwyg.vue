@@ -67,8 +67,8 @@ export default {
     }
   },
   watch: {
-    editorData (newContent, oldContent) {
-      if (this.content !== newContent && oldContent.length > 0) {
+    editorData (newContent) {
+      if (this.content !== newContent) {
         this.$emit('content-changed', newContent)
       }
     },
