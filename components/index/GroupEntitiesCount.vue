@@ -50,6 +50,14 @@ export default {
     })
     requestService.execute(request)
       .then((data) => {
+        const stats = data['hydra:member'][0]
+        if (typeof stats === 'undefined') {
+          this.$toasted.error('La récupération des statistiques des auteurs et des livres a échoué')
+          return Promise.reject(new Error('Stats service returned empty data'))
+        }
+        return Promise.resolve(stats.stats)
+      })
+      .then((data) => {
         const animParams = {
           targets: this,
           round: 1,
@@ -77,11 +85,7 @@ export default {
           author: data.authorsCount
         })
       })
-  },
-  methods: {
-    formatNumber (value) {
-      return value.toFixed(0)
-    }
+      .catch(error => console.error(error))
   }
 }
 </script>

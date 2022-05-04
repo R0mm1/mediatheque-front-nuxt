@@ -37,7 +37,8 @@ export default {
     '@/plugins/vuePaginate.client',
     '@/plugins/vueTooltip.client',
     '@/plugins/wysiwyg.client',
-    '@/plugins/vueStarRating.client'
+    '@/plugins/vueStarRating.client',
+    '@/plugins/vueChartjs.client'
   ],
   /*
   ** Auto import components

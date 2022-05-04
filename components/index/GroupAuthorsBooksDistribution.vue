@@ -8,7 +8,7 @@
         <div class="group-abd-pie-title">
           Les auteurs les plus présents dans la base, par nombre de livres
         </div>
-        <VerticalBar v-if="!isLoading" :chartdata="chartData" :options="chartOptions" />
+        <VerticalBarChart v-if="!isLoading" :key="chartKey" :chart-data="chartData" :chart-options="chartOptions" />
       </div>
     </template>
   </Group>
@@ -17,14 +17,14 @@
 <script>
 import { container } from 'tsyringe'
 import Group from '~/components/page/Group.vue'
-import VerticalBar from '~/components/widgets/charts/VerticalBar.vue'
 import RequestService from '~/assets/ts/service/RequestService'
 
 export default {
   name: 'GroupAuthorsBooksDistribution',
-  components: { VerticalBar, Group },
+  components: { Group },
   data () {
     return {
+      chartKey: 0,
       isLoading: true,
       chartData: {
         datasets: [{
@@ -47,7 +47,18 @@ export default {
     })
     requestService.execute(request)
       .then((data) => {
-        let colorAlpha = 1
+        const stats = data['hydra:member'][0]
+        if (typeof stats === 'undefined') {
+          this.$toasted.error('La récupération de la répartition des livres par auteur a échoué')
+          return Promise.reject(new Error('Stats service returned empty data'))
+        }
+        return Promise.resolve(stats.stats)
+      })
+      .then((data) => {
+        let red = 4.1
+        let green = 3.8
+        let blue = 2.8
+
         data.authorsBooksDistribution
           .sort((first, second) => {
             return second.booksCount - first.booksCount
@@ -55,13 +66,17 @@ export default {
           .slice(0, 10)
           .forEach((entry) => {
             this.chartData.datasets[0].data.push(entry.booksCount)
-            this.chartData.datasets[0].backgroundColor.push('rgba(73,68,60,' + colorAlpha + ')')
+            this.chartData.datasets[0].backgroundColor.push('rgba(' + red + ',' + green + ',' + blue + ')')
             this.chartData.labels.push(entry.firstname + ' ' + entry.lastname)
 
-            colorAlpha -= 0.1
+            red = red * 1.75
+            green = green * 1.75
+            blue = blue * 1.75
           })
+        this.chartKey++
         this.isLoading = false
       })
+      .catch(error => console.error(error))
   }
 }
 </script>
