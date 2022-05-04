@@ -28,9 +28,5 @@ export default class MainTab extends Vue {
 <style scoped lang="scss">
 #author-main-tab {
   display: flex;
-
-  > div {
-    max-width: 450px;
-  }
 }
 </style>

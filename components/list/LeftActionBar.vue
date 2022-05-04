@@ -14,14 +14,14 @@
           <MedInputButton
             v-if="isButton(labElement)"
             :button-descriptor="labElement.formElementDescriptor"
-            @click.native="eventOccurred(labElement)"
+            @click.native="customFilterChangeHandler(labElement)"
           />
 
           <MedInputSelect
             v-if="isSelect(labElement)"
             :ref="labElement.formElementDescriptor.name"
+            v-model="customFiltersValues[labElement.formElementDescriptor.name]"
             :select-descriptor="labElement.formElementDescriptor"
-            @change.native="eventOccurred(labElement, $event.target.value)"
           />
 
           <NuxtLink v-if="isLink(labElement)" :to="labElement.formElementDescriptor.to">
@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Component, Prop, Vue } from 'vue-property-decorator'
 import LeftActionBarProperties from '../../assets/ts/list/LeftActionBarProperties'
 import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
 import LeftActionBarElement from '~/assets/ts/list/LeftActionBarElement'
@@ -48,6 +48,21 @@ import Filter from '~/assets/ts/list/Filter'
 import MedInputSelect from '~/components/form/elements/MedInputSelect.vue'
 import MedInputButton from '~/components/form/elements/MedInputButton.vue'
 import LeftActionBarLinkDescriptor from '~/assets/ts/list/LeftActionBarLinkDescriptor'
+
+const customFilterChangeHandler = function (element: LeftActionBarElement, value?: any) {
+  if (element.type === 'filter') {
+    switch (element.formElementDescriptor.descriptorType) {
+      case LeftActionBarFormSelectDescriptor.descriptorType:
+        listModule.setCustomFilter(new Filter(element.formElementDescriptor.name, value))
+        break
+      case ButtonDescriptor.descriptorType:
+        listModule.setCustomFilter(new Filter(element.formElementDescriptor.name, element.callback()))
+        break
+    }
+  } else {
+    element.callback()
+  }
+}
 
 @Component({
   components: { MedInputSelect, MedInputButton }
@@ -97,51 +112,54 @@ export default class LeftActionBar extends Vue {
     return 'labe-unknown'
   }
 
-  // This boolean will be used to prevent the watcher to update the forms elements after the filters have been updated
-  // if the modification is coming from those same forms elements
-  preventAutoFilterUpdate: boolean = false
-
-  get customFilters () {
+  get listCustomFilters () {
     return listModule._customFilters
   }
 
-  @Watch('customFilters')
-  customFiltersChanged () {
-    if (!this.preventAutoFilterUpdate) {
-      this.handleCustomFilters()
-    }
-    this.preventAutoFilterUpdate = false
-  }
+  /**
+   * Return the custom filters, indexed by the name of the filter and wrapped in a proxy.
+   * This way, each custom filter can refer to himself in v-model so:
+   * - when the value is read, the proxy return the current filter value from the list module, or the default defined in the form descriptor when appropriate
+   * - when the value is updated, the proxy will update the filter value in the list module
+   */
+  get customFiltersValues () {
+    const customFilters = this.listCustomFilters
 
-  eventOccurred (element: LeftActionBarElement, value?: any) {
-    if (element.type === 'filter') {
-      switch (element.formElementDescriptor.descriptorType) {
-        case LeftActionBarFormSelectDescriptor.descriptorType:
-          this.preventAutoFilterUpdate = true
-          listModule.setCustomFilter(new Filter(element.formElementDescriptor.name, value))
-          break
-        case ButtonDescriptor.descriptorType:
-          this.preventAutoFilterUpdate = true
-          listModule.setCustomFilter(new Filter(element.formElementDescriptor.name, element.callback()))
-          break
+    const handler = {
+      get (obj: {[key: string]: LeftActionBarElement}, prop: string) {
+        const lfb = obj[prop] ?? undefined
+        if (typeof lfb !== 'undefined') {
+          if (typeof customFilters[lfb.formElementDescriptor.name] !== 'undefined') {
+            return customFilters[lfb.formElementDescriptor.name].value
+          }
+
+          if (lfb.formElementDescriptor.descriptorType === 'LeftActionBarFormSelectDescriptor') {
+            return (lfb.formElementDescriptor as LeftActionBarFormSelectDescriptor).defaultValue
+          }
+        }
+        return null
+      },
+      set (obj: {[key: string]: LeftActionBarElement}, prop: string, value: string) {
+        const lfb = obj[prop] ?? undefined
+
+        if (typeof lfb !== 'undefined') {
+          customFilterChangeHandler(lfb, value)
+        }
+
+        return true
       }
-    } else {
-      element.callback()
     }
-  }
 
-  handleCustomFilters () {
-    this.customFilters.forEach((filter: Filter) => {
-      const componentInstances = this.$refs[filter.property] as (MedInputSelect)[]
-
-      if (typeof componentInstances?.[0]?.setValue === 'function') {
-        componentInstances[0].setValue(filter.value ?? '')
-      }
+    const indexedCustomElements: {[key: string]: LeftActionBarElement} = {}
+    this.leftActionBarProperties.customElements.forEach((element) => {
+      indexedCustomElements[element.formElementDescriptor.name] = element
     })
+
+    return new Proxy<{[key: string]: LeftActionBarElement}>(indexedCustomElements, handler)
   }
 
-  mounted () {
-    this.handleCustomFilters()
+  customFilterChangeHandler (element: LeftActionBarElement, value?: any) {
+    customFilterChangeHandler(element, value)
   }
 }
 </script>
