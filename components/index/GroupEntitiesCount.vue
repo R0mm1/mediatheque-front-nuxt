@@ -4,20 +4,28 @@
       Entités dans la base
     </template>
     <template #group_content>
-      <div class="group-ec-books">
-        <div class="book-total">
-          {{ bookTotal }}
-        </div>
-        <div class="book-detail">
-          <div class="electronic">
-            {{ bookElectronic }}
+      <div id="group-entities-count">
+        <div id="books-count" class="count-block">
+          <div id="count-total" class="count-number">
+            {{ bookTotal }}
+            <span>Livres</span>
           </div>
-          <div class="paper">
-            {{ bookPaper }}
+          <div id="count-detail">
+            <div class="count-number">
+              {{ bookElectronic }}
+              <span>Epubs</span>
+            </div>
+            <div class="count-number">
+              {{ bookPaper }}
+              <span>Papiers</span>
+            </div>
           </div>
         </div>
-        <div class="authors">
-          {{ author }}
+        <div id="authors-count" class="count-block">
+          <div class="count-number">
+            {{ author }}
+            <span>Auteurs</span>
+          </div>
         </div>
       </div>
     </template>
@@ -93,58 +101,43 @@ export default {
 <style scoped lang="scss">
 @import 'assets/scss/colors';
 
-.group-ec-books {
+#group-entities-count {
+  display: flex;
+  justify-content: space-around;
+}
+
+.count-block {
   font-size: 2rem;
+  width: 175px;
+  height: 175px;
   text-align: center;
+  border: 1px solid $shade0;
+  border-radius: 5px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 
-  @mixin afterContent {
-    display: block;
-    font-size: .9rem;
-    margin-top: -5px;
-    color: $textDisabled;
-
-    @content;
-  }
-
-  .book-total {
-    border-bottom: 1px solid $shade2;
-
-    &::after {
-      @include afterContent {
-        content: 'Livres';
-      }
-    }
-  }
-
-  .book-detail {
+  .count-number {
     display: flex;
-    width: 100%;
+    flex-direction: column;
 
-    > div {
-      flex-grow: 1;
-    }
-
-    .electronic::after {
-      @include afterContent {
-        content: 'Epub'
-      }
-    }
-
-    .paper::after {
-      @include afterContent {
-        content: 'Papier'
-      }
+    span {
+      font-size: .9rem;
+      color: $textDisabled;
     }
   }
 
-  .authors {
-    margin-top: 1rem;
+  #count-detail{
+    display: flex;
+    justify-content: space-around;
+    border-top: 1px solid $shade0;
+    margin-top: 7px;
+    padding-top: 7px;
 
-    &::after {
-      @include afterContent {
-        content: 'Auteurs';
-      }
+    .count-number:not(:first-of-type){
+      margin-left: 15px;
     }
-  }
+   }
 }
 </style>
