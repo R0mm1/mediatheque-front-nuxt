@@ -8,6 +8,8 @@ import { QueryParamsInterface } from '~/assets/ts/objects/Request'
 
 @Module({ dynamic: true, name: 'list', store, namespaced: true })
 class ListModule extends VuexModule {
+  private readonly QUERY_ORDER_PARAM_NAME = 'order'
+
   _columns: { [index: string]: Column } = {}
 
   _paginationRowsPerPage: number = 30
@@ -101,7 +103,7 @@ class ListModule extends VuexModule {
         const column = this._columns[dataField]
 
         if (column.sortState !== Column.sortNone) {
-          sort[column.dataField] = column.sortState
+          sort[this.QUERY_ORDER_PARAM_NAME + '[' + column.dataField + ']'] = column.sortState
         }
 
         if (column.searchString.length > 0) {
@@ -117,7 +119,7 @@ class ListModule extends VuexModule {
       })
 
       this.setQueryParams({
-        order: sort,
+        ...sort,
         itemsPerPage: this._paginationRowsPerPage,
         page: this._paginationCurrentPage,
         ...search,
