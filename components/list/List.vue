@@ -57,6 +57,11 @@ import listModule from '~/assets/ts/store/ListModule'
 import RequestService from '~/assets/ts/service/RequestService'
 import { HydraCollection } from '~/assets/ts/models/HydraInterfaces'
 
+export const FilterQueryParamPrefix = 'lcf-'
+export const SortQueryParamPrefix = 'lst-'
+export const SearchQueryParamPrefix = 'lsh-'
+export type ListQueryParams = (typeof FilterQueryParamPrefix|typeof SortQueryParamPrefix | typeof SearchQueryParamPrefix)
+
 @Component({
   components: {
     Row: () => import('~/components/list/Row.vue'),
@@ -153,14 +158,14 @@ export default class List extends Vue {
     }
   }
 
-  @Watch('customFilters')
+  @Watch('customFilters', { deep: true })
   customFiltersChanged () {
     if (!this.isLoading) {
       // Extract the current query string and remove filters on it
       const filteredQuery = this.removeParamsFromQuery(FilterQueryParamPrefix)
 
       // Add the current filters on the query string and give it to the router
-      this.customFilters.forEach(customFilter => filteredQuery.push([FilterQueryParamPrefix + customFilter.property, customFilter.value]))
+      Object.values(this.customFilters).forEach(customFilter => filteredQuery.push([FilterQueryParamPrefix + customFilter.property, customFilter.value]))
       this.$router.push({
         query: Object.fromEntries(filteredQuery)
       })
@@ -175,13 +180,17 @@ export default class List extends Vue {
   }
 
   updateFiltersFromQueryString () {
-    const filters: Filter[] = []
+    const filters: {[key: string]: Filter} = {}
     Object.entries(this.$route.query).forEach(([paramName, paramValue]) => {
       if (paramName.startsWith(FilterQueryParamPrefix)) {
         if (typeof paramValue === 'string') {
-          filters.push(new Filter(paramName.split(FilterQueryParamPrefix).pop() ?? '', paramValue))
+          const property = paramName.split(FilterQueryParamPrefix).pop() ?? ''
+          filters[property] = new Filter(property, paramValue)
         } else if (Array.isArray(paramValue)) {
-          paramValue.forEach(value => filters.push(new Filter(paramName.split(FilterQueryParamPrefix).pop() ?? '', value)))
+          paramValue.forEach((value) => {
+            const property = paramName.split(FilterQueryParamPrefix).pop() ?? ''
+            filters[property] = new Filter(property, value)
+          })
         }
       }
     })
@@ -240,11 +249,6 @@ export default class List extends Vue {
     this.load(false)
   }
 }
-
-export const FilterQueryParamPrefix = 'lcf-'
-export const SortQueryParamPrefix = 'lst-'
-export const SearchQueryParamPrefix = 'lsh-'
-export type ListQueryParams = (typeof FilterQueryParamPrefix|typeof SortQueryParamPrefix | typeof SearchQueryParamPrefix)
 </script>
 
 <style scoped lang="scss">

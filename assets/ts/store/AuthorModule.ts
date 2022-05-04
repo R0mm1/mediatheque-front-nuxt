@@ -9,6 +9,10 @@ import EntityProxyService from '~/assets/ts/service/EntityProxyService'
 import HistoryService from '~/assets/ts/service/HistoryService'
 import RequestService from '~/assets/ts/service/RequestService'
 
+export interface AuthorModuleFlagInterface extends EntityModuleFlagInterface{
+  fetching: boolean
+}
+
 @Module({ dynamic: true, name: 'author', store, namespaced: true })
 class AuthorModule extends VuexModule implements EntityModuleInterface<AuthorEntity> {
   protected baseUrl = '/authors'
@@ -18,9 +22,10 @@ class AuthorModule extends VuexModule implements EntityModuleInterface<AuthorEnt
 
   author: AuthorEntity = this.baseAuthor
 
-  flagService = new FlagService<EntityModuleFlagInterface>({
+  flagService = new FlagService<AuthorModuleFlagInterface>({
     isModified: false,
-    readyToSave: true
+    readyToSave: true,
+    fetching: false
   })
 
   proxy = new EntityProxyService(this.flagService, new HistoryService())
@@ -43,12 +48,16 @@ class AuthorModule extends VuexModule implements EntityModuleInterface<AuthorEnt
     }
 
     @Action({ rawError: true }) get (id: number): Promise<AuthorEntity | undefined> {
+      this.flagService.flags.fetching = true
       const request = container.resolve(RequestService).createRequest(this.baseUrl + '/' + id)
       const requestService = container.resolve(RequestService)
       return requestService.execute<AuthorEntity>(request)
         .then((result) => {
           this.set(result)
           return Promise.resolve(this.author)
+        })
+        .finally(() => {
+          this.flagService.flags.fetching = false
         })
     }
 
