@@ -45,7 +45,7 @@ export default class PaperGroupInformation extends Vue {
     if (!(file.file instanceof File)) {
       throw new TypeError('file property of MedFile must be a File')
     }
-    bookElectronicModule.linkNewFile(file as {file: File, name: string})
+    return bookElectronicModule.linkNewFile(file as {file: File, name: string})
   }
 
   removeElectronicBook () {

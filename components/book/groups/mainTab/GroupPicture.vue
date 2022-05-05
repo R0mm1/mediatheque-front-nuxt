@@ -4,7 +4,7 @@
       Couverture
     </template>
     <template #group_content>
-      <InputPicture name="picture" :src="src" :with-manipulation-buttons="editModeOn" @picture-changed="pictureChanged" />
+      <InputPicture name="picture" :src="src" :with-manipulation-buttons="editModeOn" :wait-before-ready="uploading" @picture-changed="pictureChanged" />
     </template>
   </Group>
 </template>
@@ -25,7 +25,7 @@ export default {
   data () {
     return {
       src: Promise.resolve(''),
-      downloading: false
+      uploading: false
     }
   },
   computed: {
@@ -45,7 +45,7 @@ export default {
     }
   },
   watch: {
-    cover (cover) {
+    cover () {
       this.load()
     }
   },
@@ -56,10 +56,15 @@ export default {
     pictureChanged (newFile) {
       this.bookModule.unlinkCover()
       if (typeof newFile !== 'undefined') {
-        this.bookModule.linkNewCover({
-          file: newFile,
-          name: newFile.name
-        })
+        this.uploading = true
+        this.bookModule
+          .linkNewCover({
+            file: newFile,
+            name: newFile.name
+          })
+          .finally(() => {
+            this.uploading = false
+          })
       }
     },
     load () {
@@ -73,7 +78,6 @@ export default {
       if (this.cover instanceof File) {
         this.src = setFile(this.cover)
       } else {
-        this.downloading = true
         const requestService = container.resolve(RequestService)
         const request = requestService.createRequest(this.cover).setResponseType('blob')
         this.src = requestService.execute(request, {

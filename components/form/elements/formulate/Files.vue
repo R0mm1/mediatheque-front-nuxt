@@ -37,7 +37,7 @@ export default class Files extends Vue {
   @Prop({ default: null, type: Number })maxFiles!:number|null
   @Prop({ default: null, type: Function })downloadAction!:null | ((bookId: string)=>any)
   @Prop({ type: Array, required: true })files!:MedFile[]
-  @Prop({ type: Function, required: true }) onFileAdded!:((file: MedFile)=>any)
+  @Prop({ type: Function, required: true }) onFileAdded!:((file: MedFile)=>Promise<any>)
   @Prop({ type: Function })onFileRemoved?:(()=>any)
 
   isFileLoading: boolean = false
@@ -59,8 +59,8 @@ export default class Files extends Vue {
       .setFile(input.files[0])
       .setName(input.files[0].name)
       .setIsNew(true)
-    Promise.resolve(this.onFileAdded(file))
-      .then(() => {
+    this.onFileAdded(file)
+      .finally(() => {
         this.isFileLoading = false
       })
   }
@@ -114,6 +114,12 @@ input[type='file'] {
 .files_buttons .form_element_button {
   float: right;
 }
+
+.loader {
+  height: 50px;
+  margin: auto;
+}
+
 </style>
 
 <style lang="scss">
