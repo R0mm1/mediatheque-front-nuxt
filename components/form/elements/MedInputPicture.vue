@@ -10,12 +10,12 @@
         :style="'background-image: url('+pictureSrc+')'"
         @click="displayFileChooser"
       >
-        <Loader v-if="isPictureLoading" class="loader" type="s" />
-        <div v-if="!hasPictureLoaded && !isPictureLoading" class="preview_default">
+        <Loader v-if="displayLoader" class="loader" type="s" />
+        <div v-if="!hasPictureLoaded && !displayLoader" class="preview_default">
           <i class="far fa-image" />
         </div>
       </div>
-      <div class="picture_buttons" v-if="withManipulationButtons">
+      <div v-if="withManipulationButtons" class="picture_buttons">
         <MedInputButton :button-descriptor="buttonUploadDescriptor" @click.native="displayFileChooser" />
         <MedInputButton :button-descriptor="buttonDownloadDescriptor" @click.native="download" />
         <MedInputButton :button-descriptor="buttonDeleteDescriptor" @click.native="clear" />
@@ -38,7 +38,8 @@ export default {
     name: { type: String, default: '' },
     src: { type: Promise, required: true },
     autofillSrcOnChange: { type: Boolean, default: false },
-    withManipulationButtons: { type: Boolean, default: true }
+    withManipulationButtons: { type: Boolean, default: true },
+    waitBeforeReady: { type: Boolean, default: false } // Only display a loader if this bool is true
   },
   data () {
     return {
@@ -47,6 +48,9 @@ export default {
     }
   },
   computed: {
+    displayLoader () {
+      return this.isPictureLoading || this.waitBeforeReady
+    },
     hasPictureLoaded () {
       return typeof this.pictureSrc !== 'undefined' && this.pictureSrc.length > 0
     },
