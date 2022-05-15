@@ -1,16 +1,13 @@
 <template>
   <div v-if="rowAction.isDisplayed(rowData)" class="rowCustomAction">
     <MedInputButton :button-descriptor="buttonDescriptor" @click.native="triggerCustomAction" />
-
-    <div v-if="rowAction.needConfirm" class="customActionConfirm" :class="{isDisplayed: confirmDisplayed}">
-      {{ rowAction.confirmMessage }}
-    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import RowAction from '~/assets/ts/list/RowAction'
+import RowActionPayload from '~/assets/ts/list/RowActionPayload'
 import MedInputButton from '~/components/form/elements/MedInputButton.vue'
 import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
 
@@ -22,7 +19,6 @@ export default class CustomAction extends Vue {
   @Prop(Object) rowData!: object
 
   clickCounter: number = 0
-  confirmDisplayed: boolean = false
 
   get buttonDescriptor (): ButtonDescriptor {
     return new ButtonDescriptor(this.rowAction.id, this.rowAction.label, 'button').setFaIcon(this.rowAction.iconClassname)
@@ -31,19 +27,10 @@ export default class CustomAction extends Vue {
   triggerCustomAction (event: MouseEvent) {
     this.clickCounter++
 
-    let triggerEvent = true
-    if (this.rowAction.needConfirm) {
-      if (this.clickCounter === 1) {
-        this.confirmDisplayed = true
-        triggerEvent = false
-      }
-    }
-
-    if (triggerEvent) {
-      this.$emit('custom-action-triggered', this.rowAction.id)
-      this.confirmDisplayed = false
-      this.clickCounter = 0
-    }
+    this.$emit('custom-action-triggered', new RowActionPayload(
+      this.rowAction.id,
+      this.clickCounter
+    ))
 
     event.stopPropagation()
   }
