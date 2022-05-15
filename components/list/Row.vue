@@ -29,6 +29,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator'
 import Column from '~/assets/ts/list/Column'
 import DataSubProperty from '~/assets/ts/list/DataSubProperty'
 import RowAction from '~/assets/ts/list/RowAction'
+import { ActionPayload } from '~/components/list/row/CustomAction.vue'
 
 @Component({
   components: {
@@ -103,7 +104,7 @@ export default class Row extends Vue {
     return value
   }
 
-  customActionTriggered (actionName: string) {
+  customActionTriggered (actionName: ActionPayload) {
     this.$parent.$emit('custom-action-triggered', actionName, this.dataRow)
   }
 
