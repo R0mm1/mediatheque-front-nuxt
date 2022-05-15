@@ -5,11 +5,20 @@
     </template>
 
     <template #group_content>
-      <div>
-        Tout les livres de {{ authorFullName }} présents dans la médiathèque:
+      <div v-if="fetching" id="loader-container">
+        <Loader type="s" />
       </div>
+      <template v-else>
+        <div>
+          Tout les livres de {{ authorFullName }} présents dans la médiathèque:
+        </div>
+        <div id="extra-info">
+          <MedInputSelect v-model="activeFilter" :select-descriptor="selectBookTypeDescriptor" />
+          <div>{{ countSimpleListElements }} livre(s)</div>
+        </div>
 
-      <SimpleList :elements="simpleListElements" :actions="simpleListRowAction" />
+        <SimpleList :elements="simpleListElements" :actions="simpleListRowAction" />
+      </template>
     </template>
   </Group>
 </template>
@@ -23,22 +32,60 @@ import authorModule from '~/assets/ts/store/AuthorModule'
 import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
 import { AuthorBook } from '~/assets/ts/entity/AuthorEntity'
 import Group from '~/components/page/Group.vue'
+import { BookTypes } from '~/assets/ts/service/BookService'
+import MedInputSelect from '~/components/form/elements/MedInputSelect.vue'
+import SelectDescriptor from '~/assets/ts/form/SelectDescriptor'
+import Loader from '@/components/widgets/Loader.vue'
+
+export type Filter = 'none' | BookTypes
 
 @Component({
   components: {
+    MedInputSelect,
     SimpleList,
-    Group
+    Group,
+    Loader
   }
 })
 export default class GroupBibliography extends Vue {
+  activeFilter: Filter = 'none'
+  selectBookTypeOptions: { [key in Filter]: string } = {
+    none: 'Tous',
+    PaperBook: 'Papier',
+    ElectronicBook: 'Epub'
+  }
+
+  get fetching () {
+    return authorModule.flagService.flags.fetching
+  }
+
   get authorFullName () {
     return authorModule.author.firstname + ' ' + authorModule.author.lastname
   }
 
   get simpleListElements () {
-    return authorModule.author.books.map((authorBook) => {
-      return new Element(authorBook.id.toString(), authorBook.title, authorBook)
-    })
+    return authorModule.author.books
+      .filter((authorBook) => {
+        if (this.activeFilter === 'none') {
+          return true
+        }
+
+        return authorBook['@type'] === this.activeFilter
+      })
+      .map((authorBook) => {
+        return new Element(authorBook.id.toString(), authorBook.title, authorBook)
+      })
+  }
+
+  get countSimpleListElements () {
+    return this.simpleListElements.length
+  }
+
+  get selectBookTypeDescriptor () {
+    const descriptor = new SelectDescriptor('bookType', '').setFaIcon('fas fa-book')
+    descriptor.options = this.selectBookTypeOptions
+    descriptor.defaultValue = 'none'
+    return descriptor
   }
 
   get simpleListRowAction () {
@@ -64,6 +111,29 @@ export default class GroupBibliography extends Vue {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+#loader-container{
+  width: 100%;
+  text-align: center;
 
+  img{
+    width: 50px;
+  }
+}
+
+#extra-info {
+  display: flex;
+  font-size: .9rem;
+
+  > div {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin: 5px 0 5px 0;
+
+    &:not(:first-of-type) {
+      margin-left: 5px;
+    }
+  }
+}
 </style>

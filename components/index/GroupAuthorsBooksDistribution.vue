@@ -69,9 +69,9 @@ export default {
             this.chartData.datasets[0].backgroundColor.push('rgba(' + red + ',' + green + ',' + blue + ')')
             this.chartData.labels.push(entry.firstname + ' ' + entry.lastname)
 
-            red = red * 1.75
-            green = green * 1.75
-            blue = blue * 1.75
+            red = red * 1.50
+            green = green * 1.50
+            blue = blue * 1.50
           })
         this.chartKey++
         this.isLoading = false

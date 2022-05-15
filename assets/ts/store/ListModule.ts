@@ -15,7 +15,7 @@ class ListModule extends VuexModule {
   _paginationRowsPerPage: number = 30
   _paginationCurrentPage: number = 1
 
-  _customFilters: Filter[] = []
+  _customFilters: {[key: string]: Filter} = {}
 
   _searchQuery: string = ''
 
@@ -68,18 +68,12 @@ class ListModule extends VuexModule {
     this._paginationCurrentPage = currentPage
   }
 
-  @Mutation setCustomFilters (customFilters: Filter[]) {
+  @Mutation setCustomFilters (customFilters: {[key: string]: Filter}) {
     this._customFilters = customFilters
   }
 
   @Mutation setCustomFilter (customFilter: Filter) {
-    for (const [index, filter] of this._customFilters.entries()) {
-      if (filter.property === customFilter.property) {
-        this._customFilters.splice(index, 1)
-      }
-    }
-
-    this._customFilters.push(customFilter)
+    Vue.set(this._customFilters, customFilter.property, customFilter)
   }
 
   @Mutation setLabElements (labElements: LeftActionBarElement[]) {
@@ -112,7 +106,7 @@ class ListModule extends VuexModule {
       })
 
       const customFilters: { [index: string]: string } = {}
-      this._customFilters.forEach((customFilter) => {
+      Object.values(this._customFilters).forEach((customFilter) => {
         if (typeof customFilter.value === 'string') {
           customFilters[customFilter.property] = customFilter.value
         }

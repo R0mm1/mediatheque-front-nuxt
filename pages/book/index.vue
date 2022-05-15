@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="book-list" :class="{withPopupOpened: bookDeleteDisplayPopup}">
     <List
       ref="list"
       api-endpoint="/books"
@@ -10,10 +10,16 @@
       :callback="setBook"
       @custom-action-triggered="customActionTriggered"
     />
+    <BookListPopupDelete
+      :is-displayed="bookDeleteDisplayPopup"
+      :book-title="bookDeleteBookTitle"
+      @book-delete-cancel="bookDeleteCancel"
+      @book-delete-trigger="bookDeleteTrigger"
+    />
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import Column from 'assets/ts/list/Column'
 import DataSubProperty from 'assets/ts/list/DataSubProperty'
@@ -23,15 +29,27 @@ import LeftActionBarProperties from 'assets/ts/list/LeftActionBarProperties'
 import LeftActionBarFormSelectDescriptor from 'assets/ts/list/LeftActionBarFormSelectDescriptor'
 import BookService from 'assets/ts/service/BookService'
 import bookElectronicModule from 'assets/ts/store/book/BookElectronicModule'
-import BookStoreService from 'assets/ts/service/BookStoreService'
 import LeftActionBarSeparatorDescriptor from 'assets/ts/list/LeftActionBarSeparatorDescriptor'
-import List from '~/components/list/List'
+import List from '~/components/list/List.vue'
 import LeftActionBarLinkDescriptor from 'assets/ts/list/LeftActionBarLinkDescriptor'
+import { BookEntity } from '~/assets/ts/entity/BookEntity'
+import { BookPaperItem } from '~/assets/ts/models/BookPaper'
+import { BookElectronicItem } from '~/assets/ts/models/BookElectronic'
+import BookListPopupDelete from '~/components/book/BookListPopupDelete.vue'
+import BookStoreService from '~/assets/ts/service/BookStoreService'
+import RowActionPayload from '~/assets/ts/list/RowActionPayload'
 
 @Component({
-  components: { List }
+  components: { List, BookListPopupDelete }
 })
 export default class Book extends Vue {
+  bookDeleteDisplayPopup: boolean = false
+  bookDeleteBook: BookPaperItem | BookElectronicItem | null = null
+
+  get bookDeleteBookTitle () {
+    return this.bookDeleteBook?.title
+  }
+
   cols = [
     new Column('title', 'Titre'),
     new Column('year', 'Année'),
@@ -46,11 +64,10 @@ export default class Book extends Vue {
 
   rowActions = [
     new RowAction('download', '', 'fas fa-file-download')
-      .setIsDisplayed((book) => {
+      .setIsDisplayed((book: BookEntity) => {
         return typeof book['@type'] === 'string' && book['@type'] === BookService.bookElectronic
       }),
     new RowAction('delete', '', 'far fa-trash-alt')
-      .setNeedConfirm(true, 'Re-cliquez pour confirmer la suppression')
   ]
 
   leftActionBarProperties = new LeftActionBarProperties([
@@ -85,7 +102,7 @@ export default class Book extends Vue {
     )
   ], false)
 
-  setBook (selectedBook) {
+  setBook (selectedBook: BookEntity) {
     const type = selectedBook['@type']
     if (type !== 'ElectronicBook' && type !== 'PaperBook') {
       throw new Error('Invalid book type')
@@ -99,34 +116,58 @@ export default class Book extends Vue {
     window.location.href = '/book/' + matchingType[type] + selectedBook.id
   }
 
-  customActionTriggered (action, book) {
-    switch (action) {
+  customActionTriggered (action: RowActionPayload, book: BookPaperItem | BookElectronicItem) {
+    switch (action.action) {
       case 'download':
+        if (typeof book.id === 'undefined') {
+          throw new TypeError('The book id is not defined')
+        }
         bookElectronicModule.get(book.id).then(() => {
           bookElectronicModule.downloadEbook()
         })
         break
       case 'delete': {
-        const bookStore = (new BookStoreService()).getStore(book)
-        bookStore.setBook(book)
-        bookStore.deleteBook().then(() => {
-          this.$refs.list.load()
-        })
-          .catch((error) => {
-            this.$toasted.show(error, {
-              ...this.$config.default.notification_settings,
-              type: 'error',
-              icon: 'fa-times'
-            })
-          })
-
+        this.bookDeleteBook = book
+        this.bookDeleteDisplayPopup = true
         break
       }
     }
+  }
+
+  bookDeleteCancel () {
+    this.bookDeleteDisplayPopup = false
+    this.bookDeleteBook = null
+  }
+
+  bookDeleteTrigger () {
+    if (this.bookDeleteBook === null) {
+      return
+    }
+    const bookStore = (new BookStoreService()).getStore(this.bookDeleteBook)
+    bookStore.setBook(this.bookDeleteBook)
+    bookStore.deleteBook()
+      .then(() => {
+        this.bookDeleteDisplayPopup = false
+        this.bookDeleteBook = null;
+        (this.$refs.list as any).load()
+      })
+      .catch((error) => {
+        this.$toasted.show(error, {
+          ...this.$config.default.notification_settings,
+          type: 'error',
+          icon: 'fa-times'
+        })
+      })
   }
 }
 </script>
 
 <style lang="scss">
+#book-list{
+  position: relative;
 
+  &.withPopupOpened #vueListContainer{
+    filter: blur(8px);
+  }
+}
 </style>

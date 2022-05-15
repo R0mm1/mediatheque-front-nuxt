@@ -27,8 +27,6 @@ export default class MedSelect extends Vue {
 
   bindValue?: string = ''
 
-  noInputEventEmission: boolean = false
-
   get customClasses () {
     const classes = ['med_select']
     if (this.selectDescriptor.noDefaultStyle) {
@@ -47,25 +45,12 @@ export default class MedSelect extends Vue {
     }
   }
 
-  setValue (value: string) {
-    this.noInputEventEmission = true
-    this.bindValue = value
-  }
-
   @Watch('selectDescriptor', { deep: true }) descriptorChanged () {
     this.reloadOptions()
   }
 
-  @Watch('value') valueChanged () {
-    this.noInputEventEmission = true
-    this.bindValue = this.value
-  }
-
   @Watch('bindValue') bindValueChanged (newVal: string) {
-    if (!this.noInputEventEmission) {
-      this.$emit('input', newVal)
-    }
-    this.noInputEventEmission = false
+    this.$emit('input', newVal)
   }
 
   created () {
@@ -73,7 +58,7 @@ export default class MedSelect extends Vue {
     if (typeof this.selectDescriptor.defaultValue !== 'undefined' && typeof this.value === 'undefined') {
       this.bindValue = this.selectDescriptor.defaultValue
     } else {
-      this.valueChanged()
+      this.bindValue = this.value
     }
   }
 }

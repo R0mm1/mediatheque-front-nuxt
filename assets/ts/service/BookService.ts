@@ -4,9 +4,11 @@ import { BookPaper } from '~/assets/ts/models/BookPaper'
 import { Book } from '~/assets/ts/models/Book'
 import { BookElectronic } from '~/assets/ts/models/BookElectronic'
 
+export type BookTypes = 'ElectronicBook' | 'PaperBook'
+
 export default class BookService {
-  static bookElectronic: string = 'ElectronicBook'
-  static bookPaper: string = 'PaperBook'
+  static bookElectronic: BookTypes = 'ElectronicBook'
+  static bookPaper: BookTypes = 'PaperBook'
 
   entityService: EntityService = new EntityService()
 
