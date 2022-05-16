@@ -12,15 +12,15 @@
 <script lang="ts">
 
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { BookEntity } from '~/assets/ts/entity/module'
 import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
 import MedInputButton from '~/components/form/elements/MedInputButton.vue'
+import { BookItem } from '~/assets/ts/models/Book'
 
 @Component({
   components: { MedInputButton }
 })
 export default class BookListRowDetails extends Vue {
-  @Prop({ type: Object, required: true }) data!: BookEntity
+  @Prop({ type: Object, required: true }) data!: BookItem
 
   get summary () {
     if (typeof this.data.shortSummary === 'string' && this.data.shortSummary.length > 0) {

@@ -2,9 +2,9 @@ import { Action, Module, VuexModule, getModule, Mutation } from 'vuex-module-dec
 import { container } from 'tsyringe'
 import store from '~/assets/ts/store/store'
 import { GroupEntity } from '~/assets/ts/entity/GroupEntity'
-import { BookEntity } from '~/assets/ts/entity/module'
 import EntityService from '~/assets/ts/service/EntityService'
 import RequestService from '~/assets/ts/service/RequestService'
+import { Book } from '~/assets/ts/models/Book'
 
 @Module({ dynamic: true, name: 'group', store, namespaced: true })
 class GroupModule extends VuexModule {
@@ -50,7 +50,7 @@ class GroupModule extends VuexModule {
         .addHeader('Content-Type', 'application/json')
         .setBody(
           (() => {
-            group.books = group.books.map((book: BookEntity | string) => {
+            group.books = group.books.map((book: Book | string) => {
               return this.entityService.getIri(book)
             })
             return group
