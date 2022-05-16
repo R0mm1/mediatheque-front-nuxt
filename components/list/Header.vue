@@ -44,8 +44,12 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
 
-import Column from '~/assets/ts/list/Column'
+import { container } from 'tsyringe'
+import Column, { ColumnSort } from '~/assets/ts/list/Column'
 import listModule from '~/assets/ts/store/ListModule'
+import ListService from '~/assets/ts/service/ListService'
+
+const listService = container.resolve(ListService)
 
 @Component({
   components: {
@@ -91,15 +95,26 @@ export default class Header extends Vue {
   }
 
   sortUpSwitched (column: Column) {
-    listModule.handleSortState({ dataField: column.dataField, sortState: Column.sortUp })
+    this.setSort(column, Column.sortUp)
   }
 
   sortDownSwitched (column: Column) {
-    listModule.handleSortState({ dataField: column.dataField, sortState: Column.sortDown })
+    this.setSort(column, Column.sortDown)
+  }
+
+  setSort (column: Column, sortState: ColumnSort|null) {
+    if (listService.getQueryFilter('lst-', column.dataField, this.$router) === sortState) {
+      sortState = null
+    }
+    column.sortState = sortState ?? Column.sortNone
+    listService.setQueryFilter('lst-', column.dataField, sortState, this.$router)
   }
 
   searchFiltered (column: Column) {
     this.setHasPopupNotice(column.dataField, column.searchString.length > 0)
+    const queryParamSearchValue = column.searchString.length > 0 ? column.searchString : null
+    this.$set(this.listDisplayPopup, column.dataField, false)
+    listService.setQueryFilter('lsh-', column.dataField, queryParamSearchValue, this.$router)
   }
 
   created () {

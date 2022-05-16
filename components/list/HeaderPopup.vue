@@ -21,7 +21,6 @@ import MedInputButton from '~/components/form/elements/MedInputButton.vue'
 import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
 import MedInputTextWithButton from '~/components/form/elements/MedInputTextWithButton.vue'
 import TextWithButtonDescriptor from '~/assets/ts/form/TextWithButtonDescriptor'
-import listModule from '~/assets/ts/store/ListModule'
 
 @Component({
   components: { MedInputTextWithButton, MedInputButton, MedInputText }
@@ -37,7 +36,6 @@ export default class HeaderPopup extends Vue {
   @Emit('list-header-search')
   search () {
     this.column.searchString = this.searchString
-    listModule.setColumn(this.column)
     return this.column
   }
 

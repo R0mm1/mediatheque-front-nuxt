@@ -19,7 +19,6 @@
 
           <MedInputSelect
             v-if="isSelect(labElement)"
-            :ref="labElement.formElementDescriptor.name"
             v-model="customFiltersValues[labElement.formElementDescriptor.name]"
             :select-descriptor="labElement.formElementDescriptor"
           />
@@ -39,25 +38,30 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
+import VueRouter from 'vue-router'
+import { container } from 'tsyringe'
 import LeftActionBarProperties from '../../assets/ts/list/LeftActionBarProperties'
 import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
 import LeftActionBarElement from '~/assets/ts/list/LeftActionBarElement'
-import listModule from '~/assets/ts/store/ListModule'
 import LeftActionBarFormSelectDescriptor from '~/assets/ts/list/LeftActionBarFormSelectDescriptor'
-import Filter from '~/assets/ts/list/Filter'
 import MedInputSelect from '~/components/form/elements/MedInputSelect.vue'
 import MedInputButton from '~/components/form/elements/MedInputButton.vue'
 import LeftActionBarLinkDescriptor from '~/assets/ts/list/LeftActionBarLinkDescriptor'
+import ListService from '~/assets/ts/service/ListService'
 
-const customFilterChangeHandler = function (element: LeftActionBarElement, value?: any) {
+const listService = container.resolve(ListService)
+
+const customFilterChangeHandler = function (router: VueRouter, element: LeftActionBarElement, value?: any) {
   if (element.type === 'filter') {
+    let filterValue = value
     switch (element.formElementDescriptor.descriptorType) {
-      case LeftActionBarFormSelectDescriptor.descriptorType:
-        listModule.setCustomFilter(new Filter(element.formElementDescriptor.name, value))
-        break
       case ButtonDescriptor.descriptorType:
-        listModule.setCustomFilter(new Filter(element.formElementDescriptor.name, element.callback()))
+        filterValue = element.callback()
         break
+    }
+
+    if (typeof filterValue !== 'undefined') {
+      listService.setQueryFilter('lcf-', element.formElementDescriptor.name, value, router)
     }
   } else {
     element.callback()
@@ -112,25 +116,23 @@ export default class LeftActionBar extends Vue {
     return 'labe-unknown'
   }
 
-  get listCustomFilters () {
-    return listModule._customFilters
-  }
-
   /**
-   * Return the custom filters, indexed by the name of the filter and wrapped in a proxy.
-   * This way, each custom filter can refer to himself in v-model so:
-   * - when the value is read, the proxy return the current filter value from the list module, or the default defined in the form descriptor when appropriate
-   * - when the value is updated, the proxy will update the filter value in the list module
+   * This property represent all the custom filters available, indexed by the filter name. It makes it usable with v-model.
+   * The value is wrapped in a proxy so:
+   * - The values are retrieved from the query string. If the filter is not defined in the query string, the default
+   * value from the descriptor is returned, or null if there is no default value
+   * - When the filter is modified, the query string is updated
    */
   get customFiltersValues () {
-    const customFilters = this.listCustomFilters
+    const router = this.$router
 
     const handler = {
       get (obj: {[key: string]: LeftActionBarElement}, prop: string) {
         const lfb = obj[prop] ?? undefined
         if (typeof lfb !== 'undefined') {
-          if (typeof customFilters[lfb.formElementDescriptor.name] !== 'undefined') {
-            return customFilters[lfb.formElementDescriptor.name].value
+          const paramFromQuery = listService.getQueryFilter('lcf-', lfb.formElementDescriptor.name, router)
+          if (paramFromQuery !== 'undefined') {
+            return paramFromQuery
           }
 
           if (lfb.formElementDescriptor.descriptorType === 'LeftActionBarFormSelectDescriptor') {
@@ -143,7 +145,7 @@ export default class LeftActionBar extends Vue {
         const lfb = obj[prop] ?? undefined
 
         if (typeof lfb !== 'undefined') {
-          customFilterChangeHandler(lfb, value)
+          customFilterChangeHandler(router, lfb, value)
         }
 
         return true
@@ -159,7 +161,7 @@ export default class LeftActionBar extends Vue {
   }
 
   customFilterChangeHandler (element: LeftActionBarElement, value?: any) {
-    customFilterChangeHandler(element, value)
+    customFilterChangeHandler(this.$router, element, value)
   }
 }
 </script>

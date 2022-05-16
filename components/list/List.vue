@@ -133,69 +133,20 @@ export default class List extends Vue {
 
   // Handle list data filtering (filters, search...)
 
-  get customFilters () {
-    return listModule._customFilters
-  }
-
   get columns () {
     return listModule.columns
   }
 
-  @Watch('columns', { deep: true })columnsChanged (columns: Column[]) {
-    if (!this.isLoading) {
-      const filteredQuery = this.removeParamsFromQuery([SortQueryParamPrefix, SearchQueryParamPrefix])
-      Object.values(columns).forEach((column: Column) => {
-        if (column.sortState !== Column.sortNone) {
-          filteredQuery.push([SortQueryParamPrefix + column.dataField, column.sortState])
-        }
-        if (column.searchString.length > 0) {
-          filteredQuery.push([SearchQueryParamPrefix + column.dataField, encodeURIComponent(column.searchString)])
-        }
-      })
-      this.$router.push({
-        query: Object.fromEntries(filteredQuery)
-      })
-    }
-  }
-
-  @Watch('customFilters', { deep: true })
-  customFiltersChanged () {
-    if (!this.isLoading) {
-      // Extract the current query string and remove filters on it
-      const filteredQuery = this.removeParamsFromQuery(FilterQueryParamPrefix)
-
-      // Add the current filters on the query string and give it to the router
-      Object.values(this.customFilters).forEach(customFilter => filteredQuery.push([FilterQueryParamPrefix + customFilter.property, customFilter.value]))
-      this.$router.push({
-        query: Object.fromEntries(filteredQuery)
-      })
-    }
-  }
-
-  @Watch('$route.query')
-  queryStringChanged () {
-    this.updateFiltersFromQueryString()
-    this.updateColumnsFromQueryString()
-    this.load(false, true)
-  }
-
   updateFiltersFromQueryString () {
-    const filters: {[key: string]: Filter} = {}
+    const updateFilters: {[key: string]: Filter} = {}
     Object.entries(this.$route.query).forEach(([paramName, paramValue]) => {
-      if (paramName.startsWith(FilterQueryParamPrefix)) {
-        if (typeof paramValue === 'string') {
-          const property = paramName.split(FilterQueryParamPrefix).pop() ?? ''
-          filters[property] = new Filter(property, paramValue)
-        } else if (Array.isArray(paramValue)) {
-          paramValue.forEach((value) => {
-            const property = paramName.split(FilterQueryParamPrefix).pop() ?? ''
-            filters[property] = new Filter(property, value)
-          })
-        }
+      if (paramName.startsWith(FilterQueryParamPrefix) && typeof paramValue === 'string') {
+        const filter = paramName.split(FilterQueryParamPrefix).pop() as string
+        updateFilters[filter] = new Filter(filter, paramValue)
       }
     })
 
-    listModule.setCustomFilters(filters)
+    listModule.setCustomFilters(updateFilters)
   }
 
   updateColumnsFromQueryString () {
@@ -218,23 +169,11 @@ export default class List extends Vue {
     })
   }
 
-  removeParamsFromQuery (paramsStartingWith: ListQueryParams|ListQueryParams[]):[string, string|null][] {
-    const includeParam = (paramName: string, paramsStartingWith: ListQueryParams|ListQueryParams[]):boolean => {
-      if (Array.isArray(paramsStartingWith)) {
-        for (const startString of paramsStartingWith) {
-          if (paramName.startsWith(startString)) {
-            return true
-          }
-        }
-        return false
-      } else {
-        return paramName.startsWith(paramsStartingWith)
-      }
-    }
-
-    return Object.entries(this.$route.query)
-      .map(queryParam => includeParam(queryParam[0], paramsStartingWith) ? null : queryParam)
-      .filter((value):value is [string, string] => value !== null)
+  @Watch('$route.query')
+  applyQueryString () {
+    this.updateFiltersFromQueryString()
+    this.updateColumnsFromQueryString()
+    this.load(false)
   }
 
   // End handle list data filtering (filters, search...)
@@ -244,9 +183,7 @@ export default class List extends Vue {
       listModule.setColumn(col)
     })
 
-    this.updateFiltersFromQueryString()
-    this.updateColumnsFromQueryString()
-    this.load(false)
+    this.applyQueryString()
   }
 }
 </script>
