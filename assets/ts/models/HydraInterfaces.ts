@@ -1,7 +1,7 @@
 export interface HydraItem{
-  '@context': string
-  '@id': string
-  '@type': string
+  '@context'?: string
+  '@id'?: string
+  '@type'?: string
 }
 
 type HydraCollectionMember<Type> = {

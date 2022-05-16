@@ -3,7 +3,7 @@ import { Action, Mutation, VuexModule } from 'vuex-module-decorators'
 import { Method } from 'axios'
 import {
   AuthorEntity,
-  BookEntity, FileEntity,
+  FileEntity,
   GroupEntity,
   BookNotationEntity
 } from '~/assets/ts/entity/module'
@@ -13,6 +13,7 @@ import EntityModuleFlagInterface from '~/assets/ts/store/EntityModuleFlagInterfa
 import EventService from '~/assets/ts/service/EventService'
 import HistoryService from '~/assets/ts/service/HistoryService'
 import RequestService from '~/assets/ts/service/RequestService'
+import { Book, BookItem } from '~/assets/ts/models/Book'
 
 export abstract class BookModule extends VuexModule {
   static EVENT_BOOK_SAVED = 'book-saved'
@@ -25,7 +26,7 @@ export abstract class BookModule extends VuexModule {
 
   historyService: HistoryService = new HistoryService()
 
-  book: BookEntity = this.bookService.getBaseBook()
+  book: BookItem = this.bookService.getBaseBook()
 
   tempNewCover: File | null = null // Can't use undefined instead of null otherwise the attribute won't appear on the state
 
@@ -52,7 +53,7 @@ export abstract class BookModule extends VuexModule {
       this.historyService = historyService
     }
 
-    @Mutation setBook (book: BookEntity) {
+    @Mutation setBook (book: Book) {
       this.book = book
     }
 
@@ -172,6 +173,10 @@ export abstract class BookModule extends VuexModule {
 
     @Action({ rawError: true })
     updateNote (note: Number) {
+      if (typeof this.book['@id'] === 'undefined') {
+        throw new TypeError('The book is not loaded from db')
+      }
+
       const requestService = container.resolve(RequestService)
       const requestBody: BookNotationEntity = {}
       let url = '/book_notations'
