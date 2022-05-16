@@ -83,7 +83,7 @@ export default class GroupInformation extends Vue {
   }
 
   get pageCount () {
-    return this.bookModule.book.pageCount?.toString()
+    return this.bookModule.book.pageCount ? this.bookModule.book.pageCount.toString() : ''
   };
 
   set pageCount (pageCount: string | undefined) {
