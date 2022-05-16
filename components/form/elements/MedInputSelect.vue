@@ -53,6 +53,10 @@ export default class MedSelect extends Vue {
     this.$emit('input', newVal)
   }
 
+  @Watch('value') valueChanged (newVal: string) {
+    this.bindValue = newVal
+  }
+
   created () {
     this.reloadOptions()
     if (typeof this.selectDescriptor.defaultValue !== 'undefined' && typeof this.value === 'undefined') {
