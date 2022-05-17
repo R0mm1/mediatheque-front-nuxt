@@ -9,7 +9,7 @@ export default {
   ** See https://nuxtjs.org/api/configuration-head
   */
   head: {
-    title: process.env.npm_package_name || '',
+    title: 'Médiathèque',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -80,7 +80,7 @@ export default {
   ssr: false,
   publicRuntimeConfig: {
     api: {
-      endpoint: process.env.API_ENDPOINT || 'err-missing-api-endpoint',
+      endpoint: process.env.API_ENDPOINT || 'err-missing-api-endpoint'
     },
     auth: {
       userinfo_endpoint: process.env.USERINFO_ENDPOINT || 'err-missing-userinfo-endpoint',
