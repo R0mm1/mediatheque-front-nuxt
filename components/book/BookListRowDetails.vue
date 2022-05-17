@@ -1,7 +1,12 @@
 <template>
   <div class="book-list-row-details">
     <div class="details-summary">
-      {{ summary }}
+      <template v-if="hasSummary">
+        {{ summary }}
+      </template>
+      <template v-else>
+        <i>Pas de résumé disponible</i>
+      </template>
     </div>
     <div class="details-right-col">
       <MedInputButton :button-descriptor="openBookPageButtonDescriptor" />
@@ -12,18 +17,18 @@
 <script lang="ts">
 
 import { Vue, Component, Prop } from 'vue-property-decorator'
-import { BookEntity } from '~/assets/ts/entity/module'
 import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
 import MedInputButton from '~/components/form/elements/MedInputButton.vue'
+import { BookItem } from '~/assets/ts/models/Book'
 
 @Component({
   components: { MedInputButton }
 })
 export default class BookListRowDetails extends Vue {
-  @Prop({ type: Object, required: true }) data!: BookEntity
+  @Prop({ type: Object, required: true }) data!: BookItem
 
   get summary () {
-    if (typeof this.data.shortSummary === 'string' && this.data.shortSummary.length > 0) {
+    if (this.hasSummary) {
       return this.data.shortSummary + '…'
     }
     return ''
@@ -32,17 +37,27 @@ export default class BookListRowDetails extends Vue {
   get openBookPageButtonDescriptor () {
     return new ButtonDescriptor('openBookPage', 'Ouvrir la page du livre')
   }
+
+  get hasSummary () {
+    return typeof this.data.shortSummary === 'string' && this.data.shortSummary.length > 0
+  }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+
+@import "~/assets/scss/colors.scss";
+
 .book-list-row-details {
   display: flex;
+  margin: 5px 0;
 }
 
 .details-summary{
-  max-width: 500px;
+  width: 515px;
   overflow: hidden;
+  border-right: $shade0 1px solid;
+  padding-right: 15px;
 }
 
 .details-right-col{

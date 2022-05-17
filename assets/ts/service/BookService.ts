@@ -1,4 +1,4 @@
-import { BookEntity, AuthorEntity, GroupEntity } from '@/assets/ts/entity/module'
+import { AuthorEntity, GroupEntity } from '@/assets/ts/entity/module'
 import EntityService from '@/assets/ts/service/EntityService'
 import { BookPaper } from '~/assets/ts/models/BookPaper'
 import { Book } from '~/assets/ts/models/Book'
@@ -35,11 +35,11 @@ export default class BookService {
     }
   }
 
-  isPersisted (book: BookEntity): boolean {
+  isPersisted (book: Book): boolean {
     return typeof book.id !== 'undefined'
   }
 
-  hasAuthor (book: BookEntity, author: AuthorEntity): boolean | number {
+  hasAuthor (book: Book, author: AuthorEntity): boolean | number {
     let hasAuthor: boolean | number = false
     book.authors.forEach((bookAuthor: AuthorEntity, index) => {
       if (author.id === bookAuthor.id) { hasAuthor = index }

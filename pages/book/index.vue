@@ -32,7 +32,6 @@ import bookElectronicModule from 'assets/ts/store/book/BookElectronicModule'
 import LeftActionBarSeparatorDescriptor from 'assets/ts/list/LeftActionBarSeparatorDescriptor'
 import List from '~/components/list/List.vue'
 import LeftActionBarLinkDescriptor from 'assets/ts/list/LeftActionBarLinkDescriptor'
-import { BookEntity } from '~/assets/ts/entity/BookEntity'
 import { BookPaperItem } from '~/assets/ts/models/BookPaper'
 import { BookElectronicItem } from '~/assets/ts/models/BookElectronic'
 import BookListPopupDelete from '~/components/book/BookListPopupDelete.vue'
@@ -64,7 +63,7 @@ export default class Book extends Vue {
 
   rowActions = [
     new RowAction('download', '', 'fas fa-file-download')
-      .setIsDisplayed((book: BookEntity) => {
+      .setIsDisplayed((book: BookPaperItem | BookElectronicItem) => {
         return typeof book['@type'] === 'string' && book['@type'] === BookService.bookElectronic
       }),
     new RowAction('delete', '', 'far fa-trash-alt')
@@ -102,7 +101,7 @@ export default class Book extends Vue {
     )
   ], false)
 
-  setBook (selectedBook: BookEntity) {
+  setBook (selectedBook: BookPaperItem | BookElectronicItem) {
     const type = selectedBook['@type']
     if (type !== 'ElectronicBook' && type !== 'PaperBook') {
       throw new Error('Invalid book type')

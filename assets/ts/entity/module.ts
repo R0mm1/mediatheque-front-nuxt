@@ -1,5 +1,4 @@
 export { AuthorEntity } from './AuthorEntity'
-export { BookEntity } from './BookEntity'
 export { FileEntity } from './FileEntity'
 export { GroupEntity } from './GroupEntity'
 export { UserEntity } from './UserEntity'
