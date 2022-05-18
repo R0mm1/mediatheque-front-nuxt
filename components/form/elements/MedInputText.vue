@@ -9,6 +9,7 @@
     :disabled="textDescriptor.disabled"
     :readonly="!textDescriptor.editModeOn"
     @input.native="$emit('input', bindValue)"
+    @focusin.native="$emit('focusin', bindValue)"
   />
 </template>
 
