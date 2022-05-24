@@ -83,7 +83,7 @@ export default class Book extends Vue {
     new LeftActionBarElement(
       'element',
       () => null,
-      new LeftActionBarLinkDescriptor('addElectronic', 'Epub', '/book/electronic').setFaIcon('fas fa-tablet-alt')
+      new LeftActionBarLinkDescriptor('addElectronic', 'Epub', '/book/electronic/upload').setFaIcon('fas fa-tablet-alt')
     ),
     new LeftActionBarElement(
       'separator',

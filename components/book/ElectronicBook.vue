@@ -119,7 +119,9 @@ export default class ElectronicBook extends Vue {
 
   created () {
     this.switchEditModeOn = this.editModeOn
-    this.reloadBook()
+    if (typeof this.$route.query.init === 'undefined' || this.$route.query.init !== 'false') {
+      this.reloadBook()
+    }
   }
 }
 </script>

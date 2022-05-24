@@ -9,6 +9,8 @@ import EntityProxyService from '~/assets/ts/service/EntityProxyService'
 import { bookPaperBaseUrl } from '~/assets/ts/store/book/BookPaperModule'
 import RequestService from '~/assets/ts/service/RequestService'
 import { BookElectronic, BookElectronicItem } from '~/assets/ts/models/BookElectronic'
+import { ElectronicBookInformation } from '~/assets/ts/models/electronicBookInformation/ElectronicBookInformation'
+import { Image } from '~/assets/ts/models/electronicBookInformation/Image'
 
 @Module({
   dynamic: true,
@@ -147,6 +149,63 @@ export class BookElectronicModule extends BookModule implements EntityModuleInte
         this.flagService.flags.readyToSave = true
         return Promise.reject(response)
       })
+  }
+
+  @Action({ rawError: true }) extractInfo (file: { file: File, name: string }) {
+    const requestService = container.resolve(RequestService)
+    this.context.commit('setTempNewFile', file.file)
+
+    return requestService.sendFile(file.file, 'electronic_book_information/electronic_book_informations', 'electronicBook')
+  }
+
+  @Action({ rawError: true }) createBookFromElectronicBookInformation (electronicBookInformation: ElectronicBookInformation) {
+    if (typeof electronicBookInformation.id === 'undefined') {
+      throw new TypeError('Cannot create book from a not-persisted ElectronicBookInformation')
+    }
+
+    const requestService = container.resolve(RequestService)
+
+    const formData = new FormData()
+    formData.append('electronic_book_information_id', electronicBookInformation.id)
+
+    const request = requestService.createRequest('book_files', 'POST')
+    request.setBody(formData)
+
+    return requestService.execute(request)
+      .then((response: any) => {
+        this.context.commit('setBookFile', response)
+        return Promise.resolve(response)
+      })
+  }
+
+  @Action({ rawError: true }) createCoverFromElectronicBookInformationImage (electronicBookInformationImage: Image) {
+    if (typeof electronicBookInformationImage.id === 'undefined') {
+      throw new TypeError('Cannot create cover from a not-persisted ElectronicBookInformation Image')
+    }
+
+    const requestService = container.resolve(RequestService)
+
+    const formData = new FormData()
+    formData.append('electronic_book_information_image_id', electronicBookInformationImage.id)
+
+    const request = requestService.createRequest('book/covers', 'POST')
+    request.setBody(formData)
+
+    return requestService.execute(request)
+      .then((response: any) => {
+        this.context.commit('setCover', response)
+        return Promise.resolve(response)
+      })
+  }
+
+  @Action({ rawError: true }) deleteElectronicBookInformation (electronicBookInformation: ElectronicBookInformation) {
+    if (typeof electronicBookInformation.id === 'undefined') {
+      throw new TypeError('Cannot delete a not-persisted ElectronicBookInformation')
+    }
+
+    const requestService = container.resolve(RequestService)
+    const request = requestService.createRequest('electronic_book_information/electronic_book_informations/' + electronicBookInformation.id, 'DELETE')
+    return requestService.execute(request)
   }
 }
 
