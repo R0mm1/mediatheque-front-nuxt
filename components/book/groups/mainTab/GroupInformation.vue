@@ -24,7 +24,6 @@
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 import MedInputText from '~/components/form/elements/MedInputText.vue'
 import TextDescriptor from '~/assets/ts/form/TextDescriptor'
-import MedEntities from '~/components/form/elements/MedEntities.vue'
 import Group from '~/components/page/Group.vue'
 import authorModule from '~/assets/ts/store/AuthorModule'
 import { BookPaperModule } from '~/assets/ts/store/book/BookPaperModule'
@@ -35,7 +34,7 @@ import ChipsDescriptor from '~/assets/ts/form/ChipsDescriptor'
 import { BookElectronicModule } from '~/assets/ts/store/book/BookElectronicModule'
 
 @Component({
-  components: { MedChips, MedInputSelect, MedEntities, MedInputText, Group }
+  components: { MedChips, MedInputSelect, MedInputText, Group }
 })
 export default class GroupInformation extends Vue {
   @Prop({ type: Object, required: true }) bookModule!: BookPaperModule | BookElectronicModule

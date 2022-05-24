@@ -45,9 +45,9 @@ export default class RequestService implements RequestServiceInterface {
       )
   }
 
-  public sendFile (file: File, url: string) {
+  public sendFile (file: File, url: string, fieldName: string = 'file') {
     const formData = new FormData()
-    formData.append('file', file)
+    formData.append(fieldName, file)
 
     const request = this.createRequest(url, 'POST')
       .addHeader('Authorization', 'Bearer ' + window.sessionStorage.getItem('access_token'))
