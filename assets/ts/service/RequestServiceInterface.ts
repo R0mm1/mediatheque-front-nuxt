@@ -6,5 +6,5 @@ export default interface RequestServiceInterface{
 
   execute (request: Request) :any
 
-  sendFile (file: File, url:string, requestCredentialsIfUnauthorized: boolean):any
+  sendFile (file: File, url:string, fieldName: string):any
 }
