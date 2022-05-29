@@ -7,9 +7,7 @@
 
     .formulate-input-element--select {
 
-      padding-right: 1.5rem !important;
-
-      &::before {
+      &::after {
         content: "";
         width: 0;
         height: 0;
