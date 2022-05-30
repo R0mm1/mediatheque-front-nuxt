@@ -56,7 +56,8 @@ export default class BookService {
       }),
       groups: book.groups.map((group: GroupEntity): string => {
         return '/reference_groups/' + group.id
-      })
+      }),
+      editor: this.entityService.getIri(book.editor)
     }
 
     if (typeof bookPrepared.bookFile !== 'undefined' && 'bookFile' in book) {

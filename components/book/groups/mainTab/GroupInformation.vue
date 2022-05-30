@@ -13,6 +13,7 @@
         <MedInputText v-model="year" :text-descriptor="formInputTextDescriptors.year" />
         <MedInputText v-model="pageCount" :text-descriptor="formInputTextDescriptors.pageCount" />
         <MedInputText v-model="isbn" :text-descriptor="formInputTextDescriptors.isbn" />
+        <MedSelect v-model="editor" :med-select-descriptor="medSelectEditorDescriptor" />
 
         <slot name="specific-fields" />
       </template>
@@ -22,28 +23,31 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import { container } from 'tsyringe'
 import MedInputText from '~/components/form/elements/MedInputText.vue'
 import TextDescriptor from '~/assets/ts/form/TextDescriptor'
 import Group from '~/components/page/Group.vue'
 import authorModule from '~/assets/ts/store/AuthorModule'
+import editorModule from '~/assets/ts/store/EditorModule'
 import { BookPaperModule } from '~/assets/ts/store/book/BookPaperModule'
 import { AuthorEntity } from '~/assets/ts/entity/AuthorEntity'
 import MedInputSelect from '~/components/form/elements/MedInputSelect.vue'
 import MedChips from '~/components/form/elements/MedChips.vue'
 import ChipsDescriptor from '~/assets/ts/form/ChipsDescriptor'
 import { BookElectronicModule } from '~/assets/ts/store/book/BookElectronicModule'
+import MedSelectDescriptor, { SelectValue } from '~/assets/ts/form/MedSelectDescriptor'
+import MedSelect from '~/components/form/elements/MedSelect.vue'
+import EditorService from '~/assets/ts/service/EditorService'
+import { Editor, EditorItem } from '~/assets/ts/models/Editor'
+
+const editorService = container.resolve(EditorService)
 
 @Component({
-  components: { MedChips, MedInputSelect, MedInputText, Group }
+  components: { MedChips, MedInputSelect, MedSelect, MedInputText, Group }
 })
 export default class GroupInformation extends Vue {
   @Prop({ type: Object, required: true }) bookModule!: BookPaperModule | BookElectronicModule
   @Prop({ type: Boolean, required: true }) editModeOn!:boolean
-
-  newAuthor = {
-    firstname: undefined,
-    lastname: undefined
-  }
 
   formInputTextDescriptors = {
     title: new TextDescriptor('title').setLabel('Titre').setEditModeOn(this.editModeOn),
@@ -56,6 +60,8 @@ export default class GroupInformation extends Vue {
       lastname: new TextDescriptor('lastname').setLabel('Nom')
     }
   }
+
+  private editors?: SelectValue[]
 
   get title () {
     return this.bookModule.book.title
@@ -101,6 +107,22 @@ export default class GroupInformation extends Vue {
     return this.bookModule.book.authors
   }
 
+  get editor () {
+    const editor = this.bookModule.book?.editor
+    if (typeof editor !== 'undefined' && editor !== null) {
+      return {
+        key: editor['@id'] ?? 'nonexisting-editor',
+        label: editor.name ?? 'Editeur sans nom',
+        value: editor
+      }
+    }
+    return null
+  }
+
+  set editor (selectValue: SelectValue|null) {
+    this.bookModule.setEditor(selectValue?.value ?? undefined)
+  }
+
   get formChipsAuthorsDescriptor () {
     const chipsDescriptor = new ChipsDescriptor()
     chipsDescriptor.name = 'authors'
@@ -128,6 +150,49 @@ export default class GroupInformation extends Vue {
     return chipsDescriptor
   }
 
+  get medSelectEditorDescriptor () {
+    const medSelectEditorDescriptor = new MedSelectDescriptor('editor')
+    medSelectEditorDescriptor.label = 'Editeur'
+
+    if (this.editModeOn && typeof this.editors === 'undefined') {
+      medSelectEditorDescriptor.options = editorService.getEditors()
+        .then((editors) => {
+          this.editors = editors['hydra:member']
+            .map((editor) => {
+              return {
+                key: editor['@id'],
+                label: editor.name as string,
+                value: editor
+              }
+            })
+            .sort((editor1, editor2) => {
+              const label1 = editor1.label.toLowerCase()
+              const label2 = editor2.label.toLowerCase()
+              if (label1 < label2) { return -1 }
+              if (label1 > label2) { return 1 }
+              return 0
+            })
+
+          return Promise.resolve(this.editors)
+        })
+    } else {
+      medSelectEditorDescriptor.options = typeof this.editors === 'undefined' ? [] : this.editors
+    }
+
+    medSelectEditorDescriptor.editModeOn = this.editModeOn
+    medSelectEditorDescriptor.formCreationValidationAction = this.createEditorFromForm
+    medSelectEditorDescriptor.formCreationTitle = 'Nouvel éditeur'
+    medSelectEditorDescriptor.formCreationSchema = [
+      {
+        type: 'text',
+        label: 'Nom',
+        name: 'name'
+      }
+    ]
+
+    return medSelectEditorDescriptor
+  }
+
   authorRemoved (author: AuthorEntity) {
     this.bookModule.removeAuthor(author)
   };
@@ -146,6 +211,21 @@ export default class GroupInformation extends Vue {
       }
     })
   };
+
+  createEditorFromForm (formCreationData: Editor): Promise<SelectValue> {
+    editorModule.set(formCreationData)
+    return editorModule.save()
+      .then((editor: EditorItem|boolean) => {
+        if (typeof editor !== 'boolean') {
+          return Promise.resolve({
+            key: editor['@id'] as string,
+            label: editor.name as string,
+            value: editor
+          })
+        }
+        return Promise.reject(new Error('Expected new editor, false returned'))
+      })
+  }
 
   @Watch('editModeOn') editModeOnChanged () {
     this.formInputTextDescriptors.title.setEditModeOn(this.editModeOn)

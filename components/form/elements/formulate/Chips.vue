@@ -23,7 +23,7 @@
 
       <div v-click-outside="closeProposalsList" class="search_container" :class="{search_active: isProposalsDisplayed}">
         <div class="search_inputs">
-          <MedInputText v-model="searchString" :text-descriptor="searchFieldDescriptor" @click.native="openProposalsList" @focusin="openProposalsList"/>
+          <MedInputText v-model="searchString" :text-descriptor="searchFieldDescriptor" @click.native="openProposalsList" @focusin="openProposalsList" />
           <MedInputButton v-if="isCreationAvailable" :button-descriptor="buttonAddDescriptor" @click.native="openFormCreation" />
         </div>
 
