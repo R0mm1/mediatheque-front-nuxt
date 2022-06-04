@@ -10,7 +10,7 @@ import PaperBook from '~/components/book/PaperBook.vue'
   components: { PaperBook }
 })
 export default class PaperBookPage extends Vue {
-  bookId!: Number;
+  bookId!: Number
 
   created () {
     this.bookId = parseInt(this.$route.params.id)
