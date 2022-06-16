@@ -25,3 +25,9 @@ export interface Book {
 export interface BookItem extends Book, HydraItem{}
 
 export interface BookCollection extends HydraCollection<Book>{}
+
+export interface BookWithFile{
+  // null can be useful to "activate" the prop reactivity on the stores states
+  bookFile?: string | FileEntity | null;
+  hasBookFile: boolean;
+}

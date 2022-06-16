@@ -11,6 +11,7 @@ import RequestService from '~/assets/ts/service/RequestService'
 import { BookElectronic, BookElectronicItem } from '~/assets/ts/models/BookElectronic'
 import { ElectronicBookInformation } from '~/assets/ts/models/electronicBookInformation/ElectronicBookInformation'
 import { Image } from '~/assets/ts/models/electronicBookInformation/Image'
+import BookWithFileHelper from '~/assets/ts/store/book/BookWithFileHelper'
 
 @Module({
   dynamic: true,
@@ -25,6 +26,8 @@ export class BookElectronicModule extends BookModule implements EntityModuleInte
     this.flagService, this.historyService
   )
 
+  protected bookWithFileHelper = new BookWithFileHelper()
+
   book: BookElectronic = new Proxy(this.bookService.getBaseElectronicBook(), this.proxy)
 
   tempNewFile?: File = undefined
@@ -35,37 +38,12 @@ export class BookElectronicModule extends BookModule implements EntityModuleInte
   }
 
   @Action({ rawError: true }) downloadEbook () {
-    // todo: better way to avoid TS errors "Property XXX does not exist on type "ThisType<any>"
-    // when accessing this.context.state.XXX?
-
-    const state = (this.context.state as { tempNewFile: File })
-
-    let promise
     if (typeof this.book.bookFile === 'object' && this.book.bookFile !== null) {
-      const requestService = container.resolve(RequestService)
-      const request = requestService.createRequest('/book_files/' + this.book.bookFile.id).setResponseType('blob')
-      promise = requestService.execute<Blob>(request)
-        .then(blob => URL.createObjectURL(blob))
-    } else if (typeof state.tempNewFile !== 'undefined') {
-      promise = new Promise((resolve) => {
-        return resolve(URL.createObjectURL(state.tempNewFile))
-      })
-    }
-
-    if (typeof promise !== 'undefined') {
-      promise
-        .then((url) => {
-          const a = document.createElement('a')
-          a.href = (url as string)
-          a.download = this.ebookFilename
-          document.body.appendChild(a)
-          a.click()
-          document.body.removeChild(a)
-        })
-        .catch((error) => {
-          console.error(error)
-          alert('Impossible de télécharger le fichier')
-        })
+      this.bookWithFileHelper.downloadBookFile(
+        this.ebookFilename,
+        'book_files/' + this.book.bookFile.id,
+        'electronic_book_file_download_tokens'
+      )
     }
   }
 
