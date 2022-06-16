@@ -1,15 +1,15 @@
 <template>
-  <PaperBook :book-id="bookId" />
+  <AudioBook :book-id="bookId" />
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import PaperBook from '~/components/book/PaperBook.vue'
+import AudioBook from '~/components/book/AudioBook.vue'
 
 @Component({
-  components: { PaperBook }
+  components: { AudioBook }
 })
-export default class PaperBookPage extends Vue {
+export default class ElectronicBookPage extends Vue {
   bookId!: Number
 
   created () {

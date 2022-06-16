@@ -5,7 +5,7 @@ export default abstract class AbstractDescriptor {
   noLabel: boolean = false
   faIcon?: string = undefined
 
-  protected constructor (name: string) {
+  public constructor (name: string) {
     this.name = name
   }
 

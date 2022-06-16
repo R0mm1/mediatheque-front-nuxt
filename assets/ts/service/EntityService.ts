@@ -3,7 +3,7 @@ export default class EntityService {
     if (typeof value === 'string') {
       return value
     } else if (typeof value === 'object' && value !== null) {
-      return value['@id']
+      return value['@id'] ?? null
     } else {
       return null
     }

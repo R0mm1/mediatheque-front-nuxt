@@ -3,12 +3,14 @@ import EntityService from '@/assets/ts/service/EntityService'
 import { BookPaper } from '~/assets/ts/models/BookPaper'
 import { Book } from '~/assets/ts/models/Book'
 import { BookElectronic } from '~/assets/ts/models/BookElectronic'
+import { BookAudio } from '~/assets/ts/models/BookAudio'
 
-export type BookTypes = 'ElectronicBook' | 'PaperBook'
+export type BookTypes = 'ElectronicBook' | 'PaperBook' | 'AudioBook'
 
 export default class BookService {
   static bookElectronic: BookTypes = 'ElectronicBook'
   static bookPaper: BookTypes = 'PaperBook'
+  static bookAudio: BookTypes = 'AudioBook'
 
   entityService: EntityService = new EntityService()
 
@@ -35,6 +37,14 @@ export default class BookService {
     }
   }
 
+  getBaseAudioBook (): BookAudio {
+    return {
+      ...this.getBaseBook(),
+      bookFile: null,
+      hasBookFile: false
+    }
+  }
+
   isPersisted (book: Book): boolean {
     return typeof book.id !== 'undefined'
   }
@@ -56,7 +66,8 @@ export default class BookService {
       }),
       groups: book.groups.map((group: GroupEntity): string => {
         return '/reference_groups/' + group.id
-      })
+      }),
+      editor: this.entityService.getIri(book.editor)
     }
 
     if (typeof bookPrepared.bookFile !== 'undefined' && 'bookFile' in book) {

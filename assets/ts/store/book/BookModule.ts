@@ -14,6 +14,7 @@ import EventService from '~/assets/ts/service/EventService'
 import HistoryService from '~/assets/ts/service/HistoryService'
 import RequestService from '~/assets/ts/service/RequestService'
 import { Book, BookItem } from '~/assets/ts/models/Book'
+import { EditorItem } from '~/assets/ts/models/Editor'
 
 export abstract class BookModule extends VuexModule {
   static EVENT_BOOK_SAVED = 'book-saved'
@@ -123,6 +124,10 @@ export abstract class BookModule extends VuexModule {
 
     @Mutation setNotation (notation: BookNotationEntity | null) {
       this.notation = notation
+    }
+
+    @Mutation setEditor (editor: EditorItem | undefined) {
+      this.book.editor = editor
     }
 
     @Action({ rawError: true })
