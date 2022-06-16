@@ -29,6 +29,7 @@ import LeftActionBarProperties from 'assets/ts/list/LeftActionBarProperties'
 import LeftActionBarFormSelectDescriptor from 'assets/ts/list/LeftActionBarFormSelectDescriptor'
 import BookService from 'assets/ts/service/BookService'
 import bookElectronicModule from 'assets/ts/store/book/BookElectronicModule'
+import bookAudioModule from '~/assets/ts/store/book/BookAudioModule'
 import LeftActionBarSeparatorDescriptor from 'assets/ts/list/LeftActionBarSeparatorDescriptor'
 import List from '~/components/list/List.vue'
 import LeftActionBarLinkDescriptor from 'assets/ts/list/LeftActionBarLinkDescriptor'
@@ -37,9 +38,13 @@ import { BookElectronicItem } from '~/assets/ts/models/BookElectronic'
 import BookListPopupDelete from '~/components/book/BookListPopupDelete.vue'
 import BookStoreService from '~/assets/ts/service/BookStoreService'
 import RowActionPayload from '~/assets/ts/list/RowActionPayload'
+import { BookAudioItem } from '~/assets/ts/models/BookAudio'
 
 @Component({
-  components: { List, BookListPopupDelete }
+  components: {
+    List,
+    BookListPopupDelete
+  }
 })
 export default class Book extends Vue {
   bookDeleteDisplayPopup: boolean = false
@@ -62,9 +67,13 @@ export default class Book extends Vue {
   ]
 
   rowActions = [
-    new RowAction('download', '', 'fas fa-file-download')
-      .setIsDisplayed((book: BookPaperItem | BookElectronicItem) => {
+    new RowAction('download_electronic', '', 'fas fa-file-download')
+      .setIsDisplayed((book: BookPaperItem | BookElectronicItem | BookAudioItem) => {
         return typeof book['@type'] === 'string' && book['@type'] === BookService.bookElectronic
+      }),
+    new RowAction('download_audio', '', 'fas fa-file-download')
+      .setIsDisplayed((book: BookPaperItem | BookElectronicItem | BookAudioItem) => {
+        return typeof book['@type'] === 'string' && book['@type'] === BookService.bookAudio
       }),
     new RowAction('delete', '', 'far fa-trash-alt')
   ]
@@ -86,6 +95,11 @@ export default class Book extends Vue {
       new LeftActionBarLinkDescriptor('addElectronic', 'Epub', '/book/electronic/upload').setFaIcon('fas fa-tablet-alt')
     ),
     new LeftActionBarElement(
+      'element',
+      () => null,
+      new LeftActionBarLinkDescriptor('addAudio', 'Audio', '/book/audio').setFaIcon('fas fa-music')
+    ),
+    new LeftActionBarElement(
       'separator',
       () => null,
       new LeftActionBarSeparatorDescriptor('filters').setLabel('Filtres').setFaIcon('fas fa-sliders-h')
@@ -96,20 +110,22 @@ export default class Book extends Vue {
       new LeftActionBarFormSelectDescriptor('bookType', {
         all: 'Tous',
         paper: 'Papier',
-        electronic: 'Epub'
+        electronic: 'Epub',
+        audio: 'Audio'
       }).setDefaultValue('all').setFaIcon('fas fa-book').setNoDefaultStyle(true)
     )
   ], false)
 
-  setBook (selectedBook: BookPaperItem | BookElectronicItem) {
+  setBook (selectedBook: BookPaperItem | BookElectronicItem | BookAudioItem) {
     const type = selectedBook['@type']
-    if (type !== 'ElectronicBook' && type !== 'PaperBook') {
+    if (type !== 'ElectronicBook' && type !== 'PaperBook' && type !== 'AudioBook') {
       throw new Error('Invalid book type')
     }
 
     const matchingType = {
       ElectronicBook: 'electronic/',
-      PaperBook: 'paper/'
+      PaperBook: 'paper/',
+      AudioBook: 'audio/'
     }
 
     window.location.href = '/book/' + matchingType[type] + selectedBook.id
@@ -117,12 +133,22 @@ export default class Book extends Vue {
 
   customActionTriggered (action: RowActionPayload, book: BookPaperItem | BookElectronicItem) {
     switch (action.action) {
-      case 'download':
+      case 'download_electronic':
         if (typeof book.id === 'undefined') {
           throw new TypeError('The book id is not defined')
         }
+
         bookElectronicModule.get(book.id).then(() => {
           bookElectronicModule.downloadEbook()
+        })
+        break
+      case 'download_audio':
+        if (typeof book.id === 'undefined') {
+          throw new TypeError('The book id is not defined')
+        }
+
+        bookAudioModule.get(book.id).then(() => {
+          bookAudioModule.downloadBookFile()
         })
         break
       case 'delete': {
@@ -162,10 +188,10 @@ export default class Book extends Vue {
 </script>
 
 <style lang="scss">
-#book-list{
+#book-list {
   position: relative;
 
-  &.withPopupOpened #vueListContainer{
+  &.withPopupOpened #vueListContainer {
     filter: blur(8px);
   }
 }
