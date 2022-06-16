@@ -52,7 +52,8 @@ export default class GroupBibliography extends Vue {
   selectBookTypeOptions: { [key in Filter]: string } = {
     none: 'Tous',
     PaperBook: 'Papier',
-    ElectronicBook: 'Epub'
+    ElectronicBook: 'Epub',
+    AudioBook: 'Audio'
   }
 
   get fetching () {
