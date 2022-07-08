@@ -39,6 +39,7 @@ export default class Files extends Vue {
   @Prop({ type: Array, required: true })files!:MedFile[]
   @Prop({ type: Function, required: true }) onFileAdded!:((file: MedFile)=>Promise<any>)
   @Prop({ type: Function })onFileRemoved?:(()=>any)
+  @Prop({ type: String, required: true })addButtonLabel!:string
 
   isFileLoading: boolean = false
 
@@ -101,7 +102,7 @@ export default class Files extends Vue {
   }
 
   get buttonAddDescriptor () {
-    return new ButtonDescriptor('add', 'Ajouter')
+    return new ButtonDescriptor('add', this.addButtonLabel)
   }
 }
 </script>

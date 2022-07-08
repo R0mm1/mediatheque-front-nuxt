@@ -53,4 +53,9 @@ export default class ButtonDescriptor extends AbstractDescriptor {
     this.href = href
     return this
   }
+
+  setStyle (style: ButtonStyle) {
+    this.style = style
+    return this
+  }
 }
