@@ -24,7 +24,7 @@ Vue.use(VueFormulate, {
       classification: 'files',
       component: Files,
       slotProps: {
-        component: ['name', 'maxFiles', 'downloadAction', 'files', 'onFileAdded', 'onFileRemoved']
+        component: ['name', 'maxFiles', 'downloadAction', 'files', 'onFileAdded', 'onFileRemoved', 'addButtonLabel']
       }
     },
     medselect: {

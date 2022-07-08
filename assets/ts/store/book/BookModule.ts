@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import { container } from 'tsyringe'
 import { Action, Mutation, VuexModule } from 'vuex-module-decorators'
 import { Method } from 'axios'
@@ -79,7 +80,7 @@ export abstract class BookModule extends VuexModule {
     }
 
     @Mutation setSummary (summary: string) {
-      this.book.summary = summary
+      Vue.set(this.book, 'summary', summary)
     }
 
     @Mutation addAuthor (author: AuthorEntity) {

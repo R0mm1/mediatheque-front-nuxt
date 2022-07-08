@@ -1,13 +1,22 @@
 <template>
   <div id="book-main-tab">
     <GroupPicture :book-module="bookModule" :edit-mode-on="editModeOn" />
-    <GroupSummary :book-module="bookModule" :edit-mode-on="editModeOn" class="groupSummary" />
+    <GroupSummary :book-module="bookModule" :edit-mode-on="editModeOn" class="groupSummary">
+      <template #summary_customActions>
+        <MedInputButton :button-descriptor="displayOcrPopupButtonDescriptor" @click.native="isOcrPopupStateOpened = !isOcrPopupStateOpened" />
+      </template>
+    </GroupSummary>
     <Column class="third-col">
       <template #column_content>
         <PaperGroupInformation :edit-mode-on="editModeOn" />
         <GroupReferences :book-module="bookModule" :edit-mode-on="editModeOn" @group-wanna-open-book="onGroupWannaOpenBook" />
       </template>
     </Column>
+    <BookEditPopupOcrSummary
+      :is-displayed="isOcrPopupDisplayed"
+      @summary-updated="isOcrPopupStateOpened = false"
+      @cancel="isOcrPopupStateOpened = false"
+    />
   </div>
 </template>
 
@@ -17,6 +26,9 @@ import GroupSummary from '../groups/mainTab/GroupSummary'
 import GroupReferences from '../groups/mainTab/GroupReferences'
 import Column from '@/components/page/Column'
 import PaperGroupInformation from '~/components/book/paperBook/groups/PaperGroupInformation'
+import BookEditPopupOcrSummary from '~/components/book/paperBook/BookEditPopupOcrSummary'
+import MedInputButton from '~/components/form/elements/MedInputButton'
+import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
 
 export default {
   name: 'MainTab',
@@ -25,7 +37,9 @@ export default {
     Column,
     GroupReferences,
     GroupSummary,
-    GroupPicture
+    GroupPicture,
+    BookEditPopupOcrSummary,
+    MedInputButton
   },
   props: {
     bookModule: {
@@ -35,6 +49,19 @@ export default {
     editModeOn: {
       type: Boolean,
       required: true
+    }
+  },
+  data: () => {
+    return {
+      isOcrPopupStateOpened: false
+    }
+  },
+  computed: {
+    isOcrPopupDisplayed () {
+      return this.editModeOn && this.isOcrPopupStateOpened
+    },
+    displayOcrPopupButtonDescriptor () {
+      return new ButtonDescriptor('displayOcrPopup').setFaIcon('far fa-eye')
     }
   },
   methods: {
@@ -50,6 +77,7 @@ export default {
 
 #book-main-tab{
   display: flex;
+  position: relative;
 }
 
 .group_picture {

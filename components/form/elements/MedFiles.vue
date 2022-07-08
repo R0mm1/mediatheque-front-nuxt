@@ -10,6 +10,7 @@
     :files="files"
     :on-file-added="filesDescriptor.onFileAdded"
     :on-file-removed="filesDescriptor.onFileRemoved"
+    :add-button-label="filesDescriptor.addButtonLabel"
   />
 </template>
 
