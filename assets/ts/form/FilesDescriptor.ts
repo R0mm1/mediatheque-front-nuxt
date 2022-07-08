@@ -7,6 +7,7 @@ export default class FilesDescriptor {
   downloadAction: null | (() => any) = null
   onFileAdded: ((medFile: MedFile) => any) = () => null
   onFileRemoved: (() => any) | null = null
+  addButtonLabel: string = 'Ajouter'
 
   setLabel (label: string) {
     this.label = label
@@ -35,6 +36,11 @@ export default class FilesDescriptor {
 
   setOnFileRemoved (onFileRemoved: (()=>any)) {
     this.onFileRemoved = onFileRemoved
+    return this
+  }
+
+  setAddButtonLabel (label: string) {
+    this.addButtonLabel = label
     return this
   }
 }

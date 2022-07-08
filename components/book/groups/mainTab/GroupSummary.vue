@@ -5,6 +5,10 @@
         Résumé
       </template>
 
+      <template #group_customActions>
+        <slot name="summary_customActions" />
+      </template>
+
       <template #group_content>
         <MedWysiwyg
           id="wysiwygSummary"
@@ -25,8 +29,21 @@ import MedWysiwyg from '~/components/form/elements/MedWysiwyg'
 
 export default {
   name: 'GroupSummary',
-  components: { MedWysiwyg, Group },
-  props: { bookModule: { type: Object, required: true }, editModeOn: { type: Boolean, required: false, default: true } },
+  components: {
+    MedWysiwyg,
+    Group
+  },
+  props: {
+    bookModule: {
+      type: Object,
+      required: true
+    },
+    editModeOn: {
+      type: Boolean,
+      required: false,
+      default: true
+    }
+  },
   computed: {
     summary () {
       let summary = this.bookModule.book.summary
@@ -45,21 +62,21 @@ export default {
 </script>
 
 <style lang="scss">
-    #groupBookSummary {
-        #wysiwygSummary {
-            .ck.ck-editor {
-                height: 100%;
-                display: flex;
-                flex-direction: column;
-            }
-
-            .ck.ck-editor__main {
-                flex: 1;
-            }
-
-            .ck.ck-content {
-                height: 100%;
-            }
-        }
+#groupBookSummary {
+  #wysiwygSummary {
+    .ck.ck-editor {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
     }
+
+    .ck.ck-editor__main {
+      flex: 1;
+    }
+
+    .ck.ck-content {
+      height: 100%;
+    }
+  }
+}
 </style>
