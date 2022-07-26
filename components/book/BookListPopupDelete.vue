@@ -1,5 +1,5 @@
 <template>
-  <Popup :is-displayed="isDisplayed">
+  <Popup :is-displayed="true">
     <template #popup_header>
       Confirmez la suppression du livre
     </template>
@@ -27,7 +27,6 @@ import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
   components: { MedInputButton, Popup }
 })
 export default class BookListPopupDelete extends Vue {
-  @Prop({ type: Boolean, default: false }) isDisplayed!: boolean
   @Prop({ type: String, default: '' }) bookTitle!:string
 
   deleteButtonDescriptor = new ButtonDescriptor('delete', 'Supprimer')
