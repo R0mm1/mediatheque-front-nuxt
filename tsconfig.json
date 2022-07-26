@@ -25,7 +25,8 @@
     "types": [
       "@types/node",
       "@nuxt/types",
-      "@nuxtjs/toast"
+      "@nuxtjs/toast",
+      "@nuxtjs/device"
     ],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
