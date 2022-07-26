@@ -259,8 +259,11 @@ export default class LeftActionBar extends Vue {
 
     }
 
-    a{
+    a, button, select{
       font-size: .9rem;
+    }
+
+    a{
       text-decoration: none;
       color: inherit;
       padding-left: 4px;

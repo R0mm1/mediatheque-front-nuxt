@@ -16,7 +16,7 @@ import CheckboxDescriptor from 'assets/ts/form/CheckboxDescriptor'
 export default class MedInputCheckbox extends Vue {
   @Prop(Object) checkboxDescriptor!: CheckboxDescriptor
 
-  @Prop(Boolean) value = true
+  @Prop(Boolean) value !:boolean
 
   bindValue = false
 

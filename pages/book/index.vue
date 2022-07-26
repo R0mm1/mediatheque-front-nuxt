@@ -8,6 +8,7 @@
       :left-action-bar-properties="leftActionBarProperties"
       details-component-path="book/BookListRowDetails.vue"
       :callback="setBook"
+      name="book"
       @custom-action-triggered="customActionTriggered"
     />
     <BookListPopupDelete
@@ -189,8 +190,6 @@ export default class Book extends Vue {
 
 <style lang="scss">
 #book-list {
-  position: relative;
-
   &.withPopupOpened #vueListContainer {
     filter: blur(8px);
   }

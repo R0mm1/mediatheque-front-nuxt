@@ -1,8 +1,7 @@
 <template>
-  <span id="vueListContainer">
-
+  <span id="vueListContainer" :class="{hasPopupDisplayed: hasPopupDisplayed}">
     <left-action-bar
-      :left-action-bar-properties="leftActionBarProperties"
+      :left-action-bar-properties="fullLeftActionBarProperties"
     />
 
     <div id="vueListContent" ref="vueListContent">
@@ -16,7 +15,7 @@
             v-for="dataRow in listData"
             :key="'r_'+dataRow.id"
             :data-row="dataRow"
-            :cols="cols"
+            :cols="Object.values(displayedColumns)"
             :row-actions="rowActions"
             :details-component-path="detailsComponentPath"
             @click.native="callback(dataRow)"
@@ -40,6 +39,8 @@
         next-text="<i class='fas fa-angle-right'></i>"
       />
     </div>
+
+    <column-selection-popup v-if="isColumnSelectionPopupOpened" @popup-wanna-close="toggleIsColumnSelectionPopupOpened" />
   </span>
 </template>
 
@@ -56,14 +57,23 @@ import Filter from '~/assets/ts/list/Filter'
 import listModule from '~/assets/ts/store/ListModule'
 import RequestService from '~/assets/ts/service/RequestService'
 import { HydraCollection } from '~/assets/ts/models/HydraInterfaces'
+import ListService, {
+  FilterQueryParamPrefix as FilterQueryParamPrefixType,
+  SearchQueryParamPrefix as SearchQueryParamPrefixType,
+  SortQueryParamPrefix as SortQueryParamPrefixType
+} from '~/assets/ts/service/ListService'
+import LeftActionBarElement from '~/assets/ts/list/LeftActionBarElement'
+import LeftActionBarSeparatorDescriptor from '~/assets/ts/list/LeftActionBarSeparatorDescriptor'
+import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
+import ColumnSelectionPopup from '~/components/list/ColumnSelectionPopup.vue'
 
-export const FilterQueryParamPrefix = 'lcf-'
-export const SortQueryParamPrefix = 'lst-'
-export const SearchQueryParamPrefix = 'lsh-'
-export type ListQueryParams = (typeof FilterQueryParamPrefix|typeof SortQueryParamPrefix | typeof SearchQueryParamPrefix)
+export const FilterQueryParamPrefix: FilterQueryParamPrefixType = 'lcf-'
+export const SortQueryParamPrefix: SortQueryParamPrefixType = 'lst-'
+export const SearchQueryParamPrefix: SearchQueryParamPrefixType = 'lsh-'
 
 @Component({
   components: {
+    ColumnSelectionPopup,
     Row: () => import('~/components/list/Row.vue'),
     ListHeader: () => import('~/components/list/Header.vue'),
     LeftActionBar: () => import('~/components/list/LeftActionBar.vue'),
@@ -76,6 +86,11 @@ export default class List extends Vue {
   paginationTotalPages?: Number
   isLoading: boolean = true
   requestService: RequestService = container.resolve(RequestService)
+  listService: ListService = container.resolve(ListService)
+  displayedColumns: { [index: string]: Column } = {}
+  isColumnSelectionPopupOpened: boolean = false
+
+  @Prop(String) name!: string
 
   @Prop(Array) cols!: Column[]
   @Prop(String) apiEndpoint!: string
@@ -99,6 +114,36 @@ export default class List extends Vue {
     return listModule._paginationCurrentPage
   }
 
+  get fullLeftActionBarProperties ():LeftActionBarProperties {
+    const leftActionBarProperties = this.leftActionBarProperties
+    leftActionBarProperties.customElements = leftActionBarProperties.customElements.concat([
+      new LeftActionBarElement(
+        'separator',
+        () => null,
+        new LeftActionBarSeparatorDescriptor('configuration').setLabel('Configuration').setFaIcon('fas fa-cog')
+      ),
+      new LeftActionBarElement(
+        'element',
+        () => {
+          this.toggleIsColumnSelectionPopupOpened()
+          return null
+        },
+        new ButtonDescriptor('columns', 'Colonnes').setFaIcon('fas fa-columns').setNoDefaultStyle(true)
+      )
+    ])
+
+    return leftActionBarProperties
+  }
+
+  get hasPopupDisplayed () {
+    return listModule.hasPopupDisplayed
+  }
+
+  toggleIsColumnSelectionPopupOpened () {
+    this.isColumnSelectionPopupOpened = !this.isColumnSelectionPopupOpened
+    listModule.setHasPopupDisplayed(this.isColumnSelectionPopupOpened)
+  }
+
   load (fromCache: boolean = true, resetPagination: boolean = false) {
     this.isLoading = true
 
@@ -106,23 +151,32 @@ export default class List extends Vue {
       listModule.setPaginationCurrentPage(1)
     }
 
-    listModule.computeQueryParams({ getFromCache: fromCache })
-      .then(() => {
-        return this.requestService.execute<any & HydraCollection<any>>(
-          this.requestService.createRequest(this.apiEndpoint).setQueryParams(listModule.queryParams)
-        )
-      })
-      .then((data) => {
-        this.listData = data['hydra:member']
-        PaginationHelper.setRawResponse(data)
-        this.isPaginationEnabled = PaginationHelper.hasPagination()
-        if (this.isPaginationEnabled) {
-          this.paginationTotalPages = PaginationHelper.getPageNumber()
-        }
+    Promise
+      .all([
+        listModule.computeQueryParams({ getFromCache: fromCache })
+          .then(() => {
+            return this.requestService.execute<any & HydraCollection<any>>(
+              this.requestService.createRequest(this.apiEndpoint).setQueryParams(listModule.queryParams)
+            )
+          })
+          .then((data) => {
+            this.listData = data['hydra:member']
+            PaginationHelper.setRawResponse(data)
+            this.isPaginationEnabled = PaginationHelper.hasPagination()
+            if (this.isPaginationEnabled) {
+              this.paginationTotalPages = PaginationHelper.getPageNumber()
+            }
+          })
+          .catch((error) => {
+            console.error(error)
+          }),
+        listModule.loadUserConfig({
+          listName: this.name,
+          device: this.$device.isMobile ? 'mobile' : 'default'
+        })
+      ])
+      .finally(() => {
         this.isLoading = false
-      })
-      .catch((error) => {
-        console.error(error)
       })
   }
 
@@ -131,11 +185,23 @@ export default class List extends Vue {
     this.load(false)
   }
 
-  // Handle list data filtering (filters, search...)
+  // Handle columns
+
+  get userConfig () {
+    return listModule.userConfig
+  }
 
   get columns () {
     return listModule.columns
   }
+
+  @Watch('userConfig.value.columns', { deep: true })
+  @Watch('columns')
+  reloadDisplayedColumns () {
+    this.displayedColumns = this.listService.getDisplayedColumns()
+  }
+
+  // Handle list data filtering (filters, search...)
 
   updateFiltersFromQueryString () {
     const updateFilters: {[key: string]: Filter} = {}
@@ -179,9 +245,7 @@ export default class List extends Vue {
   // End handle list data filtering (filters, search...)
 
   created () {
-    this.cols.forEach((col: Column) => {
-      listModule.setColumn(col)
-    })
+    listModule.setColumns(this.cols)
 
     this.applyQueryString()
   }
@@ -197,6 +261,13 @@ $leftActionBarWidth: 30px;
 #vueListContainer {
   display: flex;
   height: 100%;
+  position: relative;
+
+  &.hasPopupDisplayed{
+    #vueListContent, #leftActionBar{
+      filter: blur(3px);
+    }
+  }
 }
 
 #vueListContent {
@@ -244,6 +315,10 @@ $leftActionBarWidth: 30px;
       transition: all 5s cubic-bezier(0, 1, 0, 1);
     }
   }
+}
+
+.widget_popup{
+  z-index: 10;
 }
 </style>
 
