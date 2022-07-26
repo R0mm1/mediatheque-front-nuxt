@@ -12,7 +12,7 @@
       @custom-action-triggered="customActionTriggered"
     />
     <BookListPopupDelete
-      :is-displayed="bookDeleteDisplayPopup"
+      v-if="bookDeleteDisplayPopup"
       :book-title="bookDeleteBookTitle"
       @book-delete-cancel="bookDeleteCancel"
       @book-delete-trigger="bookDeleteTrigger"
@@ -190,6 +190,8 @@ export default class Book extends Vue {
 
 <style lang="scss">
 #book-list {
+  position: relative;
+
   &.withPopupOpened #vueListContainer {
     filter: blur(8px);
   }
