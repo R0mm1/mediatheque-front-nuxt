@@ -1,5 +1,5 @@
 <template>
-  <header id="vueHeader">
+  <header id="vueHeader" :class="{withMobileMenu: withMobileMenu}">
     <div id="mainLogo">
       <img src="/logo.png" alt="Médiathèque" @click="goToHome">
     </div>
@@ -26,6 +26,10 @@ export default {
       default: false,
       type: Boolean
     },
+    withMobileMenu: {
+      default: false,
+      type: Boolean
+    },
     customHeaderMessage: {
       default: '',
       type: String
@@ -44,7 +48,7 @@ export default {
 <style scoped lang="scss">
 
 $default-height: 100px;
-$phone-portrait-height: 50px;
+$phone-portrait-height: 35px;
 
 #vueHeader {
   position: relative;
@@ -55,6 +59,10 @@ $phone-portrait-height: 50px;
 
   @include phone-portrait {
     height: $phone-portrait-height;
+
+    &.withMobileMenu{
+      padding-left: 35px;
+    }
   }
 
   #mainLogo {
@@ -69,7 +77,8 @@ $phone-portrait-height: 50px;
       z-index: 10;
 
       @include phone-portrait {
-        height: 30px;
+        margin: 5px;
+        height: 25px;
       }
     }
   }

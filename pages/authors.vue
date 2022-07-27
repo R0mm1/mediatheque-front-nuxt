@@ -19,6 +19,9 @@ export default {
   components: {
     List
   },
+  layout (context) {
+    return context.$device.isMobile ? 'mobile-layout-with-menu' : 'default'
+  },
   data () {
     return {
       cols: [

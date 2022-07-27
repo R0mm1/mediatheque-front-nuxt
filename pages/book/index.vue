@@ -45,6 +45,9 @@ import { BookAudioItem } from '~/assets/ts/models/BookAudio'
   components: {
     List,
     BookListPopupDelete
+  },
+  layout (context) {
+    return context.$device.isMobile ? 'mobile-layout-with-menu' : 'default'
   }
 })
 export default class Book extends Vue {

@@ -1,7 +1,7 @@
 <template>
   <div class="list-header">
     <div v-for="column in displayedColumns" :key="column.dataField" class="cell">
-      <div class="headerRow">
+      <div class="headerRow" role="columnheader" :aria-label="column.label">
         <div class="headerRowLabel">
           {{ column.label }}
         </div>
@@ -34,7 +34,7 @@
       />
     </div>
 
-    <div v-if="lastEmptyColumn" class="cell" />
+    <div v-if="lastEmptyColumn" class="cell" role="columnheader" aria-label="Actions" />
 
     <!-- To avoid having a width diff with list body due to scrollbar -->
     <div class="list-header-scrollbar-width" />

@@ -57,7 +57,8 @@ export default class HeaderPopup extends Vue {
 </script>
 
 <style scoped lang="scss">
-@import "../../assets/scss/colors";
+@import "assets/scss/colors";
+@import "assets/scss/breakpoints";
 
 .headerPopup-enter, .headerPopup-leave-to {
   opacity: 0;
@@ -74,6 +75,12 @@ export default class HeaderPopup extends Vue {
   min-width: 250px;
   margin-left: -5px;
   z-index: 1;
+
+  @include phone-portrait{
+    position: fixed;
+    margin-left: 0;
+    left: 0;
+  }
 }
 </style>
 
