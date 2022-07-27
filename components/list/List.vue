@@ -1,12 +1,20 @@
 <template>
   <span id="vueListContainer" :class="{hasPopupDisplayed: hasPopupDisplayed}">
+    <i
+      v-if="isMobile"
+      class="menu-icon fas"
+      :class="{'fa-bars': !leftActionBarOpened, 'fa-times': leftActionBarOpened}"
+      @click="leftActionBarOpened = !leftActionBarOpened"
+    />
+
     <left-action-bar
+      :class="{forceOpen: leftActionBarOpened}"
       :left-action-bar-properties="fullLeftActionBarProperties"
     />
 
     <div id="vueListContent" ref="vueListContent">
 
-      <div id="vueList" :class="{withPagination: isPaginationEnabled}">
+      <div id="vueList" :class="{withPagination: isPaginationEnabled}" role="grid">
         <list-header
           :has-row-action="hasRowAction"
         />
@@ -89,6 +97,7 @@ export default class List extends Vue {
   listService: ListService = container.resolve(ListService)
   displayedColumns: { [index: string]: Column } = {}
   isColumnSelectionPopupOpened: boolean = false
+  leftActionBarOpened: boolean = false // Useful for mobile devices when the fab is not displayed at all to begin with
 
   @Prop(String) name!: string
 
@@ -105,6 +114,10 @@ export default class List extends Vue {
     detailsComponentPath!: string | null
 
   @Prop({ type: Function, required: true }) callback!: Function
+
+  get isMobile () {
+    return this.$device.isMobile
+  }
 
   get hasRowAction () {
     return this.rowActions.length > 0
@@ -350,6 +363,19 @@ $leftActionBarWidth: 30px;
   }
 }
 
+.menu-icon{
+  position: fixed;
+  top: 0;
+  z-index: 10;
+  height: 35px;
+  width: 35px;
+  font-size: 20px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
 #leftActionBar {
   position: fixed;
   display: flex;
@@ -360,7 +386,7 @@ $leftActionBarWidth: 30px;
   background-color: #eeeae1;
   z-index: 10;
 
-  &:hover {
+  &:hover, &.forceOpen {
     width: 170px;
   }
 }
