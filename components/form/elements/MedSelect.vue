@@ -6,6 +6,7 @@
     :label="medSelectDescriptor.label"
     :edit-mode-on="medSelectDescriptor.editModeOn"
     :select-options="options"
+    :name="medSelectDescriptor.name"
 
     :form-creation-validation-action="medSelectDescriptor.formCreationValidationAction"
     :form-creation-title="medSelectDescriptor.formCreationTitle"

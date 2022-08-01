@@ -1,11 +1,18 @@
 <template>
   <div :id="elementId" class="listRow" @mouseenter="onMouseOver" @mouseleave="onMouseOut">
-    <div class="listCells">
-      <div v-for="column in cols" :key="column.dataField" class="cell">
+    <div class="listCells" role="row">
+      <div
+        v-for="column in cols"
+        :key="column.dataField"
+        class="cell"
+        role="gridcell"
+        @touchstart="cellTouchStart(column)"
+        @touchend="cellTouchEnd(column)"
+      >
         {{ getValue(column) }}
       </div>
 
-      <div v-if="hasRowAction" class="listRowCustomActions cell">
+      <div v-if="hasRowAction" class="listRowCustomActions cell" role="gridcell">
         <CustomAction
           v-for="rowAction in rowActions"
           :key="rowAction.id"
@@ -17,8 +24,14 @@
     </div>
 
     <transition name="list-row-details-trans">
-      <div v-if="hasDetailsComponent && detailsOpened" class="listRowDetails">
-        <component :is="detailsComponent" :data="dataRow" />
+      <div v-if="enhancedColumn !== null" class="listRowDetails" role="row" :aria-label="enhancedColumn.label">
+        {{ getValue(enhancedColumn) }}
+      </div>
+    </transition>
+
+    <transition name="list-row-details-trans">
+      <div v-if="hasDetailsComponent && detailsOpened" class="listRowDetails" role="row" aria-label="Informations sur le livre">
+        <component :is="detailsComponent" :data="dataRow" role="gridcell" />
       </div>
     </transition>
   </div>
@@ -134,6 +147,24 @@ export default class Row extends Vue {
 
   get detailsComponentLoader () {
     return () => import('~/components/' + this.detailsComponentPath)
+  }
+
+  // On mobile, handle cell enhancement on touch
+  cellTouchTimers: {[index: string]: ReturnType<typeof setTimeout>} = {}
+  enhancedColumn: Column|null = null
+
+  cellTouchStart (column: Column) {
+    this.cellTouchTimers[column.dataField] = setTimeout(() => {
+      this.enhancedColumn = column
+      setTimeout(() => {
+        this.enhancedColumn = null
+      }, 2000)
+    }, 500)
+  }
+
+  cellTouchEnd (column: Column) {
+    clearTimeout(this.cellTouchTimers[column.dataField])
+    delete this.cellTouchTimers[column.dataField]
   }
 
   created () {

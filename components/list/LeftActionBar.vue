@@ -8,29 +8,53 @@
         class="leftActionBarElement"
         :class="getClass(labElement)"
       >
-        <div class="leftActionBarElementIcon" :class="labElement.formElementDescriptor.faIcon" />
-
-        <div class="leftActionBarElementText">
-          <MedInputButton
-            v-if="isButton(labElement)"
-            :button-descriptor="labElement.formElementDescriptor"
-            @click.native="customFilterChangeHandler(labElement)"
+        <template v-if="isButton(labElement)">
+          <div
+            class="leftActionBarElementIcon"
+            :class="labElement.formElementDescriptor.faIcon"
+            @click="customFilterChangeHandler(labElement)"
           />
+          <div class="leftActionBarElementText">
+            <MedInputButton
+              :button-descriptor="labElement.formElementDescriptor"
+              @click.native="customFilterChangeHandler(labElement)"
+            />
+          </div>
+        </template>
 
-          <MedInputSelect
-            v-if="isSelect(labElement)"
-            v-model="customFiltersValues[labElement.formElementDescriptor.name]"
-            :select-descriptor="labElement.formElementDescriptor"
+        <template v-if="isSelect(labElement)">
+          <label
+            class="leftActionBarElementIcon"
+            :class="labElement.formElementDescriptor.faIcon"
+            :for="labElement.formElementDescriptor.name"
           />
+          <div class="leftActionBarElementText">
+            <MedInputSelect
+              v-model="customFiltersValues[labElement.formElementDescriptor.name]"
+              :select-descriptor="labElement.formElementDescriptor"
+            />
+          </div>
+        </template>
 
-          <NuxtLink v-if="isLink(labElement)" :to="labElement.formElementDescriptor.to">
-            {{ labElement.formElementDescriptor.label }}
-          </NuxtLink>
-
-          <div v-if="isSeparator(labElement)" class="leftActionBarSeparatorText">
+        <NuxtLink v-if="isLink(labElement)" :to="labElement.formElementDescriptor.to" :aria-label="labElement.formElementDescriptor.label">
+          <div
+            class="leftActionBarElementIcon"
+            :class="labElement.formElementDescriptor.faIcon"
+          />
+          <div class="leftActionBarElementText">
             {{ labElement.formElementDescriptor.label }}
           </div>
-        </div>
+        </NuxtLink>
+
+        <template v-if="isSeparator(labElement)">
+          <div
+            class="leftActionBarElementIcon"
+            :class="labElement.formElementDescriptor.faIcon"
+          />
+          <div class="leftActionBarSeparatorText">
+            {{ labElement.formElementDescriptor.label }}
+          </div>
+        </template>
       </div>
     </div>
   </div>
@@ -170,7 +194,7 @@ export default class LeftActionBar extends Vue {
 @import "../../assets/scss/breakpoints";
 
 @include phone-portrait {
-  #leftActionBar {
+  #leftActionBar:not(.forceOpen) {
     display: none;
   }
 }
@@ -180,6 +204,10 @@ export default class LeftActionBar extends Vue {
   width: 30px;
   position: fixed;
   background-color: #e4dccc;
+
+  @include phone-portrait {
+    width: 35px;
+  }
 }
 
 #labElements {
@@ -191,6 +219,11 @@ export default class LeftActionBar extends Vue {
 
 <style lang="scss">
 @import "assets/scss/colors";
+@import "assets/scss/breakpoints";
+
+$icon-min-width: 30px;
+$left-action-bar-element-text-padding-left: 3px;
+$mobile-portrait-icon-min-width: 35px;
 
 .leftActionBarElement {
   line-height: 30px;
@@ -199,21 +232,42 @@ export default class LeftActionBar extends Vue {
   z-index: 1;
   display: flex;
 
+  a{
+    display: flex;
+    font-size: .9rem;
+    text-decoration: none;
+    color: inherit;
+    overflow: hidden;
+    width: 100%;
+
+    .leftActionBarElementText{
+      width: calc(100% - $icon-min-width);
+      padding-left: 5px;
+
+      @include phone-portrait {
+        width: calc(100% - $mobile-portrait-icon-min-width);
+      }
+    }
+  }
+
   .leftActionBarElementIcon {
-    width: 30px;
-    min-width: 30px;
+    min-width: $icon-min-width;
     text-align: center;
     display: inline-block;
     transition: background-color .3s, color .3s;
     font-size: 1rem;
     height: 30px;
     line-height: 30px;
+
+    @include phone-portrait {
+      min-width: $mobile-portrait-icon-min-width;
+    }
   }
 
   .leftActionBarElementText {
     transition: background-color .3s;
     width: 100%;
-    padding-left: 3px;
+    padding-left: $left-action-bar-element-text-padding-left;
 
     .formulate-input, .formulate-input-wrapper, .formulate-input-element {
       height: 100%;
@@ -259,11 +313,8 @@ export default class LeftActionBar extends Vue {
 
     }
 
-    a{
+    button, select{
       font-size: .9rem;
-      text-decoration: none;
-      color: inherit;
-      padding-left: 4px;
     }
   }
 

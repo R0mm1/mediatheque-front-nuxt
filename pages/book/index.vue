@@ -8,10 +8,11 @@
       :left-action-bar-properties="leftActionBarProperties"
       details-component-path="book/BookListRowDetails.vue"
       :callback="setBook"
+      name="book"
       @custom-action-triggered="customActionTriggered"
     />
     <BookListPopupDelete
-      :is-displayed="bookDeleteDisplayPopup"
+      v-if="bookDeleteDisplayPopup"
       :book-title="bookDeleteBookTitle"
       @book-delete-cancel="bookDeleteCancel"
       @book-delete-trigger="bookDeleteTrigger"
@@ -44,6 +45,9 @@ import { BookAudioItem } from '~/assets/ts/models/BookAudio'
   components: {
     List,
     BookListPopupDelete
+  },
+  layout (context) {
+    return context.$device.isMobile ? 'mobile-layout-with-menu' : 'default'
   }
 })
 export default class Book extends Vue {

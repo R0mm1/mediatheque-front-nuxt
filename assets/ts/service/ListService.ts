@@ -1,5 +1,7 @@
 import { autoInjectable, singleton } from 'tsyringe'
 import VueRouter from 'vue-router'
+import Column from '~/assets/ts/list/Column'
+import listModule from '~/assets/ts/store/ListModule'
 
 export type FilterQueryParamPrefix = 'lcf-'
 export type SortQueryParamPrefix = 'lst-'
@@ -33,5 +35,23 @@ export default class ListService {
       return undefined
     }
     return value
+  }
+
+  getDisplayedColumns (): { [index: string]: Column } {
+    const displayedColumns: { [index: string]: Column } = {}
+    Object.values(listModule.columns).forEach((column) => {
+      if (this.isColumnDisplayed(column)) {
+        displayedColumns[column.dataField] = column
+      }
+    })
+    return displayedColumns
+  }
+
+  isColumnDisplayed (column: Column): boolean {
+    const userColumnConfig = listModule.userConfig?.value?.columns.find((userColumnConfig) => {
+      return userColumnConfig.dataField === column.dataField
+    })
+
+    return typeof userColumnConfig !== 'undefined' && userColumnConfig.isDisplayed === true
   }
 }

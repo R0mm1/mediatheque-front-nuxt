@@ -42,7 +42,7 @@ export default {
 
   .formulate-input-element--button button {
     $dimension: 50px;
-    $dimension-phone-portrait: 44px;
+    $dimension-phone-portrait: 30px;
 
     border-radius: 50%;
     height: 50px;
@@ -54,7 +54,8 @@ export default {
     @include phone-portrait {
       height: $dimension-phone-portrait;
       width: $dimension-phone-portrait;
-      border-radius: 5px;
+      border-radius: 0;
+      background: none;
     }
 
     i {
@@ -69,8 +70,8 @@ export default {
       bottom: 0;
 
       @include phone-portrait {
-        height: calc(#{$dimension-phone-portrait} - 20px);
-        font-size: calc(#{$dimension-phone-portrait} - 20px);
+        height: calc(#{$dimension-phone-portrait} - 10px);
+        font-size: calc(#{$dimension-phone-portrait} - 10px);
       }
     }
   }

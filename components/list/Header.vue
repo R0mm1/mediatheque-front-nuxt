@@ -1,7 +1,7 @@
 <template>
   <div class="list-header">
-    <div v-for="column in columns" :key="column.dataField" class="cell">
-      <div class="headerRow">
+    <div v-for="column in displayedColumns" :key="column.dataField" class="cell">
+      <div class="headerRow" role="columnheader" :aria-label="column.label">
         <div class="headerRowLabel">
           {{ column.label }}
         </div>
@@ -34,7 +34,7 @@
       />
     </div>
 
-    <div v-if="hasRowAction" class="cell" />
+    <div v-if="lastEmptyColumn" class="cell" role="columnheader" aria-label="Actions" />
 
     <!-- To avoid having a width diff with list body due to scrollbar -->
     <div class="list-header-scrollbar-width" />
@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
 import { container } from 'tsyringe'
 import Column, { ColumnSort } from '~/assets/ts/list/Column'
@@ -62,16 +62,14 @@ export default class Header extends Vue {
   listDisplayPopup: { [index: string]: boolean } = {}
   listHasPopupNotice: { [index: string]: boolean } = {}
 
+  displayedColumns: { [index: string]: Column } = {}
+
   toggleRowTwo (dataField: string) {
     if (typeof this.listDisplayPopup[dataField] === 'undefined') {
       this.$set(this.listDisplayPopup, dataField, true)
     } else {
       this.$set(this.listDisplayPopup, dataField, !this.listDisplayPopup[dataField])
     }
-  }
-
-  get columns () {
-    return listModule._columns
   }
 
   setHasPopupNotice (dataField: string, hasPopupNotice: boolean) {
@@ -115,6 +113,26 @@ export default class Header extends Vue {
     const queryParamSearchValue = column.searchString.length > 0 ? column.searchString : null
     this.$set(this.listDisplayPopup, column.dataField, false)
     listService.setQueryFilter('lsh-', column.dataField, queryParamSearchValue, this.$router)
+  }
+
+  // Handle columns
+
+  get userConfig () {
+    return listModule.userConfig
+  }
+
+  get columns () {
+    return listModule.columns
+  }
+
+  @Watch('userConfig.value.columns', { deep: true })
+  @Watch('columns')
+  reloadDisplayedColumns () {
+    this.displayedColumns = listService.getDisplayedColumns()
+  }
+
+  get lastEmptyColumn (): Boolean {
+    return this.hasRowAction || Object.values(this.displayedColumns).length === 0
   }
 
   created () {

@@ -1,15 +1,14 @@
 <template>
-  <client-only>
-    <div>
-      <List
-        ref="list"
-        api-endpoint="/authors"
-        :cols="cols"
-        :callback="setAuthor"
-        @list-action-add="newAuthor"
-      />
-    </div>
-  </client-only>
+  <div>
+    <List
+      ref="list"
+      api-endpoint="/authors"
+      :cols="cols"
+      :callback="setAuthor"
+      name="author"
+      @list-action-add="newAuthor"
+    />
+  </div>
 </template>
 
 <script>
@@ -19,6 +18,9 @@ export default {
   name: 'Authors',
   components: {
     List
+  },
+  layout (context) {
+    return context.$device.isMobile ? 'mobile-layout-with-menu' : 'default'
   },
   data () {
     return {

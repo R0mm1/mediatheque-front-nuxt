@@ -3,7 +3,7 @@
     <GroupPicture :book-module="bookModule" :edit-mode-on="editModeOn" />
     <GroupSummary :book-module="bookModule" :edit-mode-on="editModeOn" class="groupSummary">
       <template #summary_customActions>
-        <MedInputButton :button-descriptor="displayOcrPopupButtonDescriptor" @click.native="isOcrPopupStateOpened = !isOcrPopupStateOpened" />
+        <MedInputButton v-if="editModeOn" :button-descriptor="displayOcrPopupButtonDescriptor" @click.native="isOcrPopupStateOpened = !isOcrPopupStateOpened" />
       </template>
     </GroupSummary>
     <Column class="third-col">

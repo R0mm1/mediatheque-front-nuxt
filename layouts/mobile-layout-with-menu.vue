@@ -1,6 +1,6 @@
 <template>
-  <div id="default_layout" class="med_layout">
-    <Header />
+  <div id="mobile_layout_with_menu" class="med_layout">
+    <Header :with-mobile-menu="true"/>
     <Nuxt />
   </div>
 </template>
@@ -20,4 +20,8 @@ export default {
 
 <style>
 @import "assets/scss/layout.scss";
+</style>
+
+<style scoped>
+
 </style>
