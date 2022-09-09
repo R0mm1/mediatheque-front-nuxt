@@ -1,10 +1,10 @@
-import LeftActionBarFormSelectDescriptor from '~/assets/ts/list/LeftActionBarFormSelectDescriptor'
 import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
 import { FilterValue } from '~/assets/ts/list/Filter'
 import LeftActionBarSeparatorDescriptor from '~/assets/ts/list/LeftActionBarSeparatorDescriptor'
+import MedSelectDescriptor from '~/assets/ts/form/MedSelectDescriptor'
 
 type ElementType = ('element' | 'filter' | 'separator')
-type FormElementDescriptorType = (LeftActionBarFormSelectDescriptor | ButtonDescriptor | LeftActionBarSeparatorDescriptor)
+type FormElementDescriptorType = (MedSelectDescriptor | ButtonDescriptor | LeftActionBarSeparatorDescriptor)
 type CallbackType = (...args: any[]) => FilterValue
 
 export default class LeftActionBarElement {

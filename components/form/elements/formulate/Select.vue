@@ -203,6 +203,10 @@ export default class Select extends Vue {
     this.closeFormCreation()
     this.options = this.selectOptions
   }
+
+  created () {
+    this.options = this.selectOptions
+  }
 }
 </script>
 

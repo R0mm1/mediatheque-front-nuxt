@@ -29,9 +29,9 @@
             :for="labElement.formElementDescriptor.name"
           />
           <div class="leftActionBarElementText">
-            <MedInputSelect
+            <MedSelect
               v-model="customFiltersValues[labElement.formElementDescriptor.name]"
-              :select-descriptor="labElement.formElementDescriptor"
+              :med-select-descriptor="labElement.formElementDescriptor"
             />
           </div>
         </template>
@@ -67,11 +67,12 @@ import { container } from 'tsyringe'
 import LeftActionBarProperties from '../../assets/ts/list/LeftActionBarProperties'
 import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
 import LeftActionBarElement from '~/assets/ts/list/LeftActionBarElement'
-import LeftActionBarFormSelectDescriptor from '~/assets/ts/list/LeftActionBarFormSelectDescriptor'
 import MedInputSelect from '~/components/form/elements/MedInputSelect.vue'
 import MedInputButton from '~/components/form/elements/MedInputButton.vue'
 import LeftActionBarLinkDescriptor from '~/assets/ts/list/LeftActionBarLinkDescriptor'
 import ListService from '~/assets/ts/service/ListService'
+import MedSelect from '~/components/form/elements/MedSelect.vue'
+import MedSelectDescriptor, { SelectValue } from '~/assets/ts/form/MedSelectDescriptor'
 
 const listService = container.resolve(ListService)
 
@@ -93,7 +94,7 @@ const customFilterChangeHandler = function (router: VueRouter, element: LeftActi
 }
 
 @Component({
-  components: { MedInputSelect, MedInputButton }
+  components: { MedSelect, MedInputSelect, MedInputButton }
 })
 export default class LeftActionBar extends Vue {
   @Prop(Object) leftActionBarProperties!: LeftActionBarProperties
@@ -121,7 +122,7 @@ export default class LeftActionBar extends Vue {
   }
 
   isSelect (element: LeftActionBarElement) {
-    return element.formElementDescriptor.descriptorType === 'LeftActionBarFormSelectDescriptor'
+    return element.formElementDescriptor.descriptorType === 'MedSelectDescriptor'
   }
 
   isSeparator (element: LeftActionBarElement) {
@@ -156,19 +157,23 @@ export default class LeftActionBar extends Vue {
         if (typeof lfb !== 'undefined') {
           const paramFromQuery = listService.getQueryFilter('lcf-', lfb.formElementDescriptor.name, router)
           if (paramFromQuery !== 'undefined') {
+            if (lfb.formElementDescriptor.descriptorType === 'MedSelectDescriptor') {
+              return (lfb.formElementDescriptor as MedSelectDescriptor)
+                .getOptions()
+                .then(options => options?.find(option => option.value === paramFromQuery) ?? null)
+            }
             return paramFromQuery
-          }
-
-          if (lfb.formElementDescriptor.descriptorType === 'LeftActionBarFormSelectDescriptor') {
-            return (lfb.formElementDescriptor as LeftActionBarFormSelectDescriptor).defaultValue
           }
         }
         return null
       },
-      set (obj: {[key: string]: LeftActionBarElement}, prop: string, value: string) {
+      set (obj: {[key: string]: LeftActionBarElement}, prop: string, value: any) {
         const lfb = obj[prop] ?? undefined
 
         if (typeof lfb !== 'undefined') {
+          if (lfb.formElementDescriptor.descriptorType === 'MedSelectDescriptor' && typeof value !== 'undefined') {
+            value = (value as SelectValue).value
+          }
           customFilterChangeHandler(router, lfb, value)
         }
 
@@ -221,13 +226,14 @@ export default class LeftActionBar extends Vue {
 @import "assets/scss/colors";
 @import "assets/scss/breakpoints";
 
+$left-action-bar-element-height: 30px;
 $icon-min-width: 30px;
 $left-action-bar-element-text-padding-left: 3px;
 $mobile-portrait-icon-min-width: 35px;
 
 .leftActionBarElement {
-  line-height: 30px;
-  height: 30px;
+  line-height: $left-action-bar-element-height;
+  height: $left-action-bar-element-height;
   cursor: pointer;
   z-index: 1;
   display: flex;
@@ -242,7 +248,7 @@ $mobile-portrait-icon-min-width: 35px;
 
     .leftActionBarElementText{
       width: calc(100% - $icon-min-width);
-      padding-left: 5px;
+      padding-left: $left-action-bar-element-text-padding-left;
 
       @include phone-portrait {
         width: calc(100% - $mobile-portrait-icon-min-width);
@@ -256,8 +262,8 @@ $mobile-portrait-icon-min-width: 35px;
     display: inline-block;
     transition: background-color .3s, color .3s;
     font-size: 1rem;
-    height: 30px;
-    line-height: 30px;
+    height: $left-action-bar-element-height;
+    line-height: $left-action-bar-element-height;
 
     @include phone-portrait {
       min-width: $mobile-portrait-icon-min-width;
@@ -279,38 +285,33 @@ $mobile-portrait-icon-min-width: 35px;
         text-align: left;
         display: block;
         background-color: transparent;
+        padding-left: 0;
 
         i {
           display: none;
         }
       }
 
-      .formulate-input-element--select {
+      .formulate-input-element--medselect {
         position: relative;
 
-        &::before {
-          content: "";
-          width: 0;
-          height: 0;
-          border-color: black transparent transparent;
-          border-style: solid;
-          border-width: .3em .3em 0;
-          right: 1em;
-          position: absolute;
-          top: 50%;
-          transform: translateY(-50%);
-        }
+        .formulate-input-wrapper{
+          margin: 0 !important;
+          height: $left-action-bar-element-height !important;
 
-        select {
-          -webkit-appearance: none;
-          -moz-appearance: none;
-          width: 100%;
-          border: none;
-          height: 100%;
-          background: top;
+          .formulate-input[data-type="void"]{
+            margin-right: 0 !important;
+          }
+
+          .formulate-input-element--void{
+            border: none !important;
+            padding: 0 !important;
+            background: transparent !important;
+            color: $text !important;
+            font-size: .9rem !important;
+          }
         }
       }
-
     }
 
     button, select{
@@ -337,7 +338,7 @@ $mobile-portrait-icon-min-width: 35px;
 
     .leftActionBarSeparatorText {
       flex: 1;
-      line-height: 30px;
+      line-height: $left-action-bar-element-height;
       padding-left: 5px;
     }
   }
