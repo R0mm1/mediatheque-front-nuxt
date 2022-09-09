@@ -27,7 +27,6 @@ import DataSubProperty from 'assets/ts/list/DataSubProperty'
 import RowAction from 'assets/ts/list/RowAction'
 import LeftActionBarElement from 'assets/ts/list/LeftActionBarElement'
 import LeftActionBarProperties from 'assets/ts/list/LeftActionBarProperties'
-import LeftActionBarFormSelectDescriptor from 'assets/ts/list/LeftActionBarFormSelectDescriptor'
 import BookService from 'assets/ts/service/BookService'
 import bookElectronicModule from 'assets/ts/store/book/BookElectronicModule'
 import bookAudioModule from '~/assets/ts/store/book/BookAudioModule'
@@ -40,6 +39,7 @@ import BookListPopupDelete from '~/components/book/BookListPopupDelete.vue'
 import BookStoreService from '~/assets/ts/service/BookStoreService'
 import RowActionPayload from '~/assets/ts/list/RowActionPayload'
 import { BookAudioItem } from '~/assets/ts/models/BookAudio'
+import MedSelectDescriptor from '~/assets/ts/form/MedSelectDescriptor'
 
 @Component({
   components: {
@@ -111,12 +111,31 @@ export default class Book extends Vue {
     new LeftActionBarElement(
       'filter',
       () => null,
-      new LeftActionBarFormSelectDescriptor('bookType', {
-        all: 'Tous',
-        paper: 'Papier',
-        electronic: 'Epub',
-        audio: 'Audio'
-      }).setDefaultValue('all').setFaIcon('fas fa-book').setNoDefaultStyle(true)
+      new MedSelectDescriptor('bookType')
+        .setOptions([
+          {
+            label: 'Tous',
+            key: 'all',
+            value: 'all',
+            default: true
+          },
+          {
+            label: 'Papier',
+            key: 'paper',
+            value: 'paper'
+          },
+          {
+            label: 'Epub',
+            key: 'electronic',
+            value: 'electronic'
+          },
+          {
+            label: 'Audio',
+            key: 'audio',
+            value: 'audio'
+          }
+        ])
+        .setFaIcon('fas fa-book')
     )
   ], false)
 

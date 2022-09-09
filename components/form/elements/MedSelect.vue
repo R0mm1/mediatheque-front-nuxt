@@ -27,7 +27,7 @@ export default class MedSelect extends Vue {
 
   @Prop({
     required: true
-  }) value!: SelectValue | null
+  }) value!: SelectValue | null | Promise<SelectValue | null>
 
   bindValue: SelectValue | null = null
 
@@ -37,8 +37,10 @@ export default class MedSelect extends Vue {
     this.reloadOptions()
   }
 
-  @Watch('value') updateBindValue (newVal: SelectValue | null) {
-    this.bindValue = newVal
+  @Watch('value') updateBindValue (newVal: SelectValue | null | Promise<SelectValue | null>) {
+    Promise.resolve(newVal).then((newVal) => {
+      this.bindValue = newVal
+    })
   }
 
   @Watch('bindValue') bindValueChanged (newVal: SelectValue | null) {
@@ -46,18 +48,27 @@ export default class MedSelect extends Vue {
   }
 
   reloadOptions () {
-    if (Array.isArray(this.medSelectDescriptor.options)) {
-      this.options = this.medSelectDescriptor.options
-    } else if (typeof this.medSelectDescriptor.options !== 'undefined') {
-      this.medSelectDescriptor.options.then((options) => {
-        this.options = options
+    this.medSelectDescriptor.getOptions()
+      .then((options) => {
+        if (typeof options !== 'undefined') {
+          this.options = options
+        }
+        this.setDefault()
       })
+  }
+
+  setDefault () {
+    if (this.bindValue === null || typeof this.bindValue === 'undefined') {
+      const defaultValue = this.options.find(option => option.default === true)
+      if (typeof defaultValue !== 'undefined') {
+        this.bindValue = defaultValue
+      }
     }
   }
 
   created () {
+    this.updateBindValue(this.value)
     this.reloadOptions()
-    this.bindValue = this.value
   }
 }
 </script>
