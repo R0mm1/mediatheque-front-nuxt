@@ -122,18 +122,11 @@ export default class MedSelect extends Vue {
           height: 100%;
           display: flex;
           align-items: center;
+          white-space: nowrap;
+          overflow: hidden;
 
-          &::after {
-            content: "";
-            width: 0;
-            height: 0;
-            border-color: black transparent transparent;
-            border-style: solid;
-            border-width: .3em .3em 0;
-            right: .7em;
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
+          i{
+            font-size: .8rem;
           }
         }
       }
@@ -142,7 +135,7 @@ export default class MedSelect extends Vue {
         @include popup;
         list-style-type: none;
         position: absolute;
-        width: 100%;
+        width: calc(100% - $popup-padding - $popup-padding - $popup-border-width - $popup-border-width);
         z-index: 10;
         max-height: 10em;
         overflow-y: auto;

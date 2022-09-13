@@ -1,7 +1,12 @@
+@import "colors";
+
+$popup-padding: 3px;
+$popup-border-width: 1px;
+
 @mixin popup{
   background: white;
-  border: 1px solid $shade0;
+  border: $popup-border-width solid $shade0;
   box-shadow: 1px 1px 15px 1px $shade0;
   border-radius: 5px;
-  padding: 3px;
+  padding: $popup-padding;
 }

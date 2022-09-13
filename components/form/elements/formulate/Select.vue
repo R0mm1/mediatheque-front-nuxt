@@ -19,7 +19,11 @@
           wrapper-class="selected-value formulate-input-wrapper"
           type="void"
           @click.native="toggle"
-        />
+        >
+          <template #after>
+            <i class="fas fa-caret-down"></i>
+          </template>
+        </FormulateInput>
 
         <MedInputButton
           v-if="isCreationAvailable"

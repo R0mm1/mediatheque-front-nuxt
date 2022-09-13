@@ -236,11 +236,7 @@ export default class LeftActionBar extends Vue {
 <style lang="scss">
 @import "assets/scss/colors";
 @import "assets/scss/breakpoints";
-
-$left-action-bar-element-height: 30px;
-$icon-min-width: 30px;
-$left-action-bar-element-text-padding-left: 3px;
-$mobile-portrait-icon-min-width: 35px;
+@import "assets/scss/list";
 
 .leftActionBarElement {
   line-height: $left-action-bar-element-height;
@@ -283,7 +279,7 @@ $mobile-portrait-icon-min-width: 35px;
 
   .leftActionBarElementText {
     transition: background-color .3s;
-    width: 100%;
+    flex-grow: 1;
     padding-left: $left-action-bar-element-text-padding-left;
 
     .formulate-input, .formulate-input-wrapper, .formulate-input-element {
@@ -316,10 +312,11 @@ $mobile-portrait-icon-min-width: 35px;
 
           .formulate-input-element--void {
             border: none !important;
-            padding: 0 !important;
+            padding-left: 0 !important;
             background: transparent !important;
             color: $text !important;
             font-size: .9rem !important;
+            width: calc($left-action-bar-width-extent - $left-action-bar-width-shrunk - $left-action-bar-element-text-padding-left);
           }
         }
       }

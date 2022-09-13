@@ -268,8 +268,7 @@ export default class List extends Vue {
 <style scoped lang="scss">
 @import "../../assets/scss/colors";
 @import "../../assets/scss/breakpoints";
-
-$leftActionBarWidth: 30px;
+@import "../../assets/scss/list";
 
 #vueListContainer {
   display: flex;
@@ -286,7 +285,7 @@ $leftActionBarWidth: 30px;
 #vueListContent {
   flex-grow: 1;
   overflow: hidden;
-  margin-left: $leftActionBarWidth;
+  margin-left: $left-action-bar-width-shrunk;
   display: flex;
   flex-direction: column;
 
@@ -337,8 +336,7 @@ $leftActionBarWidth: 30px;
 
 <style lang="scss">
 @import "../../assets/scss/colors";
-
-$leftActionBarWidth: 30px;
+@import "../../assets/scss/list";
 
 #pagination {
   margin: 0;
@@ -380,14 +378,14 @@ $leftActionBarWidth: 30px;
   position: fixed;
   display: flex;
   flex-direction: column;
-  width: $leftActionBarWidth;
+  width: $left-action-bar-width-shrunk;
   height: 100%;
   transition: width .3s;
   background-color: #eeeae1;
   z-index: 10;
 
   &:hover, &.forceOpen {
-    width: 170px;
+    width: $left-action-bar-width-extent;
   }
 }
 </style>
