@@ -3,7 +3,10 @@
     :class="`formulate-input-element formulate-input-element--${context.type}`"
     :data-type="context.type"
   >
-    {{ context.model }}
+    <span class="content">{{ context.model }}</span>
+    <FormulateSlot
+      name="after"
+    />
   </div>
 </template>
 
@@ -17,5 +20,10 @@ export default class Void extends Vue {
 </script>
 
 <style scoped>
-
+  .content{
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 </style>
