@@ -30,7 +30,7 @@ export default class ListService {
     const filterName = prefix + paramName
     const value = router.currentRoute.query[filterName]
 
-    if (typeof value !== 'string' && typeof value !== 'undefined') {
+    if (typeof value !== 'string' && typeof value !== 'undefined' && value !== null) {
       console.error('Other values than string are not handled for filters')
       return undefined
     }

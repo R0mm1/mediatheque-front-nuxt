@@ -36,7 +36,11 @@
           </div>
         </template>
 
-        <NuxtLink v-if="isLink(labElement)" :to="labElement.formElementDescriptor.to" :aria-label="labElement.formElementDescriptor.label">
+        <NuxtLink
+          v-if="isLink(labElement)"
+          :to="labElement.formElementDescriptor.to"
+          :aria-label="labElement.formElementDescriptor.label"
+        >
           <div
             class="leftActionBarElementIcon"
             :class="labElement.formElementDescriptor.faIcon"
@@ -94,7 +98,11 @@ const customFilterChangeHandler = function (router: VueRouter, element: LeftActi
 }
 
 @Component({
-  components: { MedSelect, MedInputSelect, MedInputButton }
+  components: {
+    MedSelect,
+    MedInputSelect,
+    MedInputButton
+  }
 })
 export default class LeftActionBar extends Vue {
   @Prop(Object) leftActionBarProperties!: LeftActionBarProperties
@@ -152,12 +160,15 @@ export default class LeftActionBar extends Vue {
     const router = this.$router
 
     const handler = {
-      get (obj: {[key: string]: LeftActionBarElement}, prop: string) {
+      get (obj: { [key: string]: LeftActionBarElement }, prop: string) {
         const lfb = obj[prop] ?? undefined
         if (typeof lfb !== 'undefined') {
-          const paramFromQuery = listService.getQueryFilter('lcf-', lfb.formElementDescriptor.name, router)
-          if (paramFromQuery !== 'undefined') {
+          let paramFromQuery: string | undefined | null = listService.getQueryFilter('lcf-', lfb.formElementDescriptor.name, router)
+          if (typeof paramFromQuery !== 'undefined') {
             if (lfb.formElementDescriptor.descriptorType === 'MedSelectDescriptor') {
+              if (paramFromQuery.length === 0) {
+                paramFromQuery = null
+              }
               return (lfb.formElementDescriptor as MedSelectDescriptor)
                 .getOptions()
                 .then(options => options?.find(option => option.value === paramFromQuery) ?? null)
@@ -167,7 +178,7 @@ export default class LeftActionBar extends Vue {
         }
         return null
       },
-      set (obj: {[key: string]: LeftActionBarElement}, prop: string, value: any) {
+      set (obj: { [key: string]: LeftActionBarElement }, prop: string, value: any) {
         const lfb = obj[prop] ?? undefined
 
         if (typeof lfb !== 'undefined') {
@@ -181,12 +192,12 @@ export default class LeftActionBar extends Vue {
       }
     }
 
-    const indexedCustomElements: {[key: string]: LeftActionBarElement} = {}
+    const indexedCustomElements: { [key: string]: LeftActionBarElement } = {}
     this.leftActionBarProperties.customElements.forEach((element) => {
       indexedCustomElements[element.formElementDescriptor.name] = element
     })
 
-    return new Proxy<{[key: string]: LeftActionBarElement}>(indexedCustomElements, handler)
+    return new Proxy<{ [key: string]: LeftActionBarElement }>(indexedCustomElements, handler)
   }
 
   customFilterChangeHandler (element: LeftActionBarElement, value?: any) {
@@ -238,7 +249,7 @@ $mobile-portrait-icon-min-width: 35px;
   z-index: 1;
   display: flex;
 
-  a{
+  a {
     display: flex;
     font-size: .9rem;
     text-decoration: none;
@@ -246,7 +257,7 @@ $mobile-portrait-icon-min-width: 35px;
     overflow: hidden;
     width: 100%;
 
-    .leftActionBarElementText{
+    .leftActionBarElementText {
       width: calc(100% - $icon-min-width);
       padding-left: $left-action-bar-element-text-padding-left;
 
@@ -295,15 +306,15 @@ $mobile-portrait-icon-min-width: 35px;
       .formulate-input-element--medselect {
         position: relative;
 
-        .formulate-input-wrapper{
+        .formulate-input-wrapper {
           margin: 0 !important;
           height: $left-action-bar-element-height !important;
 
-          .formulate-input[data-type="void"]{
+          .formulate-input[data-type="void"] {
             margin-right: 0 !important;
           }
 
-          .formulate-input-element--void{
+          .formulate-input-element--void {
             border: none !important;
             padding: 0 !important;
             background: transparent !important;
@@ -314,7 +325,7 @@ $mobile-portrait-icon-min-width: 35px;
       }
     }
 
-    button, select{
+    button, select {
       font-size: .9rem;
     }
   }

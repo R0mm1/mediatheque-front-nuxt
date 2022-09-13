@@ -22,6 +22,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import { container } from 'tsyringe'
 import Column from 'assets/ts/list/Column'
 import DataSubProperty from 'assets/ts/list/DataSubProperty'
 import RowAction from 'assets/ts/list/RowAction'
@@ -39,7 +40,8 @@ import BookListPopupDelete from '~/components/book/BookListPopupDelete.vue'
 import BookStoreService from '~/assets/ts/service/BookStoreService'
 import RowActionPayload from '~/assets/ts/list/RowActionPayload'
 import { BookAudioItem } from '~/assets/ts/models/BookAudio'
-import MedSelectDescriptor from '~/assets/ts/form/MedSelectDescriptor'
+import MedSelectDescriptor, { SelectValue } from '~/assets/ts/form/MedSelectDescriptor'
+import UserService from '~/assets/ts/service/UserService'
 
 @Component({
   components: {
@@ -136,6 +138,34 @@ export default class Book extends Vue {
           }
         ])
         .setFaIcon('fas fa-book')
+    ),
+    new LeftActionBarElement(
+      'filter',
+      () => null,
+      new MedSelectDescriptor('owner')
+        .setOptions(container.resolve(UserService).getUsers().then((data) => {
+          const options: SelectValue[] = data['hydra:member']
+            .map((user) => {
+              return {
+                key: user.id?.toString() ?? '',
+                value: user.id,
+                label: user.firstname + ' ' + user.lastname
+              }
+            })
+            .sort((first, second) => first.label.localeCompare(second.label))
+
+          options.unshift(
+            {
+              key: 'all',
+              value: null,
+              label: 'Tous',
+              default: true
+            }
+          )
+
+          return options
+        }))
+        .setFaIcon('fas fa-user')
     )
   ], false)
 
