@@ -44,7 +44,9 @@ export default class MedSelect extends Vue {
   }
 
   @Watch('bindValue') bindValueChanged (newVal: SelectValue | null) {
-    this.$emit('input', newVal)
+    if (this.value !== newVal) {
+      this.$emit('input', newVal)
+    }
   }
 
   reloadOptions () {
