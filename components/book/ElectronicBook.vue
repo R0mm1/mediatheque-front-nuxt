@@ -1,5 +1,5 @@
 <template>
-  <EntityLayout v-model="activeTab" :tabs="tabs" @edit-button-pressed="toggleEditMode">
+  <EntityLayout v-model="activeTab" :tabs="tabs" :footer-opened="switchEditModeOn && isModified" @edit-button-pressed="toggleEditMode">
     <template #entity-layout-title>
       {{ title }}
     </template>
@@ -106,6 +106,8 @@ export default class ElectronicBook extends Vue {
             path: '/book/electronic/' + bookElectronicModule.book.id
           })
         }
+
+        this.toggleEditMode()
       })
       .catch((error) => {
         console.error(error)

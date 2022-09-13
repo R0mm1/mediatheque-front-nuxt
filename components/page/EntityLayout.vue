@@ -2,7 +2,9 @@
   <div>
     <div id="entity-layout-title">
       <div id="entity-layout-title-text">
-        <h1><slot name="entity-layout-title" /></h1>
+        <h1>
+          <slot name="entity-layout-title" />
+        </h1>
         <span><slot name="entity-layout-title-note" /></span>
       </div>
       <MedInputButton :button-descriptor="editButtonDescriptor" @click.native="editButtonPressed" />
@@ -12,7 +14,7 @@
         <slot name="entity-layout-content" />
       </template>
     </Tabs>
-    <div>
+    <div v-if="footerOpened" id="entity-layout-footer">
       <slot name="entity-layout-footer" />
     </div>
   </div>
@@ -25,13 +27,23 @@ import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
 import MedInputButton from '~/components/form/elements/MedInputButton.vue'
 
 @Component({
-  components: { Tabs, MedInputButton }
+  components: {
+    Tabs,
+    MedInputButton
+  }
 })
 export default class EntityLayout extends Vue {
-  @Prop({ type: Array, required: true }) tabs!: TabData[]
-  @Prop({ type: String, required: true }) value!: string
+  @Prop({
+    type: Array,
+    required: true
+  }) tabs!: TabData[]
 
-  activeTab: string|null = null
+  @Prop({
+    type: String,
+    required: true
+  }) value!: string
+
+  activeTab: string | null = null
 
   @Watch('activeTab') activeTabChange () {
     this.$emit('input', this.activeTab)
@@ -46,6 +58,12 @@ export default class EntityLayout extends Vue {
     return true
   }
 
+  @Prop({
+    type: Boolean,
+    required: false,
+    default: false
+  }) footerOpened!: boolean
+
   created () {
     this.activeTab = this.value
   }
@@ -57,29 +75,29 @@ export default class EntityLayout extends Vue {
 
 $headerHeight: 50px;
 
-#entity-layout-title{
+#entity-layout-title {
   display: inline-block;
   text-align: center;
   width: 100%;
   position: relative;
   height: $headerHeight;
 
-  #entity-layout-title-text{
+  #entity-layout-title-text {
     position: absolute;
     width: 100%;
     height: $headerHeight;
     line-height: $headerHeight;
   }
 
-  h1{
+  h1 {
     display: inline-block;
   }
 
-  span{
+  span {
     color: $textLessImportant;
   }
 
-  .formulate-input{
+  .formulate-input {
     float: right;
     line-height: 50px;
     margin-right: 10px;
@@ -87,7 +105,13 @@ $headerHeight: 50px;
     z-index: 1;
   }
 }
-.tabs{
+
+.tabs {
   flex: 1;
+}
+
+#entity-layout-footer {
+  padding: 5px;
+  border-top: 1px solid $shade0;
 }
 </style>
