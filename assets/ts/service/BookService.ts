@@ -1,9 +1,10 @@
-import { AuthorEntity, GroupEntity } from '@/assets/ts/entity/module'
+import { GroupEntity } from '@/assets/ts/entity/module'
 import EntityService from '@/assets/ts/service/EntityService'
 import { BookPaper } from '~/assets/ts/models/BookPaper'
 import { Book } from '~/assets/ts/models/Book'
 import { BookElectronic } from '~/assets/ts/models/BookElectronic'
 import { BookAudio } from '~/assets/ts/models/BookAudio'
+import { Author } from '~/assets/ts/models/Author'
 
 export type BookTypes = 'ElectronicBook' | 'PaperBook' | 'AudioBook'
 
@@ -49,9 +50,9 @@ export default class BookService {
     return typeof book.id !== 'undefined'
   }
 
-  hasAuthor (book: Book, author: AuthorEntity): boolean | number {
+  hasAuthor (book: Book, author: Author): boolean | number {
     let hasAuthor: boolean | number = false
-    book.authors.forEach((bookAuthor: AuthorEntity, index) => {
+    book.authors.forEach((bookAuthor: Author, index) => {
       if (author.id === bookAuthor.id) { hasAuthor = index }
     })
     return hasAuthor
@@ -61,7 +62,7 @@ export default class BookService {
     const bookPrepared: any = {
       ...book,
       cover: this.entityService.getIri(book.cover),
-      authors: book.authors.map((author: AuthorEntity) :string => {
+      authors: book.authors.map((author: Author) :string => {
         return '/authors/' + author.id
       }),
       groups: book.groups.map((group: GroupEntity): string => {

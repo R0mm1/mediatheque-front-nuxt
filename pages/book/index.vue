@@ -66,9 +66,12 @@ export default class Book extends Vue {
     new Column('language', 'Langue'),
     new Column('authors', 'Auteurs')
       .setSearchParameterName('authorFullname')
+      .setIsSortable(false)
       .setSubProperties([
-        new DataSubProperty('firstname'),
-        new DataSubProperty('lastname')
+        new DataSubProperty('person', [
+          new DataSubProperty('firstname'),
+          new DataSubProperty('lastname')
+        ])
       ])
   ]
 

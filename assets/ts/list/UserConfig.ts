@@ -1,5 +1,5 @@
 export interface UserColumnConfig{
-  dataField: string,
+  uid: string,
   isDisplayed: boolean
 }
 

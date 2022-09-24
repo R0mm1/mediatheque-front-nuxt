@@ -3,7 +3,6 @@ import { container } from 'tsyringe'
 import { Action, Mutation, VuexModule } from 'vuex-module-decorators'
 import { Method } from 'axios'
 import {
-  AuthorEntity,
   FileEntity,
   GroupEntity,
   BookNotationEntity
@@ -16,6 +15,7 @@ import HistoryService from '~/assets/ts/service/HistoryService'
 import RequestService from '~/assets/ts/service/RequestService'
 import { Book, BookItem } from '~/assets/ts/models/Book'
 import { EditorItem } from '~/assets/ts/models/Editor'
+import { AuthorItem } from '~/assets/ts/models/Author'
 
 export abstract class BookModule extends VuexModule {
   static EVENT_BOOK_SAVED = 'book-saved'
@@ -83,7 +83,7 @@ export abstract class BookModule extends VuexModule {
       Vue.set(this.book, 'summary', summary)
     }
 
-    @Mutation addAuthor (author: AuthorEntity) {
+    @Mutation addAuthor (author: AuthorItem) {
       const authorAtIndex = this.bookService.hasAuthor(this.book, author)
       if (authorAtIndex === false) {
         const authors = Array.from(this.book.authors)
@@ -92,7 +92,7 @@ export abstract class BookModule extends VuexModule {
       }
     }
 
-    @Mutation removeAuthor (author: AuthorEntity) {
+    @Mutation removeAuthor (author: AuthorItem) {
       const authorAtIndex = this.bookService.hasAuthor(this.book, author)
       if (typeof authorAtIndex === 'number') {
         const authors = Array.from(this.book.authors)

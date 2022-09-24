@@ -48,7 +48,10 @@
       />
     </div>
 
-    <column-selection-popup v-if="isColumnSelectionPopupOpened" @popup-wanna-close="toggleIsColumnSelectionPopupOpened" />
+    <column-selection-popup
+      v-if="isColumnSelectionPopupOpened"
+      @popup-wanna-close="toggleIsColumnSelectionPopupOpened"
+    />
   </span>
 </template>
 
@@ -104,16 +107,28 @@ export default class List extends Vue {
   @Prop(Array) cols!: Column[]
   @Prop(String) apiEndpoint!: string
 
-  @Prop({ type: Object, default: () => new LeftActionBarProperties() })
+  @Prop({
+    type: Object,
+    default: () => new LeftActionBarProperties()
+  })
     leftActionBarProperties!: LeftActionBarProperties
 
-  @Prop({ type: Array, default: () => [] })
+  @Prop({
+    type: Array,
+    default: () => []
+  })
     rowActions!: RowAction[]
 
-  @Prop({ type: String, default: null })
+  @Prop({
+    type: String,
+    default: null
+  })
     detailsComponentPath!: string | null
 
-  @Prop({ type: Function, required: true }) callback!: Function
+  @Prop({
+    type: Function,
+    required: true
+  }) callback!: Function
 
   get isMobile () {
     return this.$device.isMobile
@@ -127,7 +142,7 @@ export default class List extends Vue {
     return listModule._paginationCurrentPage
   }
 
-  get fullLeftActionBarProperties ():LeftActionBarProperties {
+  get fullLeftActionBarProperties (): LeftActionBarProperties {
     const leftActionBarProperties = this.leftActionBarProperties
     leftActionBarProperties.customElements = leftActionBarProperties.customElements.concat([
       new LeftActionBarElement(
@@ -217,7 +232,7 @@ export default class List extends Vue {
   // Handle list data filtering (filters, search...)
 
   updateFiltersFromQueryString () {
-    const updateFilters: {[key: string]: Filter} = {}
+    const updateFilters: { [key: string]: Filter } = {}
     Object.entries(this.$route.query).forEach(([paramName, paramValue]) => {
       if (paramName.startsWith(FilterQueryParamPrefix) && typeof paramValue === 'string') {
         const filter = paramName.split(FilterQueryParamPrefix).pop() as string
@@ -275,8 +290,8 @@ export default class List extends Vue {
   height: 100%;
   position: relative;
 
-  &.hasPopupDisplayed{
-    #vueListContent, #leftActionBar{
+  &.hasPopupDisplayed {
+    #vueListContent, #leftActionBar {
       filter: blur(3px);
     }
   }
@@ -329,7 +344,7 @@ export default class List extends Vue {
   }
 }
 
-.widget_popup{
+.widget_popup {
   z-index: 10;
 }
 </style>
@@ -361,7 +376,7 @@ export default class List extends Vue {
   }
 }
 
-.menu-icon{
+.menu-icon {
   position: fixed;
   top: 0;
   z-index: 10;
