@@ -204,7 +204,7 @@ export default {
       const rows = group.books.map((book) => {
         return new Element(book.id, book.title, book)
       })
-      rows.push(new Element(this.bookModule.book.id, this.bookModule.book.title, this.bookModule.book))
+      rows.push(new Element(this.bookModule.book.id.toString(), this.bookModule.book.title, this.bookModule.book))
       this.$set(this.blocsRows, group.id, rows)
 
       // Add the group on the list of groups to be linked to the book on saving

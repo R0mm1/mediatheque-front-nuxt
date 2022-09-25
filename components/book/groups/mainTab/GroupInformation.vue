@@ -7,7 +7,11 @@
       <template #group_content>
         <MedInputText v-model="title" :text-descriptor="formInputTextDescriptors.title" />
 
-        <MedChips :chips-descriptor="formChipsAuthorsDescriptor" @entity-removed="authorRemoved" @entity-added="authorAdded" />
+        <MedChips
+          :chips-descriptor="formChipsAuthorsDescriptor"
+          @entity-removed="authorRemoved"
+          @entity-added="authorAdded"
+        />
 
         <MedInputText v-model="language" :text-descriptor="formInputTextDescriptors.language" />
         <MedInputText v-model="year" :text-descriptor="formInputTextDescriptors.year" />
@@ -30,7 +34,6 @@ import Group from '~/components/page/Group.vue'
 import authorModule from '~/assets/ts/store/AuthorModule'
 import editorModule from '~/assets/ts/store/EditorModule'
 import { BookPaperModule } from '~/assets/ts/store/book/BookPaperModule'
-import { AuthorEntity } from '~/assets/ts/entity/AuthorEntity'
 import MedInputSelect from '~/components/form/elements/MedInputSelect.vue'
 import MedChips from '~/components/form/elements/MedChips.vue'
 import ChipsDescriptor from '~/assets/ts/form/ChipsDescriptor'
@@ -39,15 +42,32 @@ import MedSelectDescriptor, { SelectValue } from '~/assets/ts/form/MedSelectDesc
 import MedSelect from '~/components/form/elements/MedSelect.vue'
 import EditorService from '~/assets/ts/service/EditorService'
 import { Editor, EditorItem } from '~/assets/ts/models/Editor'
+import Person from '~/assets/ts/models/Person'
+import AuthorService from '~/assets/ts/service/AuthorService'
+import { Author } from '~/assets/ts/models/Author'
 
 const editorService = container.resolve(EditorService)
+const authorService = container.resolve(AuthorService)
 
 @Component({
-  components: { MedChips, MedInputSelect, MedSelect, MedInputText, Group }
+  components: {
+    MedChips,
+    MedInputSelect,
+    MedSelect,
+    MedInputText,
+    Group
+  }
 })
 export default class GroupInformation extends Vue {
-  @Prop({ type: Object, required: true }) bookModule!: BookPaperModule | BookElectronicModule
-  @Prop({ type: Boolean, required: true }) editModeOn!:boolean
+  @Prop({
+    type: Object,
+    required: true
+  }) bookModule!: BookPaperModule | BookElectronicModule
+
+  @Prop({
+    type: Boolean,
+    required: true
+  }) editModeOn!: boolean
 
   formInputTextDescriptors = {
     title: new TextDescriptor('title').setLabel('Titre').setEditModeOn(this.editModeOn),
@@ -119,7 +139,7 @@ export default class GroupInformation extends Vue {
     return null
   }
 
-  set editor (selectValue: SelectValue|null) {
+  set editor (selectValue: SelectValue | null) {
     this.bookModule.setEditor(selectValue?.value ?? undefined)
   }
 
@@ -127,9 +147,9 @@ export default class GroupInformation extends Vue {
     const chipsDescriptor = new ChipsDescriptor()
     chipsDescriptor.name = 'authors'
     chipsDescriptor.label = 'Auteurs'
-    chipsDescriptor.entities = this.authors
+    chipsDescriptor.entities = this.authors.map(author => author.person)
     chipsDescriptor.entityFields = ['firstname', 'lastname']
-    chipsDescriptor.entityURI = '/authors'
+    chipsDescriptor.entityURI = '/people'
     chipsDescriptor.searchParam = 'fullname'
     chipsDescriptor.searchFieldPlaceholder = 'Rechercher un auteur'
     chipsDescriptor.formCreationValidationAction = this.createAuthorFromForm
@@ -168,8 +188,12 @@ export default class GroupInformation extends Vue {
             .sort((editor1, editor2) => {
               const label1 = editor1.label.toLowerCase()
               const label2 = editor2.label.toLowerCase()
-              if (label1 < label2) { return -1 }
-              if (label1 > label2) { return 1 }
+              if (label1 < label2) {
+                return -1
+              }
+              if (label1 > label2) {
+                return 1
+              }
               return 0
             })
 
@@ -193,12 +217,20 @@ export default class GroupInformation extends Vue {
     return medSelectEditorDescriptor
   }
 
-  authorRemoved (author: AuthorEntity) {
-    this.bookModule.removeAuthor(author)
+  authorRemoved (author: Author | Person) {
+    if (authorService.isAuthor(author)) {
+      this.bookModule.removeAuthor(author)
+    } else {
+      authorService.getAuthorFromPerson(author).then(author => this.bookModule.removeAuthor(author))
+    }
   };
 
-  authorAdded (author: AuthorEntity) {
-    this.bookModule.addAuthor(author)
+  authorAdded (author: Author | Person) {
+    if (authorService.isAuthor(author)) {
+      this.bookModule.addAuthor(author)
+    } else {
+      authorService.getAuthorFromPerson(author).then(author => this.bookModule.addAuthor(author))
+    }
   };
 
   createAuthorFromForm (formCreationData: any) {
@@ -215,7 +247,7 @@ export default class GroupInformation extends Vue {
   createEditorFromForm (formCreationData: Editor): Promise<SelectValue> {
     editorModule.set(formCreationData)
     return editorModule.save()
-      .then((editor: EditorItem|boolean) => {
+      .then((editor: EditorItem | boolean) => {
         if (typeof editor !== 'boolean') {
           return Promise.resolve({
             key: editor['@id'] as string,

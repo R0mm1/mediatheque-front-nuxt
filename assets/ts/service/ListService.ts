@@ -41,7 +41,7 @@ export default class ListService {
     const displayedColumns: { [index: string]: Column } = {}
     Object.values(listModule.columns).forEach((column) => {
       if (this.isColumnDisplayed(column)) {
-        displayedColumns[column.dataField] = column
+        displayedColumns[column.uid] = column
       }
     })
     return displayedColumns
@@ -49,7 +49,7 @@ export default class ListService {
 
   isColumnDisplayed (column: Column): boolean {
     const userColumnConfig = listModule.userConfig?.value?.columns.find((userColumnConfig) => {
-      return userColumnConfig.dataField === column.dataField
+      return userColumnConfig.uid === column.uid
     })
 
     return typeof userColumnConfig !== 'undefined' && userColumnConfig.isDisplayed === true

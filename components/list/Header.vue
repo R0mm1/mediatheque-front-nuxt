@@ -1,6 +1,6 @@
 <template>
   <div class="list-header">
-    <div v-for="column in displayedColumns" :key="column.dataField" class="cell">
+    <div v-for="column in displayedColumns" :key="column.uid" class="cell">
       <div class="headerRow" role="columnheader" :aria-label="column.label">
         <div class="headerRowLabel">
           {{ column.label }}
@@ -9,8 +9,8 @@
         <button
           v-if="column.isSearchable"
           class="headerTogglePopupButton fas fa-ellipsis-h"
-          :class="{isActive: isButtonPopupLocked(column.dataField)}"
-          @click="toggleRowTwo(column.dataField)"
+          :class="{isActive: isButtonPopupLocked(column.uid)}"
+          @click="toggleRowTwo(column.uid)"
         />
 
         <div v-if="column.isSortable" class="buttonGroup">
@@ -29,7 +29,7 @@
 
       <HeaderPopup
         :column="column"
-        :is-displayed="isPopupDisplayed(column.dataField)"
+        :is-displayed="isPopupDisplayed(column.uid)"
         @list-header-search="searchFiltered"
       />
     </div>
@@ -64,24 +64,24 @@ export default class Header extends Vue {
 
   displayedColumns: { [index: string]: Column } = {}
 
-  toggleRowTwo (dataField: string) {
-    if (typeof this.listDisplayPopup[dataField] === 'undefined') {
-      this.$set(this.listDisplayPopup, dataField, true)
+  toggleRowTwo (uid: string) {
+    if (typeof this.listDisplayPopup[uid] === 'undefined') {
+      this.$set(this.listDisplayPopup, uid, true)
     } else {
-      this.$set(this.listDisplayPopup, dataField, !this.listDisplayPopup[dataField])
+      this.$set(this.listDisplayPopup, uid, !this.listDisplayPopup[uid])
     }
   }
 
-  setHasPopupNotice (dataField: string, hasPopupNotice: boolean) {
-    this.$set(this.listHasPopupNotice, dataField, hasPopupNotice)
+  setHasPopupNotice (uid: string, hasPopupNotice: boolean) {
+    this.$set(this.listHasPopupNotice, uid, hasPopupNotice)
   }
 
-  isPopupDisplayed (dataField: string) {
-    return this.listDisplayPopup[dataField]
+  isPopupDisplayed (uid: string) {
+    return this.listDisplayPopup[uid]
   }
 
-  isButtonPopupLocked (dataField: string) {
-    return this.isPopupDisplayed(dataField) || this.listHasPopupNotice[dataField]
+  isButtonPopupLocked (uid: string) {
+    return this.isPopupDisplayed(uid) || this.listHasPopupNotice[uid]
   }
 
   get sortUpString () {
@@ -101,18 +101,18 @@ export default class Header extends Vue {
   }
 
   setSort (column: Column, sortState: ColumnSort|null) {
-    if (listService.getQueryFilter('lst-', column.dataField, this.$router) === sortState) {
+    if (listService.getQueryFilter('lst-', column.uid, this.$router) === sortState) {
       sortState = null
     }
     column.sortState = sortState ?? Column.sortNone
-    listService.setQueryFilter('lst-', column.dataField, sortState, this.$router)
+    listService.setQueryFilter('lst-', column.uid, sortState, this.$router)
   }
 
   searchFiltered (column: Column) {
-    this.setHasPopupNotice(column.dataField, column.searchString.length > 0)
+    this.setHasPopupNotice(column.uid, column.searchString.length > 0)
     const queryParamSearchValue = column.searchString.length > 0 ? column.searchString : null
-    this.$set(this.listDisplayPopup, column.dataField, false)
-    listService.setQueryFilter('lsh-', column.dataField, queryParamSearchValue, this.$router)
+    this.$set(this.listDisplayPopup, column.uid, false)
+    listService.setQueryFilter('lsh-', column.uid, queryParamSearchValue, this.$router)
   }
 
   // Handle columns

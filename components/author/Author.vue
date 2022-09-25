@@ -1,5 +1,5 @@
 <template>
-  <EntityLayout v-model="activeTab" :tabs="tabs" @edit-button-pressed="toggleEditMode">
+  <EntityLayout v-model="activeTab" :tabs="tabs" :footer-opened="switchEditModeOn && isModified" @edit-button-pressed="toggleEditMode">
     <template #entity-layout-title>
       {{ firstname }} {{ lastname }}
     </template>
@@ -42,11 +42,11 @@ export default class Author extends Vue {
   ]
 
   get lastname () {
-    return authorModule.author.lastname
+    return authorModule.author.person.lastname
   }
 
   get firstname () {
-    return authorModule.author.firstname
+    return authorModule.author.person.firstname
   }
 
   get saveButtonDescriptor () {
@@ -71,10 +71,16 @@ export default class Author extends Vue {
           icon: 'fa-check'
         })
         this.$emit('author-saved')
+
+        this.toggleEditMode()
       })
       .catch((error) => {
         console.error(error)
-        alert('Une erreur s\'est produite et l\'auteur n\'a pas pu être sauvegardé')
+        this.$toasted.show('Une erreur s\'est produite et l\'auteur n\'a pas pu être sauvegardé', {
+          ...this.$config.default.notification_settings,
+          type: 'error',
+          icon: 'fa-times'
+        })
       })
   }
 

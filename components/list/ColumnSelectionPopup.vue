@@ -48,16 +48,16 @@ export default class ColumnSelectionPopup extends Vue {
 
   get checkboxDescriptors (): CheckboxDescriptor[] {
     return Object.values(listModule.columns).map((column) => {
-      return new CheckboxDescriptor(column.dataField, column.label)
+      return new CheckboxDescriptor(column.uid, column.label)
     })
   }
 
   get columns (): {[index: string]: UserColumnConfig} {
     return Object.fromEntries(Object.values(listModule.columns).map((column) => {
       return [
-        column.dataField,
+        column.uid,
         {
-          dataField: column.dataField,
+          uid: column.uid,
           isDisplayed: this.listService.isColumnDisplayed(column)
         }
       ]
@@ -70,12 +70,12 @@ export default class ColumnSelectionPopup extends Vue {
     }
 
     let userColumnConfig = listModule.userConfig.value.columns.find((ucc) => {
-      return ucc.dataField === column
+      return ucc.uid === column
     })
 
     if (typeof userColumnConfig === 'undefined') {
       userColumnConfig = {
-        dataField: column,
+        uid: column,
         isDisplayed: (e.target as HTMLInputElement).checked
       }
       listModule.userConfig.value.columns.push(userColumnConfig)

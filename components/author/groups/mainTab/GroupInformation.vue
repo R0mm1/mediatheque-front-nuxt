@@ -32,7 +32,7 @@ export default class GroupInformation extends Vue {
   }) editModeOn!: boolean
 
   get firstname () {
-    return authorModule.author.firstname
+    return authorModule.author.person.firstname
   }
 
   set firstname (firstname: string | undefined) {
@@ -40,7 +40,7 @@ export default class GroupInformation extends Vue {
   }
 
   get lastname () {
-    return authorModule.author.lastname
+    return authorModule.author.person.lastname
   }
 
   set lastname (lastname: string | undefined) {
