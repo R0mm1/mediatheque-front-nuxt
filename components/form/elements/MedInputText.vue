@@ -8,6 +8,7 @@
     :add-label="addLabel"
     :disabled="textDescriptor.disabled"
     :readonly="!textDescriptor.editModeOn"
+    :error="textDescriptor.error"
     @input.native="$emit('input', bindValue)"
     @focusin.native="$emit('focusin', bindValue)"
   />
