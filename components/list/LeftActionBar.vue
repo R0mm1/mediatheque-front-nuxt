@@ -302,6 +302,10 @@ export default class LeftActionBar extends Vue {
       .formulate-input-element--medselect {
         position: relative;
 
+        li{
+          line-height: initial;
+        }
+
         .formulate-input-wrapper {
           margin: 0 !important;
           height: $left-action-bar-element-height !important;
