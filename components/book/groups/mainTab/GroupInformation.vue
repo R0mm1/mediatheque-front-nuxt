@@ -5,7 +5,7 @@
         Informations
       </template>
       <template #group_content>
-        <MedInputText v-model="title" :text-descriptor="formInputTextDescriptors.title" />
+        <MedInputText v-model="title" :text-descriptor="titleTextDescriptor"/>
 
         <MedChips
           :chips-descriptor="formChipsAuthorsDescriptor"
@@ -13,13 +13,13 @@
           @entity-added="authorAdded"
         />
 
-        <MedInputText v-model="language" :text-descriptor="formInputTextDescriptors.language" />
-        <MedInputText v-model="year" :text-descriptor="formInputTextDescriptors.year" />
-        <MedInputText v-model="pageCount" :text-descriptor="formInputTextDescriptors.pageCount" />
-        <MedInputText v-model="isbn" :text-descriptor="formInputTextDescriptors.isbn" />
-        <MedSelect v-model="editor" :med-select-descriptor="medSelectEditorDescriptor" />
+        <MedInputText v-model="language" :text-descriptor="formInputTextDescriptors.language"/>
+        <MedInputText v-model="year" :text-descriptor="formInputTextDescriptors.year"/>
+        <MedInputText v-model="pageCount" :text-descriptor="formInputTextDescriptors.pageCount"/>
+        <MedInputText v-model="isbn" :text-descriptor="formInputTextDescriptors.isbn"/>
+        <MedSelect v-model="editor" :med-select-descriptor="medSelectEditorDescriptor"/>
 
-        <slot name="specific-fields" />
+        <slot name="specific-fields"/>
       </template>
     </Group>
   </client-only>
@@ -70,7 +70,6 @@ export default class GroupInformation extends Vue {
   }) editModeOn!: boolean
 
   formInputTextDescriptors = {
-    title: new TextDescriptor('title').setLabel('Titre').setEditModeOn(this.editModeOn),
     language: new TextDescriptor('language').setLabel('Langue').setEditModeOn(this.editModeOn),
     year: new TextDescriptor('year').setLabel('Année').setEditModeOn(this.editModeOn),
     pageCount: new TextDescriptor('pageCount').setLabel('Nombre de pages').setEditModeOn(this.editModeOn),
@@ -82,6 +81,13 @@ export default class GroupInformation extends Vue {
   }
 
   private editors?: SelectValue[]
+
+  get titleTextDescriptor () {
+    return new TextDescriptor('title')
+      .setLabel('Titre')
+      .setEditModeOn(this.editModeOn)
+      .setError(this.bookModule.violations.title?.message ?? null)
+  }
 
   get title () {
     return this.bookModule.book.title
@@ -260,7 +266,6 @@ export default class GroupInformation extends Vue {
   }
 
   @Watch('editModeOn') editModeOnChanged () {
-    this.formInputTextDescriptors.title.setEditModeOn(this.editModeOn)
     this.formInputTextDescriptors.language.setEditModeOn(this.editModeOn)
     this.formInputTextDescriptors.year.setEditModeOn(this.editModeOn)
     this.formInputTextDescriptors.pageCount.setEditModeOn(this.editModeOn)
