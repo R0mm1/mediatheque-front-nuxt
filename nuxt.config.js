@@ -59,7 +59,8 @@ export default {
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
     '@nuxtjs/style-resources',
-    '@nuxtjs/toast'
+    '@nuxtjs/toast',
+    '@nuxtjs/i18n'
   ],
   /*
   ** Axios module configuration
@@ -104,5 +105,12 @@ export default {
   },
   server: {
     host: '0.0.0.0'
+  },
+  i18n: {
+    locales: [
+      { code: 'fr', iso: 'fr-FR', file: 'fr.js' }
+    ],
+    langDir: '~/locales/',
+    defaultLocale: 'fr'
   }
 }

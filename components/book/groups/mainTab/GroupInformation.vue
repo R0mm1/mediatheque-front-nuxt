@@ -45,9 +45,11 @@ import { Editor, EditorItem } from '~/assets/ts/models/Editor'
 import Person from '~/assets/ts/models/Person'
 import AuthorService from '~/assets/ts/service/AuthorService'
 import { Author } from '~/assets/ts/models/Author'
+import FormService from '~/assets/ts/service/FormService'
 
 const editorService = container.resolve(EditorService)
 const authorService = container.resolve(AuthorService)
+const formService = container.resolve(FormService)
 
 @Component({
   components: {
@@ -83,10 +85,13 @@ export default class GroupInformation extends Vue {
   private editors?: SelectValue[]
 
   get titleTextDescriptor () {
+    const errorMessageTranslationKey = formService.getApiErrorTranslationKey(this.bookModule.violations.title?.message)
+    const errorMessage = errorMessageTranslationKey ? this.$t(errorMessageTranslationKey).toString() : null
+
     return new TextDescriptor('title')
       .setLabel('Titre')
       .setEditModeOn(this.editModeOn)
-      .setError(this.bookModule.violations.title?.message ?? null)
+      .setError(errorMessage)
   }
 
   get title () {
