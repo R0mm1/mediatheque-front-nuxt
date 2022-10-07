@@ -1,5 +1,6 @@
 import { Action, getModule, Module, Mutation } from 'vuex-module-decorators'
 import { container } from 'tsyringe'
+import { AxiosError } from 'axios'
 import store from '~/assets/ts/store/store'
 import { BookModule } from '~/assets/ts/store/book/BookModule'
 import EntityModuleInterface from '~/assets/ts/store/EntityModuleInterface'
@@ -59,6 +60,7 @@ export class BookAudioModule extends BookModule implements EntityModuleInterface
       .addHeader('Content-Type', 'application/json')
 
     return requestService.execute<BookAudioItem>(request)
+      .catch((error: Error | AxiosError) => super.handleViolations(error))
       .then((response: BookAudioItem) => {
         response.authors = this.book.authors
         this.set(response)
@@ -70,6 +72,7 @@ export class BookAudioModule extends BookModule implements EntityModuleInterface
   @Mutation set (book: BookAudio) {
     this.flagService.reset()
     this.historyService.init()
+    this.violations = {}
     this.book = new Proxy(book, this.proxy)
   }
 

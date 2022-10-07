@@ -110,8 +110,15 @@ export default class AudioBook extends Vue {
         this.toggleEditMode()
       })
       .catch((error) => {
-        console.error(error)
-        this.$toasted.error("Une erreur s'est produite et le livre n'a pas pu être sauvegardé")
+        this.$toasted.error(
+          'isDisplayable' in error && error.isDisplayable
+            ? error.message
+            : "Une erreur s'est produite et le livre n'a pas pu être sauvegardé",
+          {
+            ...this.$config.default.notification_settings,
+            icon: 'fa-times'
+          }
+        )
       })
   }
 

@@ -1,5 +1,6 @@
 import { Action, getModule, Module, Mutation } from 'vuex-module-decorators'
 import { container } from 'tsyringe'
+import { AxiosError } from 'axios'
 import { BookModule } from '~/assets/ts/store/book/BookModule'
 import store from '~/assets/ts/store/store'
 import EntityModuleInterface from '~/assets/ts/store/EntityModuleInterface'
@@ -27,6 +28,7 @@ export class BookPaperModule extends BookModule implements EntityModuleInterface
   @Mutation set (book: BookPaper) {
     this.flagService.reset()
     this.historyService.init()
+    this.violations = {}
     this.book = new Proxy(book, this.proxy)
   }
 
@@ -34,6 +36,7 @@ export class BookPaperModule extends BookModule implements EntityModuleInterface
     super.init()
     this.flagService.reset()
     this.historyService.init()
+    this.violations = {}
     this.book = new Proxy(this.bookService.getBasePaperBook(), this.proxy)
   }
 
@@ -62,6 +65,7 @@ export class BookPaperModule extends BookModule implements EntityModuleInterface
       .setBody(this.bookService.prepareForUpload(this.book))
 
     return requestService.execute<BookPaperItem>(request)
+      .catch((error: Error | AxiosError) => super.handleViolations(error))
       .then((response: BookPaperItem) => {
         response.authors = this.book.authors
         this.set(response)

@@ -1,5 +1,6 @@
 import { Mutation, getModule, Action, Module } from 'vuex-module-decorators'
 import { container } from 'tsyringe'
+import { AxiosError } from 'axios'
 import { FileEntity } from '~/assets/ts/entity/module'
 import store from '~/assets/ts/store/store'
 import EntityModuleInterface from '~/assets/ts/store/EntityModuleInterface'
@@ -70,6 +71,7 @@ export class BookElectronicModule extends BookModule implements EntityModuleInte
       .addHeader('Content-Type', 'application/json')
 
     return requestService.execute<BookElectronicItem>(request)
+      .catch((error: Error | AxiosError) => super.handleViolations(error))
       .then((response: BookElectronicItem) => {
         response.authors = this.book.authors
         this.set(response)
@@ -81,6 +83,7 @@ export class BookElectronicModule extends BookModule implements EntityModuleInte
   @Mutation set (book: BookElectronic) {
     this.flagService.reset()
     this.historyService.init()
+    this.violations = {}
     this.book = new Proxy(book, this.proxy)
   }
 
@@ -103,6 +106,7 @@ export class BookElectronicModule extends BookModule implements EntityModuleInte
     super.init()
     this.flagService.reset()
     this.historyService.init()
+    this.violations = {}
     this.book = new Proxy(this.bookService.getBaseElectronicBook(), this.proxy)
   }
 
