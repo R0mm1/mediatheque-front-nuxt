@@ -1,9 +1,9 @@
 import { GroupEntity } from '@/assets/ts/entity/module'
 import EntityService from '@/assets/ts/service/EntityService'
-import { BookPaper } from '~/assets/ts/models/BookPaper'
+import { BookPaper, BookPaperItem } from '~/assets/ts/models/BookPaper'
 import { Book } from '~/assets/ts/models/Book'
-import { BookElectronic } from '~/assets/ts/models/BookElectronic'
-import { BookAudio } from '~/assets/ts/models/BookAudio'
+import { BookElectronic, BookElectronicItem } from '~/assets/ts/models/BookElectronic'
+import { BookAudio, BookAudioItem } from '~/assets/ts/models/BookAudio'
 import { Author } from '~/assets/ts/models/Author'
 
 export type BookTypes = 'ElectronicBook' | 'PaperBook' | 'AudioBook'
@@ -76,5 +76,19 @@ export default class BookService {
     }
 
     return JSON.stringify(bookPrepared)
+  }
+
+  getBookUrl (book: BookPaperItem | BookElectronicItem | BookAudioItem) {
+    if (book['@type'] !== 'ElectronicBook' && book['@type'] !== 'PaperBook' && book['@type'] !== 'AudioBook') {
+      throw new Error('Invalid book type')
+    }
+
+    const matchingType: Record<BookTypes, string> = {
+      ElectronicBook: 'electronic/',
+      PaperBook: 'paper/',
+      AudioBook: 'audio/'
+    }
+
+    return '/book/' + matchingType[book['@type']] + book.id
   }
 }
