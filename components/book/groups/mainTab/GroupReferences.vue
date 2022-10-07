@@ -4,7 +4,7 @@
       Groupes
     </template>
 
-    <template #group_customActions v-if="editModeOn">
+    <template v-if="editModeOn" #group_customActions>
       <MedInputButton :button-descriptor="displayFormDataButtonDescriptor" @click.native="toggleDisplayFormData" />
     </template>
 
@@ -53,6 +53,7 @@
 </template>
 
 <script>
+import { container } from 'tsyringe'
 import Group from '@/components/page/Group'
 import Accordion, { AccordionBloc } from '@/components/widgets/Accordion'
 import SimpleList, { Element, Action } from '@/components/widgets/SimpleList'
@@ -69,8 +70,10 @@ import TextDescriptor from 'assets/ts/form/TextDescriptor'
 import MedInputText from '@/components/form/elements/MedInputText'
 import SelectDescriptor from 'assets/ts/form/SelectDescriptor'
 import MedInputSelect from '@/components/form/elements/MedInputSelect'
+import BookService from '~/assets/ts/service/BookService'
 
 const eventService = EventService.getService()
+const bookService = container.resolve(BookService)
 
 export default {
   name: 'GroupReferences',
@@ -242,16 +245,8 @@ export default {
         })
     },
     openBook (rowElement) {
-      if (typeof rowElement.extra === 'undefined' || typeof rowElement.extra['@type'] === 'undefined') {
-        throw new TypeError('Invalid extra data in payload')
-      }
-
-      if (rowElement.extra['@type'] !== 'ElectronicBook' && rowElement.extra['@type'] !== 'PaperBook') {
-        throw new Error('Invalid book type')
-      }
-
       this.$router.push({
-        path: '/book/' + (rowElement.extra['@type'] === 'ElectronicBook' ? 'electronic' : 'paper') + '/' + rowElement.id
+        path: bookService.getBookUrl(rowElement.extra)
       })
     }
   }

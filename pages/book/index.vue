@@ -43,6 +43,8 @@ import { BookAudioItem } from '~/assets/ts/models/BookAudio'
 import MedSelectDescriptor, { SelectValue } from '~/assets/ts/form/MedSelectDescriptor'
 import UserService from '~/assets/ts/service/UserService'
 
+const bookService = container.resolve(BookService)
+
 @Component({
   components: {
     List,
@@ -173,18 +175,7 @@ export default class Book extends Vue {
   ], false)
 
   setBook (selectedBook: BookPaperItem | BookElectronicItem | BookAudioItem) {
-    const type = selectedBook['@type']
-    if (type !== 'ElectronicBook' && type !== 'PaperBook' && type !== 'AudioBook') {
-      throw new Error('Invalid book type')
-    }
-
-    const matchingType = {
-      ElectronicBook: 'electronic/',
-      PaperBook: 'paper/',
-      AudioBook: 'audio/'
-    }
-
-    window.location.href = '/book/' + matchingType[type] + selectedBook.id
+    window.location.href = bookService.getBookUrl(selectedBook)
   }
 
   customActionTriggered (action: RowActionPayload, book: BookPaperItem | BookElectronicItem) {
