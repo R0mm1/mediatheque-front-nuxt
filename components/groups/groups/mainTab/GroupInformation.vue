@@ -5,7 +5,7 @@
     </template>
 
     <template #group_content>
-      <MedInputText v-model="comment" :text-descriptor="commentTextDescriptor"/>
+      <MedInputText v-model="comment" :text-descriptor="commentTextDescriptor" />
     </template>
   </Group>
 </template>

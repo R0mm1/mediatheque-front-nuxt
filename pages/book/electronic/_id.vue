@@ -10,7 +10,7 @@ import ElectronicBook from '~/components/book/ElectronicBook.vue'
   components: { ElectronicBook }
 })
 export default class ElectronicBookPage extends Vue {
-  bookId!: Number;
+  bookId!: Number
 
   created () {
     this.bookId = parseInt(this.$route.params.id)

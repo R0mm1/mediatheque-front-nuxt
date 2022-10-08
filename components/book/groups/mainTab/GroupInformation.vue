@@ -5,7 +5,7 @@
         Informations
       </template>
       <template #group_content>
-        <MedInputText v-model="title" :text-descriptor="titleTextDescriptor"/>
+        <MedInputText v-model="title" :text-descriptor="titleTextDescriptor" />
 
         <MedChips
           :chips-descriptor="formChipsAuthorsDescriptor"
@@ -13,13 +13,13 @@
           @entity-added="authorAdded"
         />
 
-        <MedInputText v-model="language" :text-descriptor="formInputTextDescriptors.language"/>
-        <MedInputText v-model="year" :text-descriptor="formInputTextDescriptors.year"/>
-        <MedInputText v-model="pageCount" :text-descriptor="formInputTextDescriptors.pageCount"/>
-        <MedInputText v-model="isbn" :text-descriptor="formInputTextDescriptors.isbn"/>
-        <MedSelect v-model="editor" :med-select-descriptor="medSelectEditorDescriptor"/>
+        <MedInputText v-model="language" :text-descriptor="formInputTextDescriptors.language" />
+        <MedInputText v-model="year" :text-descriptor="formInputTextDescriptors.year" />
+        <MedInputText v-model="pageCount" :text-descriptor="formInputTextDescriptors.pageCount" />
+        <MedInputText v-model="isbn" :text-descriptor="formInputTextDescriptors.isbn" />
+        <MedSelect v-model="editor" :med-select-descriptor="medSelectEditorDescriptor" />
 
-        <slot name="specific-fields"/>
+        <slot name="specific-fields" />
       </template>
     </Group>
   </client-only>
