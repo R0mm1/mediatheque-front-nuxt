@@ -26,18 +26,20 @@
 <script lang="ts">
 
 import { Component, Vue } from 'vue-property-decorator'
-
+import { container } from 'tsyringe'
 import SimpleList, { Element, Action } from '@/components/widgets/SimpleList.vue'
 import authorModule from '~/assets/ts/store/AuthorModule'
 import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
 import { AuthorBook } from '~/assets/ts/models/Author'
 import Group from '~/components/page/Group.vue'
-import { BookTypes } from '~/assets/ts/service/BookService'
+import BookService, { BookTypes } from '~/assets/ts/service/BookService'
 import MedInputSelect from '~/components/form/elements/MedInputSelect.vue'
 import SelectDescriptor from '~/assets/ts/form/SelectDescriptor'
 import Loader from '@/components/widgets/Loader.vue'
 
 export type Filter = 'none' | BookTypes
+
+const bookService = container.resolve(BookService)
 
 @Component({
   components: {
@@ -94,17 +96,20 @@ export default class GroupBibliography extends Vue {
       new Action(
         (new ButtonDescriptor('openBook')).setFaIcon('fas fa-arrow-right'),
         (rowElement: Element<AuthorBook>) => {
-          if (typeof rowElement.extra === 'undefined' || typeof rowElement.extra['@type'] === 'undefined') {
-            throw new TypeError('Invalid extra data in payload')
+          try {
+            this.$router.push({
+              path: bookService.getBookUrl(rowElement.extra)
+            })
+          } catch (error) {
+            console.error(error)
+            this.$toasted.show(
+              this.$t('errors.generic_console').toString(),
+              {
+                ...this.$config.default.notification_settings,
+                type: 'error',
+                icon: 'fa-times'
+              })
           }
-
-          if (rowElement.extra['@type'] !== 'ElectronicBook' && rowElement.extra['@type'] !== 'PaperBook') {
-            throw new Error('Invalid book type')
-          }
-
-          this.$router.push({
-            path: '/book/' + (rowElement.extra['@type'] === 'ElectronicBook' ? 'electronic' : 'paper') + '/' + rowElement.id
-          })
         }
       )
     ]

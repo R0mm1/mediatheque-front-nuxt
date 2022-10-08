@@ -7,7 +7,7 @@
         </h1>
         <span><slot name="entity-layout-title-note" /></span>
       </div>
-      <MedInputButton :button-descriptor="editButtonDescriptor" @click.native="editButtonPressed" />
+      <MedInputButton v-if="editable" :button-descriptor="editButtonDescriptor" @click.native="editButtonPressed" />
     </div>
     <Tabs v-model="activeTab" :tabs="tabs">
       <template #tab-content>
@@ -42,6 +42,12 @@ export default class EntityLayout extends Vue {
     type: String,
     required: true
   }) value!: string
+
+  @Prop({
+    type: Boolean,
+    required: false,
+    default: true
+  }) editable!: boolean
 
   activeTab: string | null = null
 

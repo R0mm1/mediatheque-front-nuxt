@@ -79,4 +79,9 @@ export default class Column {
     this.isSortable = isSortable
     return this
   }
+
+  setIsSearchable (isSearchable: boolean) {
+    this.isSearchable = isSearchable
+    return this
+  }
 }

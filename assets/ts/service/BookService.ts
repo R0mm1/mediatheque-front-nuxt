@@ -78,7 +78,11 @@ export default class BookService {
     return JSON.stringify(bookPrepared)
   }
 
-  getBookUrl (book: BookPaperItem | BookElectronicItem | BookAudioItem) {
+  getBookUrl (book: Partial<BookPaperItem | BookElectronicItem | BookAudioItem>) {
+    if (typeof book['@type'] === 'undefined' || typeof book.id === 'undefined') {
+      throw new TypeError('Both @type and id properties need to be defined')
+    }
+
     if (book['@type'] !== 'ElectronicBook' && book['@type'] !== 'PaperBook' && book['@type'] !== 'AudioBook') {
       throw new Error('Invalid book type')
     }

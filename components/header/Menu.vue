@@ -40,6 +40,10 @@ export default {
             {
               label: 'Par auteur',
               target: '/authors'
+            },
+            {
+              label: 'Par groupes',
+              target: '/groups'
             }
           ]
         }
