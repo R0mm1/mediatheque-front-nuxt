@@ -21,7 +21,7 @@
           @click.native="toggle"
         >
           <template #after>
-            <i class="fas fa-caret-down"></i>
+            <i class="fas fa-caret-down" />
           </template>
         </FormulateInput>
 

@@ -6,18 +6,18 @@
 
     <template #group_content>
       <div v-if="fetching" id="loader-container">
-        <Loader type="s"/>
+        <Loader type="s" />
       </div>
       <template v-else>
         <div>
           Tout les livres de {{ authorFullName }} présents dans la médiathèque:
         </div>
         <div id="extra-info">
-          <MedInputSelect v-model="activeFilter" :select-descriptor="selectBookTypeDescriptor"/>
+          <MedInputSelect v-model="activeFilter" :select-descriptor="selectBookTypeDescriptor" />
           <div>{{ countSimpleListElements }} livre(s)</div>
         </div>
 
-        <SimpleList :elements="simpleListElements" :actions="simpleListRowAction"/>
+        <SimpleList :elements="simpleListElements" :actions="simpleListRowAction" />
       </template>
     </template>
   </Group>

@@ -13,7 +13,7 @@
           v-model="cNote"
           :star-size="20"
           :max-rating="10"
-        ></StarsRatings>
+        />
       </client-only>
     </template>
   </Group>

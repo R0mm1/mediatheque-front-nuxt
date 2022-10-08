@@ -4,7 +4,7 @@
       {{ comment }}
     </template>
     <template #entity-layout-content>
-      <MainTab/>
+      <MainTab />
     </template>
   </EntityLayout>
 </template>
