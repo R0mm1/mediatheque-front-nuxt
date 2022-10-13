@@ -3,7 +3,7 @@
     <div class="listCells" role="row">
       <div
         v-for="column in cols"
-        :key="column.dataField"
+        :key="column.uid"
         class="cell"
         role="gridcell"
         @touchstart="cellTouchStart(column)"

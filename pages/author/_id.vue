@@ -7,7 +7,7 @@ import { Component, Vue } from 'vue-property-decorator'
 
 @Component({})
 export default class AuthorPage extends Vue {
-  authorId!:Number;
+  authorId!:Number
 
   created () {
     this.authorId = parseInt(this.$route.params.id)

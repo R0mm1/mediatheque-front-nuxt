@@ -19,6 +19,10 @@
               {{ bookPaper }}
               <span>Papiers</span>
             </div>
+            <div class="count-number">
+              {{ bookAudio }}
+              <span>Audios</span>
+            </div>
           </div>
         </div>
         <div id="authors-count" class="count-block">
@@ -46,6 +50,7 @@ export default {
       bookTotal: 0,
       bookElectronic: 0,
       bookPaper: 0,
+      bookAudio: 0,
       author: 0
     }
   },
@@ -86,6 +91,11 @@ export default {
         anime({
           ...animParams,
           bookElectronic: data.booksCount.electronic
+        })
+
+        anime({
+          ...animParams,
+          bookAudio: data.booksCount.audio
         })
 
         anime({

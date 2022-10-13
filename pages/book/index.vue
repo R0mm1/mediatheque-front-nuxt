@@ -22,12 +22,12 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
+import { container } from 'tsyringe'
 import Column from 'assets/ts/list/Column'
 import DataSubProperty from 'assets/ts/list/DataSubProperty'
 import RowAction from 'assets/ts/list/RowAction'
 import LeftActionBarElement from 'assets/ts/list/LeftActionBarElement'
 import LeftActionBarProperties from 'assets/ts/list/LeftActionBarProperties'
-import LeftActionBarFormSelectDescriptor from 'assets/ts/list/LeftActionBarFormSelectDescriptor'
 import BookService from 'assets/ts/service/BookService'
 import bookElectronicModule from 'assets/ts/store/book/BookElectronicModule'
 import bookAudioModule from '~/assets/ts/store/book/BookAudioModule'
@@ -40,6 +40,10 @@ import BookListPopupDelete from '~/components/book/BookListPopupDelete.vue'
 import BookStoreService from '~/assets/ts/service/BookStoreService'
 import RowActionPayload from '~/assets/ts/list/RowActionPayload'
 import { BookAudioItem } from '~/assets/ts/models/BookAudio'
+import MedSelectDescriptor, { SelectValue } from '~/assets/ts/form/MedSelectDescriptor'
+import UserService from '~/assets/ts/service/UserService'
+
+const bookService = container.resolve(BookService)
 
 @Component({
   components: {
@@ -64,9 +68,12 @@ export default class Book extends Vue {
     new Column('language', 'Langue'),
     new Column('authors', 'Auteurs')
       .setSearchParameterName('authorFullname')
+      .setIsSortable(false)
       .setSubProperties([
-        new DataSubProperty('firstname'),
-        new DataSubProperty('lastname')
+        new DataSubProperty('person', [
+          new DataSubProperty('firstname'),
+          new DataSubProperty('lastname')
+        ])
       ])
   ]
 
@@ -111,28 +118,64 @@ export default class Book extends Vue {
     new LeftActionBarElement(
       'filter',
       () => null,
-      new LeftActionBarFormSelectDescriptor('bookType', {
-        all: 'Tous',
-        paper: 'Papier',
-        electronic: 'Epub',
-        audio: 'Audio'
-      }).setDefaultValue('all').setFaIcon('fas fa-book').setNoDefaultStyle(true)
+      new MedSelectDescriptor('bookType')
+        .setOptions([
+          {
+            label: 'Tous',
+            key: 'all',
+            value: 'all',
+            default: true
+          },
+          {
+            label: 'Papier',
+            key: 'paper',
+            value: 'paper'
+          },
+          {
+            label: 'Epub',
+            key: 'electronic',
+            value: 'electronic'
+          },
+          {
+            label: 'Audio',
+            key: 'audio',
+            value: 'audio'
+          }
+        ])
+        .setFaIcon('fas fa-book')
+    ),
+    new LeftActionBarElement(
+      'filter',
+      () => null,
+      new MedSelectDescriptor('owner')
+        .setOptions(container.resolve(UserService).getUsers().then((data) => {
+          const options: SelectValue[] = data['hydra:member']
+            .map((user) => {
+              return {
+                key: user.id?.toString() ?? '',
+                value: user.id,
+                label: user.firstname + ' ' + user.lastname
+              }
+            })
+            .sort((first, second) => first.label.localeCompare(second.label))
+
+          options.unshift(
+            {
+              key: 'all',
+              value: null,
+              label: 'Tous',
+              default: true
+            }
+          )
+
+          return options
+        }))
+        .setFaIcon('fas fa-user')
     )
   ], false)
 
   setBook (selectedBook: BookPaperItem | BookElectronicItem | BookAudioItem) {
-    const type = selectedBook['@type']
-    if (type !== 'ElectronicBook' && type !== 'PaperBook' && type !== 'AudioBook') {
-      throw new Error('Invalid book type')
-    }
-
-    const matchingType = {
-      ElectronicBook: 'electronic/',
-      PaperBook: 'paper/',
-      AudioBook: 'audio/'
-    }
-
-    window.location.href = '/book/' + matchingType[type] + selectedBook.id
+    window.location.href = bookService.getBookUrl(selectedBook)
   }
 
   customActionTriggered (action: RowActionPayload, book: BookPaperItem | BookElectronicItem) {

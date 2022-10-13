@@ -27,7 +27,7 @@ export default class MedSelect extends Vue {
 
   @Prop({
     required: true
-  }) value!: SelectValue | null
+  }) value!: SelectValue | null | Promise<SelectValue | null>
 
   bindValue: SelectValue | null = null
 
@@ -37,27 +37,40 @@ export default class MedSelect extends Vue {
     this.reloadOptions()
   }
 
-  @Watch('value') updateBindValue (newVal: SelectValue | null) {
-    this.bindValue = newVal
+  @Watch('value') updateBindValue (newVal: SelectValue | null | Promise<SelectValue | null>) {
+    Promise.resolve(newVal).then((newVal) => {
+      this.bindValue = newVal
+    })
   }
 
   @Watch('bindValue') bindValueChanged (newVal: SelectValue | null) {
-    this.$emit('input', newVal)
+    if (this.value !== newVal) {
+      this.$emit('input', newVal)
+    }
   }
 
   reloadOptions () {
-    if (Array.isArray(this.medSelectDescriptor.options)) {
-      this.options = this.medSelectDescriptor.options
-    } else if (typeof this.medSelectDescriptor.options !== 'undefined') {
-      this.medSelectDescriptor.options.then((options) => {
-        this.options = options
+    this.medSelectDescriptor.getOptions()
+      .then((options) => {
+        if (typeof options !== 'undefined') {
+          this.options = options
+        }
+        this.setDefault()
       })
+  }
+
+  setDefault () {
+    if (this.bindValue === null || typeof this.bindValue === 'undefined') {
+      const defaultValue = this.options.find(option => option.default === true)
+      if (typeof defaultValue !== 'undefined') {
+        this.bindValue = defaultValue
+      }
     }
   }
 
   created () {
+    this.updateBindValue(this.value)
     this.reloadOptions()
-    this.bindValue = this.value
   }
 }
 </script>
@@ -111,18 +124,11 @@ export default class MedSelect extends Vue {
           height: 100%;
           display: flex;
           align-items: center;
+          white-space: nowrap;
+          overflow: hidden;
 
-          &::after {
-            content: "";
-            width: 0;
-            height: 0;
-            border-color: black transparent transparent;
-            border-style: solid;
-            border-width: .3em .3em 0;
-            right: .7em;
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
+          i{
+            font-size: .8rem;
           }
         }
       }
@@ -131,7 +137,7 @@ export default class MedSelect extends Vue {
         @include popup;
         list-style-type: none;
         position: absolute;
-        width: 100%;
+        width: calc(100% - $popup-padding - $popup-padding - $popup-border-width - $popup-border-width);
         z-index: 10;
         max-height: 10em;
         overflow-y: auto;

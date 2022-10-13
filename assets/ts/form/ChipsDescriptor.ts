@@ -1,6 +1,6 @@
 export default class ChipsDescriptor {
   entities: any[] = []
-  entityFields: string[] = []
+  entityFields: string[] | {[index: string]: string[]} = []
   searchParam?: string
   fieldsSeparator: string = ' '
   entityURI?: string

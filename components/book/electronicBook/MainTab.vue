@@ -1,6 +1,6 @@
 <template>
   <div id="book-main-tab">
-    <GroupPicture :book-module="bookModule" :edit-mode-on="editModeOn"/>
+    <GroupPicture :book-module="bookModule" :edit-mode-on="editModeOn" />
     <GroupSummary :book-module="bookModule" :edit-mode-on="editModeOn" class="groupSummary" />
     <Column class="third-col">
       <template #column_content>

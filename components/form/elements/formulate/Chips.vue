@@ -23,8 +23,17 @@
 
       <div v-click-outside="closeProposalsList" class="search_container" :class="{search_active: isProposalsDisplayed}">
         <div class="search_inputs">
-          <MedInputText v-model="searchString" :text-descriptor="searchFieldDescriptor" @click.native="openProposalsList" @focusin="openProposalsList" />
-          <MedInputButton v-if="isCreationAvailable" :button-descriptor="buttonAddDescriptor" @click.native="openFormCreation" />
+          <MedInputText
+            v-model="searchString"
+            :text-descriptor="searchFieldDescriptor"
+            @click.native="openProposalsList"
+            @focusin="openProposalsList"
+          />
+          <MedInputButton
+            v-if="isCreationAvailable"
+            :button-descriptor="buttonAddDescriptor"
+            @click.native="openFormCreation"
+          />
         </div>
 
         <div v-if="isProposalsDisplayed" class="search_results">
@@ -76,38 +85,79 @@ import Loader from '~/components/widgets/Loader.vue'
 import FormContainer from '~/components/form/FormContainer.vue'
 
 @Component({
-  components: { FormContainer, Loader, MedInputButton, MedInputText },
+  components: {
+    FormContainer,
+    Loader,
+    MedInputButton,
+    MedInputText
+  },
   directives: { 'click-outside': ClickOutside }
 })
 export default class Chips extends Vue {
-  @Prop({ type: Object, required: true }) context!: any
+  @Prop({
+    type: Object,
+    required: true
+  }) context!: any
 
-  @Prop({ type: Array, required: true }) entities!:any[]
+  @Prop({
+    type: Array,
+    required: true
+  }) entities!: any[]
 
-  @Prop({ type: Array, required: true }) entityFields!:string[]
+  @Prop({
+    required: true
+  }) entityFields!: string[] | { [index: string]: string[] }
 
-  @Prop({ type: String, required: false, default: ' ' }) fieldsSeparator!:string
+  @Prop({
+    type: String,
+    required: false,
+    default: ' '
+  }) fieldsSeparator!: string
 
-  @Prop({ type: Boolean, required: false, default: true }) editModeOn!:boolean
+  @Prop({
+    type: Boolean,
+    required: false,
+    default: true
+  }) editModeOn!: boolean
 
   getEntityLabel (entity: any) {
-    const elements:any[] = []
-    this.entityFields.forEach((field: string) => {
-      if (entity[field]) {
-        elements.push(entity[field])
+    const getElements = (entity: any, fields: string[] | { [index: string]: string[] }): string => {
+      if (Array.isArray(fields)) {
+        return fields
+          .map((field: string) => entity[field] ?? null)
+          .filter(element => element !== null)
+          .join(this.fieldsSeparator)
+      } else {
+        return Object.entries(fields).map(data => getElements(entity[data[0]], data[1]))
+          .join(this.fieldsSeparator)
       }
-    })
-    return elements.join(this.fieldsSeparator)
+    }
+
+    return getElements(entity, this.entityFields)
   }
 
   // --- Stuff for creation of a new entity --- //
 
   isFormCreationDisplayed = false
-  formCreationData: {[index: string]: any} = {}
+  formCreationData: { [index: string]: any } = {}
 
-  @Prop({ type: Function, required: false, default: null })formCreationValidationAction!:null|((formCreationData:any)=>Promise<any>)
-  @Prop({ type: String, required: false, default: '' })formCreationTitle!:string
-  @Prop({ type: Array, required: false, default: () => [] })formCreationSchema!:any[]
+  @Prop({
+    type: Function,
+    required: false,
+    default: null
+  }) formCreationValidationAction!: null | ((formCreationData: any) => Promise<any>)
+
+  @Prop({
+    type: String,
+    required: false,
+    default: ''
+  }) formCreationTitle!: string
+
+  @Prop({
+    type: Array,
+    required: false,
+    default: () => []
+  }) formCreationSchema!: any[]
 
   get isCreationAvailable () {
     return (typeof this.formCreationValidationAction === 'function')
@@ -149,9 +199,20 @@ export default class Chips extends Vue {
 
   // --- Search existing entity and add it --- //
 
-  @Prop({ type: String, required: true }) searchFieldPlaceholder!:string
-  @Prop({ type: String, required: true }) searchParam!:string
-  @Prop({ type: String, required: true }) entityURI!:string
+  @Prop({
+    type: String,
+    required: true
+  }) searchFieldPlaceholder!: string
+
+  @Prop({
+    type: String,
+    required: true
+  }) searchParam!: string
+
+  @Prop({
+    type: String,
+    required: true
+  }) entityURI!: string
 
   searching = false
   searchString: string = ''
@@ -166,11 +227,11 @@ export default class Chips extends Vue {
     return Object.keys(this.proposals).length
   }
 
-  @Watch('searchString')searchStringChanged (newVal:string) {
+  @Watch('searchString') searchStringChanged (newVal: string) {
     if (newVal.length >= 3) {
       this.isFormCreationDisplayed = false
       this.searching = true
-      const data: {[index: string]: string} = {}
+      const data: { [index: string]: string } = {}
       data[this.searchParam] = newVal
 
       const requestService = container.resolve(RequestService)

@@ -68,7 +68,7 @@ class ListModule extends VuexModule {
   @Mutation setColumns (columns: Column[]) {
     const formattedColumns: { [index: string]: Column } = {}
     columns.forEach((column) => {
-      formattedColumns[column.dataField] = column
+      formattedColumns[column.uid] = column
     })
     this._columns = formattedColumns
   }
@@ -133,7 +133,7 @@ class ListModule extends VuexModule {
         const column = this._columns[dataField]
 
         if (column.sortState !== Column.sortNone) {
-          sort[this.QUERY_ORDER_PARAM_NAME + '[' + column.dataField + ']'] = column.sortState
+          sort[this.QUERY_ORDER_PARAM_NAME + '[' + column.orderParameterName + ']'] = column.sortState
         }
 
         if (column.searchString.length > 0) {

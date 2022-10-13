@@ -1,5 +1,5 @@
 <template>
-  <EntityLayout v-model="activeTab" :tabs="tabs" @edit-button-pressed="toggleEditMode">
+  <EntityLayout v-model="activeTab" :tabs="tabs" :footer-opened="switchEditModeOn && isModified" @edit-button-pressed="toggleEditMode">
     <template #entity-layout-title>
       {{ title }}
     </template>
@@ -106,10 +106,19 @@ export default class ElectronicBook extends Vue {
             path: '/book/electronic/' + bookElectronicModule.book.id
           })
         }
+
+        this.toggleEditMode()
       })
       .catch((error) => {
-        console.error(error)
-        this.$toasted.error("Une erreur s'est produite et le livre n'a pas pu être sauvegardé")
+        this.$toasted.error(
+          'isDisplayable' in error && error.isDisplayable
+            ? error.message
+            : "Une erreur s'est produite et le livre n'a pas pu être sauvegardé",
+          {
+            ...this.$config.default.notification_settings,
+            icon: 'fa-times'
+          }
+        )
       })
   }
 
