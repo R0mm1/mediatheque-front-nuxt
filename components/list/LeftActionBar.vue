@@ -171,7 +171,7 @@ export default class LeftActionBar extends Vue {
               }
               return (lfb.formElementDescriptor as MedSelectDescriptor)
                 .getOptions()
-                .then(options => options?.find(option => option.value === paramFromQuery) ?? null)
+                .then((options: SelectValue[] | undefined) => options?.find((option: SelectValue) => option.value === paramFromQuery) ?? null)
             }
             return paramFromQuery
           }
