@@ -70,7 +70,8 @@ export default class LoginService {
         code
       })).toString()
     )
-      .then((response) => {
+
+      .then((response: { data: { access_token: string; refresh_token: string } }) => {
         window.sessionStorage.setItem('access_token', response.data.access_token)
         window.sessionStorage.setItem('refresh_token', response.data.refresh_token)
 
