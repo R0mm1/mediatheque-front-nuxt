@@ -224,7 +224,7 @@ export abstract class BookModule extends VuexModule {
 
     protected handleViolations (error: Error|AxiosError) {
       if ('response' in error && error.response?.status === 422) {
-        const violations: Violation[] = error.response.data?.violations ?? []
+        const violations: Violation[] = (error.response.data as any)?.violations ?? []
         violations.forEach((violation) => {
           Vue.set(this.violations, violation.propertyPath, violation)
         })
