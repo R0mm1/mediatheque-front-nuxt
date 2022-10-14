@@ -114,7 +114,7 @@ export default class LeftActionBar extends Vue {
       elements.push(new LeftActionBarElement(
         'element',
         () => {
-          this.$parent.$emit('list-action-add')
+          this.$parent?.$emit('list-action-add')
           return null
         },
         new ButtonDescriptor('add', 'Ajouter').setFaIcon('fas fa-plus').setNoDefaultStyle(true)
@@ -166,7 +166,7 @@ export default class LeftActionBar extends Vue {
           let paramFromQuery: string | undefined | null = listService.getQueryFilter('lcf-', lfb.formElementDescriptor.name, router)
           if (typeof paramFromQuery !== 'undefined') {
             if (lfb.formElementDescriptor.descriptorType === 'MedSelectDescriptor') {
-              if (paramFromQuery.length === 0) {
+              if ((paramFromQuery?.length ?? 0) === 0) {
                 paramFromQuery = null
               }
               return (lfb.formElementDescriptor as MedSelectDescriptor)

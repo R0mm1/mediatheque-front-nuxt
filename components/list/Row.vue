@@ -118,7 +118,7 @@ export default class Row extends Vue {
   }
 
   customActionTriggered (actionName: RowActionPayload) {
-    this.$parent.$emit('custom-action-triggered', actionName, this.dataRow)
+    this.$parent?.$emit('custom-action-triggered', actionName, this.dataRow)
   }
 
   onMouseOver () {
