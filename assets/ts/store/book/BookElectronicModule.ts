@@ -152,6 +152,7 @@ export class BookElectronicModule extends BookModule implements EntityModuleInte
 
     const request = requestService.createRequest('book_files', 'POST')
     request.setBody(formData)
+    request.addHeader('Content-Type', 'Content-Type')
 
     return requestService.execute(request)
       .then((response: any) => {
@@ -172,6 +173,7 @@ export class BookElectronicModule extends BookModule implements EntityModuleInte
 
     const request = requestService.createRequest('book/covers', 'POST')
     request.setBody(formData)
+    request.addHeader('Content-Type', 'Content-Type')
 
     return requestService.execute(request)
       .then((response: any) => {
