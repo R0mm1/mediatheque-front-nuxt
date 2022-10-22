@@ -68,13 +68,10 @@ export default class LoginService {
         grant_type: 'authorization_code',
         redirect_uri: location.href.replace(location.search, ''),
         code
-      })).toString(),
-      {
-        headers: {
-          'Content-type': 'application/x-www-form-urlencoded'
-        }
-      })
-      .then((response) => {
+      })).toString()
+    )
+
+      .then((response: { data: { access_token: string; refresh_token: string } }) => {
         window.sessionStorage.setItem('access_token', response.data.access_token)
         window.sessionStorage.setItem('refresh_token', response.data.refresh_token)
 

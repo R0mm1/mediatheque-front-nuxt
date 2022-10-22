@@ -51,7 +51,7 @@ export default class MedSelect extends Vue {
 
   reloadOptions () {
     this.medSelectDescriptor.getOptions()
-      .then((options) => {
+      .then((options: SelectValue[] | undefined) => {
         if (typeof options !== 'undefined') {
           this.options = options
         }

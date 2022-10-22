@@ -194,7 +194,7 @@ export default class Chips extends Vue {
 
   removeEntity (indexInArray: any) {
     // todo: https://vueformulate.com/guide/inputs/custom-inputs/#custom-events
-    this.$parent.$emit('entity-removed', this.entities[indexInArray])
+    this.$parent?.$emit('entity-removed', this.entities[indexInArray])
   }
 
   // --- Search existing entity and add it --- //
@@ -267,7 +267,7 @@ export default class Chips extends Vue {
     this.closeProposalsList()
     this.searchString = ''
     // todo: https://vueformulate.com/guide/inputs/custom-inputs/#custom-events
-    this.$parent.$emit('entity-added', entity)
+    this.$parent?.$emit('entity-added', entity)
   }
 }
 </script>
