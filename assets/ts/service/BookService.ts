@@ -20,7 +20,7 @@ export default class BookService {
       title: '',
       cover: null,
       authors: [],
-      groups: []
+      groupMemberships: []
     }
   }
 
@@ -64,9 +64,6 @@ export default class BookService {
       cover: this.entityService.getIri(book.cover),
       authors: book.authors.map((author: Author) :string => {
         return '/authors/' + author.id
-      }),
-      groups: book.groups.map((group: GroupEntity): string => {
-        return '/reference_groups/' + group.id
       }),
       editor: this.entityService.getIri(book.editor)
     }

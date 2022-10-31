@@ -70,7 +70,6 @@ export class BookPaperModule extends BookModule implements EntityModuleInterface
         response.authors = this.book.authors
         this.set(response)
 
-        this.eventService.trigger(BookPaperModule.EVENT_BOOK_SAVED)
         return response
       })
   }

@@ -27,7 +27,7 @@ export default {
   data () {
     return {
       cols: [
-        new Column('comment', this.$t('reference_groups.comment'))
+        new Column('comment', this.$t('reference_groups.comment').toString())
           .setIsSearchable(false)
       ],
       leftActionBarProperties: new LeftActionBarProperties()

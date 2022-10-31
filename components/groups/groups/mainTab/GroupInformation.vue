@@ -13,7 +13,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import Group from '~/components/page/Group.vue'
-import groupModule from '~/assets/ts/store/GroupModule'
+import referenceGroupModule from '~/assets/ts/store/book/ReferenceGroupModule'
 import TextDescriptor from '~/assets/ts/form/TextDescriptor'
 import MedInputText from '~/components/form/elements/MedInputText.vue'
 
@@ -25,7 +25,7 @@ import MedInputText from '~/components/form/elements/MedInputText.vue'
 })
 export default class GroupInformation extends Vue {
   get comment () {
-    return groupModule.group.comment
+    return referenceGroupModule.referenceGroup.comment
   }
 
   get commentTextDescriptor () {
