@@ -164,6 +164,7 @@ export default class BookBook extends Vue {
         this.toggleEditMode()
       })
       .catch((error) => {
+        console.error(error)
         this.$toasted.error(
           'isDisplayable' in error && error.isDisplayable
             ? error.message

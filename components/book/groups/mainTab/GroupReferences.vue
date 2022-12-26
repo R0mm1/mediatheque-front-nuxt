@@ -5,13 +5,13 @@
     </template>
 
     <template v-if="editModeOn" #group_customActions>
-      <MedInputButton :button-descriptor="displayFormDataButtonDescriptor" @click.native="toggleDisplayFormData"/>
+      <MedInputButton :button-descriptor="displayFormDataButtonDescriptor" @click.native="toggleDisplayFormData" />
     </template>
 
     <template #group_content>
       <Accordion :blocs="blocs" @bloc-opened="loadReferenceGroupBooks">
         <template v-for="bloc in blocs" :slot="bloc.slotId">
-          <Loader v-if="!blocsRows[bloc.slotId]" :key="bloc.slotId" type="s"/>
+          <Loader v-if="!blocsRows[bloc.slotId]" :key="bloc.slotId" type="s" />
           <SimpleList
             v-else
             :key="bloc.slotId"
@@ -35,7 +35,7 @@
             />
           </template>
           <template #action_cancel>
-            <span/>
+            <span />
           </template>
         </FormContainer>
 
@@ -48,7 +48,7 @@
             Créer un nouveau groupe
           </template>
           <template #form_body>
-            <MedInputText v-model="newGroupComment" :text-descriptor="commentInputTextDescriptor"/>
+            <MedInputText v-model="newGroupComment" :text-descriptor="commentInputTextDescriptor" />
           </template>
         </FormContainer>
       </div>
@@ -107,8 +107,10 @@ export default {
   },
   data () {
     return {
+      isNewBook: true,
       blocs: [],
       blocsRows: new Proxy({}, {
+        vue: this,
         set (target, p, value) {
           let isFirstLoading = true
           // This proxy allow the position to be kept up-to-date both when the referenceGroupBooks are first loaded,
@@ -121,8 +123,12 @@ export default {
               isFirstLoading = false
             }
             element.extra.position = index
-            element.content = (element.extra.position + 1) + ' ' + element.extra.book.title
+            this.vue.updateBookRowContent(element, element.extra.book)
             referenceGroupBookIds.push([element.extra.id, element.extra.position])
+
+            if (element.extra.book.id === this.vue.bookId) {
+              this.vue.blocsRowsForCurrentBook.push(element)
+            }
           })
 
           if (!isFirstLoading) {
@@ -139,6 +145,7 @@ export default {
           return true
         }
       }),
+      blocsRowsForCurrentBook: [],
       groupFormDisplayed: false,
       addToExistingGroup: null,
       existingGroupsSelectData: null,
@@ -148,6 +155,9 @@ export default {
   computed: {
     bookId () {
       return this.bookModule.book.id
+    },
+    bookTitle () {
+      return this.bookModule.book.title
     },
     rowActions () {
       return [
@@ -176,10 +186,19 @@ export default {
   watch: {
     bookId () {
       this.loadGroups()
+    },
+    bookTitle () {
+      this.blocsRowsForCurrentBook.forEach(blocRow => this.updateBookRowContent(blocRow))
     }
   },
   created () {
+    this.isNewBook = !this.bookId
     eventService.on(BookModule.EVENT_BOOK_SAVED, () => {
+      if (this.isNewBook) {
+        // If it's a new book, the current bookGroupMemberships have no reference to the new book id, so we need to
+        // update them before saving
+        bookGroupMembershipModule.updateBook(this.bookModule.book)
+      }
       return bookGroupMembershipModule.save()
         .then(() => {
           bookGroupMembershipModule.reset()
@@ -188,6 +207,12 @@ export default {
     })
   },
   methods: {
+    updateBookRowContent (element, book) {
+      if (!book) {
+        book = this.bookModule.book
+      }
+      element.content = (element.extra.position + 1) + ' ' + book.title
+    },
     toggleDisplayFormData () {
       this.groupFormDisplayed = !this.groupFormDisplayed
       if (this.existingGroupsSelectData === null) {
