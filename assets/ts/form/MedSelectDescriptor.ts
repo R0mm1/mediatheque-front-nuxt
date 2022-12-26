@@ -22,11 +22,9 @@ export default class MedSelectDescriptor extends AbstractDescriptor {
   }
 
   getOptions () {
-    if (Array.isArray(this.options)) {
-      return Promise.resolve(this.options)
-    } else if (typeof this.options !== 'undefined') {
-      return this.options
+    if (typeof this.options === 'undefined') {
+      return Promise.resolve(undefined)
     }
-    return Promise.resolve(undefined)
+    return Promise.resolve(this.options)
   }
 }

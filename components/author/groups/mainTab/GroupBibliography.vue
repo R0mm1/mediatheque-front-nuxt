@@ -17,7 +17,7 @@
           <div>{{ countSimpleListElements }} livre(s)</div>
         </div>
 
-        <SimpleList :elements="simpleListElements" :actions="simpleListRowAction" />
+        <SimpleList :value="simpleListElements" :actions="simpleListRowAction" />
       </template>
     </template>
   </Group>

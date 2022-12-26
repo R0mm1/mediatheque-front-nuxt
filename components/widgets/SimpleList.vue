@@ -1,38 +1,38 @@
 <template>
   <div class="widget_simpleList">
-    <div v-for="element in elements" :key="element.id" class="list_row">
-      <div class="row_content">
-        {{ element.content }}
-      </div>
+    <draggable
+      v-model="elementsWorkingCopy"
+      :disabled="!sortable || !editModeOn"
+    >
+      <transition-group>
+        <div v-for="element in elementsWorkingCopy" :key="element.id" class="list_row">
+          <div class="row_content">
+            {{ element.content }}
+          </div>
 
-      <MedInputButton
-        v-for="(action, actionIndex) in actions"
-        :key="actionIndex"
-        :button-descriptor="action.buttonDescriptor"
-        @click.native="action.action(element)"
-      />
-    </div>
+          <MedInputButton
+            v-for="(action, actionIndex) in actions"
+            :key="actionIndex"
+            :button-descriptor="action.buttonDescriptor"
+            @click.native="action.action(element)"
+          />
+        </div>
+      </transition-group>
+    </draggable>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
+import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator'
+import draggable from 'vuedraggable'
 import MedInputButton from '@/components/form/elements/MedInputButton.vue'
 import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
 
-@Component({
-  components: { MedInputButton }
-})
-export default class SimpleList extends Vue {
-  @Prop({ type: Array, default: () => [] }) elements!:Element<any>[]
-  @Prop({ type: Array, default: () => [] }) actions!:Action[]
-}
-
 export class Action {
   buttonDescriptor: ButtonDescriptor
-  action: ((...args: any[])=>any)
+  action: ((...args: any[]) => any)
 
-  constructor (buttonDescriptor: ButtonDescriptor, action: ((...args: any[])=>any)) {
+  constructor (buttonDescriptor: ButtonDescriptor, action: ((...args: any[]) => any)) {
     this.buttonDescriptor = buttonDescriptor
     this.buttonDescriptor
       .addCustomClass('row_action')
@@ -41,13 +41,62 @@ export class Action {
 }
 
 export class Element<ExtraType> {
-  id:string
+  id: string
   content: string
   extra: ExtraType
+
   constructor (id: string, content: string, extra: ExtraType) {
     this.id = id
     this.content = content
     this.extra = extra
+  }
+}
+
+@Component({
+  components: { MedInputButton, draggable }
+})
+export default class SimpleList extends Vue {
+  @Prop({
+    type: Array,
+    default: () => []
+  }) value!: Element<any>[]
+
+  @Prop({
+    type: Array,
+    default: () => []
+  }) actions!: Action[]
+
+  @Prop({
+    type: Boolean,
+    default: false
+  }) sortable!: Boolean
+
+  @Prop({
+    type: Boolean,
+    default: false
+  }) editModeOn!: Boolean
+
+  elementsWorkingCopy: Element<any>[] = []
+
+  @Watch('elements')
+  elementsUpdate () {
+    this.elementsWorkingCopy = this.value
+    return this.elementsWorkingCopy
+  }
+
+  @Emit('input')
+  @Watch('elementsWorkingCopy')
+  workingCopyUpdate () {
+    return this.elementsWorkingCopy
+  }
+
+  @Watch('value')
+  valueChanged () {
+    this.elementsWorkingCopy = this.value
+  }
+
+  created () {
+    this.elementsWorkingCopy = this.value
   }
 }
 </script>
@@ -84,6 +133,14 @@ export class Element<ExtraType> {
       &:last-of-type {
         margin-right: 0;
       }
+    }
+
+    &.sortable {
+      cursor: move;
+    }
+
+    &.moving {
+      position: fixed;
     }
   }
 
