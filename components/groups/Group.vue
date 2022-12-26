@@ -4,7 +4,7 @@
       {{ comment }}
     </template>
     <template #entity-layout-content>
-      <MainTab />
+      <MainTab/>
     </template>
   </EntityLayout>
 </template>
@@ -13,7 +13,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import EntityLayout from '~/components/page/EntityLayout.vue'
 import { TabData } from '~/components/widgets/Tabs.vue'
-import groupModule from '~/assets/ts/store/GroupModule'
+import referenceGroupModule from '~/assets/ts/store/book/ReferenceGroupModule'
 import MainTab from '~/components/groups/groups/MainTab.vue'
 
 @Component({
@@ -34,11 +34,11 @@ export default class Group extends Vue {
   ]
 
   get comment () {
-    return groupModule.group.comment
+    return referenceGroupModule.referenceGroup.comment
   }
 
   created () {
-    groupModule.get(this.groupId)
+    referenceGroupModule.get(this.groupId)
   }
 }
 </script>

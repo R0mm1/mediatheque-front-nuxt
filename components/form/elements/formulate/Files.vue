@@ -3,7 +3,7 @@
     :class="`formulate-input-element formulate-input-element--${context.type}`"
     :data-type="context.type"
   >
-    <SimpleList :elements="listElements" :actions="listRowActions" />
+    <SimpleList :value="listElements" :actions="listRowActions" />
 
     <div class="files_buttons">
       <MedInputButton

@@ -21,11 +21,13 @@ class EventService {
   }
 
   trigger (event: string) {
+    const results: any[] = []
     this.callbacks.forEach((callback) => {
       if (callback.event === event) {
-        callback.callback()
+        results.push(callback.callback())
       }
     })
+    return results
   }
 }
 
