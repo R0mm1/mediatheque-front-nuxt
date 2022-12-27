@@ -1,7 +1,7 @@
 <template>
   <GroupInformation :book-module="bookPaperModule" :edit-mode-on="editModeOn">
     <template #specific-fields>
-      <MedInputSelect v-model="ownerId" :select-descriptor="formSelectOwnerDescriptor" />
+      <MedSelect v-model="ownerId" :med-select-descriptor="formSelectOwnerDescriptor" />
     </template>
   </GroupInformation>
 </template>
@@ -10,15 +10,15 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { container } from 'tsyringe'
 import GroupInformation from '@/components/book/groups/mainTab/GroupInformation.vue'
-import MedInputSelect from '@/components/form/elements/MedInputSelect.vue'
-import SelectDescriptor from '@/assets/ts/form/SelectDescriptor'
+import MedSelect from '@/components/form/elements/MedSelect.vue'
 import bookPaperModule from '@/assets/ts/store/book/BookPaperModule'
 import { UserEntity } from '~/assets/ts/entity/UserEntity'
 import RequestService from '~/assets/ts/service/RequestService'
+import MedSelectDescriptor, { SelectValue } from '~/assets/ts/form/MedSelectDescriptor'
 
 @Component({
   components: {
-    MedInputSelect,
+    MedSelect,
     GroupInformation
   }
 })
@@ -27,25 +27,39 @@ export default class PaperGroupInformation extends Vue {
 
   bookPaperModule = bookPaperModule
 
+  users: SelectValue[] = []
+
   get ownerId () {
     const owner = bookPaperModule.book.owner
 
-    if (typeof owner === 'string') {
-      return owner
-    } else if (typeof owner === 'object' && owner !== null) {
-      return owner['@id']
+    const ownerId = (() => {
+      if (typeof owner === 'string') {
+        return owner
+      } else if (typeof owner === 'object' && owner !== null) {
+        return owner['@id']
+      }
+      return undefined
+    })()
+
+    if (ownerId) {
+      return this.users.find(user => user.value === ownerId)
     }
+
     return undefined
   }
 
-  set ownerId (ownerId: string|undefined) {
+  set ownerId (ownerId: SelectValue | undefined) {
+    if (typeof ownerId !== 'undefined') {
+      bookPaperModule.setOwner(ownerId.value)
+      return
+    }
     bookPaperModule.setOwner(ownerId)
   }
 
   get formSelectOwnerDescriptor () {
-    const selectDescriptor = new SelectDescriptor('owner')
+    const selectDescriptor = new MedSelectDescriptor('owner')
     selectDescriptor.label = 'Propriétaire'
-    selectDescriptor.optionsSource = this.getUserListPromise()
+    selectDescriptor.options = this.getUserListPromise()
     selectDescriptor.editModeOn = this.editModeOn
     return selectDescriptor
   }
@@ -53,16 +67,28 @@ export default class PaperGroupInformation extends Vue {
   getUserListPromise () {
     const requestService = container.resolve(RequestService)
     const request = requestService.createRequest('/users')
+
+    if (this.users.length > 0) {
+      // Switching between view mode and edition mode will recreate the medSelectDescriptor (because of the reactivity on
+      // this.editModeOn) and call this method again, and we want to avoid over-calling the server
+      return Promise.resolve(this.users)
+    }
+
     return requestService.execute<any>(request)
       .then((response) => {
-        const users: { [index: string]: string } = {}
         response['hydra:member'].forEach((user: UserEntity) => {
           if (typeof user['@id'] === 'undefined') {
             return
           }
-          users[user['@id']] = (user.firstname ?? '') + ' ' + (user.lastname ?? '')
+
+          this.users.push({
+            label: (user.firstname ?? '') + ' ' + (user.lastname ?? ''),
+            key: user['@id'],
+            value: user['@id'],
+            default: user['@id'] === this.ownerId?.value
+          })
         })
-        return Promise.resolve(users)
+        return Promise.resolve(this.users)
       })
   }
 }
