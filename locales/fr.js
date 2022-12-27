@@ -7,6 +7,16 @@ export default {
       this_value_should_not_be_blank: 'Cette valeur ne doit pas être vide'
     }
   },
+  authors: {
+    group_bibliography: {
+      select_book_type_options: {
+        none: 'Tous',
+        paper_book: 'Papier',
+        electronic_book: 'Epub',
+        audio_book: 'Audio'
+      }
+    }
+  },
   reference_groups: {
     entity_layout: {
       group_information: 'Informations',
