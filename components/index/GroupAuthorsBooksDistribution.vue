@@ -1,12 +1,12 @@
 <template>
   <Group>
     <template #group_name>
-      Top 10 des auteurs dans la base
+      {{ $t('home.group_authors_books_distribution.group_name') }}
     </template>
     <template #group_content>
       <div class="group-abd-pie-container">
         <div class="group-abd-pie-title">
-          Les auteurs les plus présents dans la base, par nombre de livres
+          {{ $t('home.group_authors_books_distribution.chart_title') }}
         </div>
         <VerticalBarChart v-if="!isLoading" :key="chartKey" :chart-data="chartData" :chart-options="chartOptions" />
       </div>
@@ -49,7 +49,7 @@ export default {
       .then((data) => {
         const stats = data['hydra:member'][0]
         if (typeof stats === 'undefined') {
-          this.$toasted.error('La récupération de la répartition des livres par auteur a échoué')
+          this.$toasted.error(this.$t('home.group_authors_books_distribution.api_error').toString())
           return Promise.reject(new Error('Stats service returned empty data'))
         }
         return Promise.resolve(stats.stats)
