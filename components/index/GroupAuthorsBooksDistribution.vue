@@ -55,9 +55,11 @@ export default {
         return Promise.resolve(stats.stats)
       })
       .then((data) => {
-        let red = 4.1
-        let green = 3.8
-        let blue = 2.8
+        const tintFactor = 0.1
+        let red = 52
+        let green = 39
+        let blue = 25
+        let iteration = 1
 
         data.authorsBooksDistribution
           .sort((first, second) => {
@@ -69,9 +71,11 @@ export default {
             this.chartData.datasets[0].backgroundColor.push('rgba(' + red + ',' + green + ',' + blue + ')')
             this.chartData.labels.push(entry.firstname + ' ' + entry.lastname)
 
-            red = red * 1.50
-            green = green * 1.50
-            blue = blue * 1.50
+            const weight = (tintFactor * (iteration / 5))
+            red = red + (255 - red) * weight
+            green = green + (255 - green) * weight
+            blue = blue + (255 - blue) * weight
+            iteration++
           })
         this.chartKey++
         this.isLoading = false
