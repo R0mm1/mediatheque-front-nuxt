@@ -1,12 +1,12 @@
 <template>
   <Group>
     <template #group_name>
-      Top 10 des auteurs dans la base
+      {{ $t('home.group_authors_books_distribution.group_name') }}
     </template>
     <template #group_content>
       <div class="group-abd-pie-container">
         <div class="group-abd-pie-title">
-          Les auteurs les plus présents dans la base, par nombre de livres
+          {{ $t('home.group_authors_books_distribution.chart_title') }}
         </div>
         <VerticalBarChart v-if="!isLoading" :key="chartKey" :chart-data="chartData" :chart-options="chartOptions" />
       </div>
@@ -49,15 +49,17 @@ export default {
       .then((data) => {
         const stats = data['hydra:member'][0]
         if (typeof stats === 'undefined') {
-          this.$toasted.error('La récupération de la répartition des livres par auteur a échoué')
+          this.$toasted.error(this.$t('home.group_authors_books_distribution.api_error').toString())
           return Promise.reject(new Error('Stats service returned empty data'))
         }
         return Promise.resolve(stats.stats)
       })
       .then((data) => {
-        let red = 4.1
-        let green = 3.8
-        let blue = 2.8
+        const tintFactor = 0.1
+        let red = 52
+        let green = 39
+        let blue = 25
+        let iteration = 1
 
         data.authorsBooksDistribution
           .sort((first, second) => {
@@ -69,9 +71,11 @@ export default {
             this.chartData.datasets[0].backgroundColor.push('rgba(' + red + ',' + green + ',' + blue + ')')
             this.chartData.labels.push(entry.firstname + ' ' + entry.lastname)
 
-            red = red * 1.50
-            green = green * 1.50
-            blue = blue * 1.50
+            const weight = (tintFactor * (iteration / 5))
+            red = red + (255 - red) * weight
+            green = green + (255 - green) * weight
+            blue = blue + (255 - blue) * weight
+            iteration++
           })
         this.chartKey++
         this.isLoading = false

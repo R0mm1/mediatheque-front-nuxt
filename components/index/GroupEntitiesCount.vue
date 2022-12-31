@@ -1,34 +1,34 @@
 <template>
   <Group>
     <template #group_name>
-      Entités dans la base
+      {{ $t('home.group_entities_count.group_name') }}
     </template>
     <template #group_content>
       <div id="group-entities-count">
         <div id="books-count" class="count-block">
           <div id="count-total" class="count-number">
             {{ bookTotal }}
-            <span>Livres</span>
+            <span>{{ $t('home.group_entities_count.books') }}</span>
           </div>
           <div id="count-detail">
             <div class="count-number">
               {{ bookElectronic }}
-              <span>Epubs</span>
+              <span>{{ $t('home.group_entities_count.book_electronics') }}</span>
             </div>
             <div class="count-number">
               {{ bookPaper }}
-              <span>Papiers</span>
+              <span>{{ $t('home.group_entities_count.book_papers') }}</span>
             </div>
             <div class="count-number">
               {{ bookAudio }}
-              <span>Audios</span>
+              <span>{{ $t('home.group_entities_count.book_audios') }}</span>
             </div>
           </div>
         </div>
         <div id="authors-count" class="count-block">
           <div class="count-number">
             {{ author }}
-            <span>Auteurs</span>
+            <span>{{ $t('home.group_entities_count.authors') }}</span>
           </div>
         </div>
       </div>
@@ -65,7 +65,7 @@ export default {
       .then((data) => {
         const stats = data['hydra:member'][0]
         if (typeof stats === 'undefined') {
-          this.$toasted.error('La récupération des statistiques des auteurs et des livres a échoué')
+          this.$toasted.error(this.$t('home.group_entities_count.api_error').toString())
           return Promise.reject(new Error('Stats service returned empty data'))
         }
         return Promise.resolve(stats.stats)
