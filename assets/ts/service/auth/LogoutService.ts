@@ -35,8 +35,7 @@ export default class LogoutService {
         }
       )
       .then(() => {
-        window.sessionStorage.removeItem('access_token')
-        window.sessionStorage.removeItem('refresh_token')
+        window.sessionStorage.clear()
         Navigator.navigate(this.configDefault.page)
       })
   }
