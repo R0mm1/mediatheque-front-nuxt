@@ -72,17 +72,18 @@ export default class LoginService {
     )
 
       .then((response: { data: { access_token: string; refresh_token: string } }) => {
+        const authenticationRedirect: string|null = window.sessionStorage.getItem('authentication_redirect')
+
+        window.sessionStorage.clear()
         window.sessionStorage.setItem('access_token', response.data.access_token)
         window.sessionStorage.setItem('refresh_token', response.data.refresh_token)
 
-        const authenticationRedirect: string|null = window.sessionStorage.getItem('authentication_redirect')
         if (authenticationRedirect !== null) {
           window.location.href = authenticationRedirect
         } else {
           window.location.href = location.protocol + '//' + location.host + this.configDefault.page
         }
       })
-      .finally(() => window.sessionStorage.removeItem('code_verifier'))
   }
 
   private generateCodeChallenge (codeVerifier: string) {
