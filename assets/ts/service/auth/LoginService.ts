@@ -36,7 +36,8 @@ export default class LoginService {
           client_id: this.configAuth.client_id,
           code_challenge_method: 'S256',
           code_challenge: codeChallenge,
-          redirect_uri: redirectUri
+          redirect_uri: redirectUri,
+          scope: 'openid'
         })
         window.location.href = this.configAuth.authorization_endpoint + '/?' + args
       })

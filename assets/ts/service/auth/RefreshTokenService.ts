@@ -9,7 +9,7 @@ export default class RefreshTokenService {
   constructor (@inject(Tokens.auth) private configAuth: Auth) {
   }
 
-  refresh () : Promise<void> {
+  refresh (): Promise<void> {
     const refreshToken = window.sessionStorage.getItem('refresh_token')
     if (refreshToken === null) {
       return Promise.reject(new Error('No refresh token'))
@@ -20,12 +20,7 @@ export default class RefreshTokenService {
           client_id: this.configAuth.client_id,
           grant_type: 'refresh_token',
           refresh_token: refreshToken
-        })).toString(),
-        {
-          headers: {
-            'Content-type': 'application/x-www-form-urlencoded'
-          }
-        })
+        })).toString())
         .then((response) => {
           window.sessionStorage.setItem('access_token', response.data.access_token)
           window.sessionStorage.setItem('refresh_token', response.data.refresh_token)
