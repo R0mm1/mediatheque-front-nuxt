@@ -18,6 +18,7 @@ import { AuthorItem } from '~/assets/ts/models/Author'
 import Violation from '~/assets/ts/models/Violation'
 import DisplayableError from '~/assets/ts/objects/error/DisplayableError'
 import { ReferenceGroupBookItem } from '~/assets/ts/models/book/referenceGroup/Book'
+import UserService from '~/assets/ts/service/UserService'
 
 export abstract class BookModule extends VuexModule {
   static EVENT_BOOK_SAVED = 'book-saved'
@@ -156,6 +157,8 @@ export abstract class BookModule extends VuexModule {
   @Action({ rawError: true })
   getNotation () {
     const requestService = container.resolve(RequestService)
+    const userService = container.resolve(UserService)
+
     if (this.notation !== null) {
       return Promise.resolve(this.notation)
     }
@@ -164,20 +167,25 @@ export abstract class BookModule extends VuexModule {
       return
     }
 
-    const request = requestService.createRequest('/book_notations')
-      .setQueryParams({
-        'book.id': this.book.id
-      })
+    const bookId: number = this.book.id
 
-    return requestService.execute<any>(request)
-      .then((response) => {
-        if (response['hydra:member'].length > 0) {
-          this.context.commit('setNotation', response['hydra:member'].pop())
-        } else {
-          this.context.commit('setNotation', null)
-        }
-        return Promise.resolve(this.notation)
-      })
+    return userService.getSelf().then((self) => {
+      const request = requestService.createRequest('/book_notations')
+        .setQueryParams({
+          'book.id': bookId,
+          'user.id': (self.id as number)
+        })
+
+      return requestService.execute<any>(request)
+        .then((response) => {
+          if (response['hydra:member'].length > 0) {
+            this.context.commit('setNotation', response['hydra:member'].pop())
+          } else {
+            this.context.commit('setNotation', null)
+          }
+          return Promise.resolve(this.notation)
+        })
+    })
   }
 
   @Action({ rawError: true })

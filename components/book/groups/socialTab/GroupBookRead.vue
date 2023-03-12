@@ -5,14 +5,15 @@
     </template>
     <template #group_content>
       <div id="loader-container">
-        <Loader v-if="isNotationLoading" type="s" />
+        <Loader v-if="isNotationLoading" type="s"/>
       </div>
       <client-only>
         <StarsRatings
           v-if="!isNotationLoading"
-          v-model="cNote"
+          :rating="cNote"
           :star-size="20"
           :max-rating="10"
+          @rating-selected="value => note = value"
         />
       </client-only>
     </template>
@@ -25,44 +26,54 @@ import Loader from '@/components/widgets/Loader'
 
 export default {
   name: 'GroupBookRead',
-  components: { Loader, Group },
-  props: { bookModule: { type: Object, required: true } },
+  components: {
+    Loader,
+    Group
+  },
+  props: {
+    bookModule: {
+      type: Object,
+      required: true
+    }
+  },
   data () {
     return {
       isNotationLoading: true,
-      note: 0
+      note: null // Value can be null if not loaded yet, -1 if it doesn't exist, the note value otherwise
     }
   },
   computed: {
-    cNote: {
-      get () {
-        return this.note
-      },
-      set (value) {
-        this.isNotationLoading = true
-        this.bookModule.updateNote(value)
-          .then((bookNotation) => {
-            this.note = bookNotation.note
-            this.isNotationLoading = false
-          })
-          .catch((error) => {
-            this.$toasted.show("Une erreur est survenue lors de l'enregistrement de la note", {
-              ...this.$config.default.notification_settings,
-              type: 'error',
-              icon: 'fa-times'
-            })
-            console.error(error)
-            this.isNotationLoading = false
-          })
+    cNote () {
+      return Math.max(this.note, 0)
+    }
+  },
+  watch: {
+    note (newValue, oldValue) {
+      if (oldValue === null) {
+        return
       }
+
+      this.isNotationLoading = true
+      this.bookModule.updateNote(newValue)
+        .then((bookNotation) => {
+          this.note = bookNotation.note
+          this.isNotationLoading = false
+        })
+        .catch((error) => {
+          this.$toasted.show('Une erreur est survenue lors de l\'enregistrement de la note', {
+            ...this.$config.default.notification_settings,
+            type: 'error',
+            icon: 'fa-times'
+          })
+          console.error(error)
+          this.isNotationLoading = false
+        })
     }
   },
   created () {
     this.bookModule.getNotation()
       .then((notation) => {
-        if (notation !== null) {
-          this.note = notation.note
-        }
+        this.note = notation ? notation.note : -1 // If the notation doesn't exist we initialize it to -1 to indicate it's loaded
         this.isNotationLoading = false
       })
       .catch((error) => {
@@ -79,12 +90,12 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  #loader-container{
-    width: 100%;
-    text-align: center;
+#loader-container {
+  width: 100%;
+  text-align: center;
 
-    img{
-      width: 50px;
-    }
+  img {
+    width: 50px;
   }
+}
 </style>
