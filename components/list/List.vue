@@ -240,6 +240,8 @@ export default class List extends Vue {
       }
     })
 
+    // The page is reinitialized as we may not have the same number of pages after the filters are applied.
+    listModule.setPaginationCurrentPage(1)
     listModule.setCustomFilters(updateFilters)
   }
 
