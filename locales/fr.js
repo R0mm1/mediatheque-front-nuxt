@@ -43,5 +43,11 @@ export default {
     },
     comment: 'Description',
     the_reference_group: 'Le groupe'
+  },
+  books: {
+    list: {
+      download_book_button_label: 'Télécharger le livre',
+      download_book_error: 'Une erreur est survenue lors du téléchargement du livre'
+    }
   }
 }

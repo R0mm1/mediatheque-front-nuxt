@@ -38,13 +38,16 @@ export class BookElectronicModule extends BookModule implements EntityModuleInte
     return name + '.epub'
   }
 
-  @Action({ rawError: true }) downloadEbook () {
+  @Action({ rawError: true }) downloadEbook (): Promise<void> {
     if (typeof this.book.bookFile === 'object' && this.book.bookFile !== null) {
       this.bookWithFileHelper.downloadBookFile(
         this.ebookFilename,
         'book_files/' + this.book.bookFile.id,
         'electronic_book_file_download_tokens'
       )
+      return Promise.resolve()
+    } else {
+      return Promise.reject(new Error('bookFile property is empty or null'))
     }
   }
 
