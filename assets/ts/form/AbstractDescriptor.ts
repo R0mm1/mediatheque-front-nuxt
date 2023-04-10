@@ -2,7 +2,6 @@ export default abstract class AbstractDescriptor {
   descriptorType?: string = undefined
   name: string
   label?: string = undefined
-  noLabel: boolean = false
   faIcon?: string = undefined
 
   public constructor (name: string) {

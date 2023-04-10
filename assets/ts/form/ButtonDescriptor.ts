@@ -1,7 +1,7 @@
 import AbstractDescriptor from '@/assets/ts/form/AbstractDescriptor'
 import ButtonHrefDescriptor from '~/assets/ts/form/ButtonHrefDescriptor'
 
-export type ButtonStyle = 'normal' | 'negative';
+export type ButtonStyle = 'normal' | 'negative' | 'icon-round';
 export type ButtonRoundedCorner = Boolean | Number; // Number to specify the value to use in CSS, true to use default value, false to deactivate
 
 export default class ButtonDescriptor extends AbstractDescriptor {

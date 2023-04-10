@@ -11,16 +11,6 @@
       >
         {{ getValue(column) }}
       </div>
-
-      <div v-if="hasRowAction" class="listRowCustomActions cell" role="gridcell">
-        <CustomAction
-          v-for="rowAction in rowActions"
-          :key="rowAction.id"
-          :row-action="rowAction"
-          :row-data="dataRow"
-          @custom-action-triggered="customActionTriggered"
-        />
-      </div>
     </div>
 
     <transition name="list-row-details-trans">
@@ -41,27 +31,16 @@
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import Column from '~/assets/ts/list/Column'
 import DataSubProperty from '~/assets/ts/list/DataSubProperty'
-import RowAction from '~/assets/ts/list/RowAction'
-import RowActionPayload from '~/assets/ts/list/RowActionPayload'
 
-@Component({
-  components: {
-    CustomAction: () => import('./row/CustomAction.vue')
-  }
-})
+@Component({})
 export default class Row extends Vue {
   rowId: any
 
   @Prop(Object) dataRow: any
   @Prop(Array) cols!: Column[]
-  @Prop(Array) rowActions!: RowAction[]
 
   get elementId () {
     return 'el' + (this.dataRow.id ? this.dataRow.id : Math.random().toString())
-  }
-
-  get hasRowAction () {
-    return this.rowActions.length > 0
   }
 
   getValue (column: Column, scope?: any) {
@@ -115,10 +94,6 @@ export default class Row extends Vue {
     }
 
     return value
-  }
-
-  customActionTriggered (actionName: RowActionPayload) {
-    this.$parent?.$emit('custom-action-triggered', actionName, this.dataRow)
   }
 
   onMouseOver () {
@@ -234,7 +209,11 @@ export default class Row extends Vue {
   }
 
   &:hover {
-    border-color: #d0c3a9;
+    border-bottom-color: $shade1;
+
+    .listCells{
+      background-color: $shade3;
+    }
 
     .listRowCustomActions {
       opacity: 1;

@@ -3,28 +3,34 @@
 @mixin button {
   .formulate-input[data-type="submit"], .formulate-input[data-type="button"] {
 
-    .formulate-input-wrapper:not(.no-def-style) .formulate-input-element button {
-      border: 1px solid $shade0;
-      border-radius: 5px;
-      padding: 6px 10px;
-      background-color: transparent;
-      font-size: inherit;
-      color: initial;
-      transition: all .3s;
-
-      &, &:focus, &:hover {
-        //For Chrome
-        outline: none;
-      }
-
-      &:hover {
-        background-color: $shade3;
-        border-color: $shade3;
-      }
-
-      a {
-        text-decoration: none;
+    .formulate-input-wrapper:not(.no-def-style) {
+      .formulate-input-element button {
+        border: 1px solid $shade0;
+        border-radius: 5px;
+        padding: 6px 10px;
+        background-color: transparent;
+        font-size: inherit;
         color: initial;
+        transition: all .3s;
+
+        &, &:focus, &:hover {
+          //For Chrome
+          outline: none;
+        }
+
+        &:hover {
+          background-color: $shade3;
+          border-color: $shade3;
+        }
+
+        a {
+          text-decoration: none;
+          color: initial;
+        }
+      }
+
+      &.style_icon-round .formulate-input-element button{
+        border-radius: 50%;
       }
     }
   }
