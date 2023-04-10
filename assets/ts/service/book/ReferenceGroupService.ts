@@ -34,6 +34,11 @@ export default class ReferenceGroupService {
     return this.requestService.execute(request)
   }
 
+  delete (referenceGroupId: number) {
+    const request = this.requestService.createRequest(this.baseUrl + '/' + referenceGroupId, 'DELETE')
+    return this.requestService.execute(request)
+  }
+
   private get requestService () {
     return container.resolve(RequestService)
   }
