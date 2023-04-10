@@ -15,16 +15,13 @@
     <div id="vueListContent" ref="vueListContent">
 
       <div id="vueList" :class="{withPagination: isPaginationEnabled}" role="grid">
-        <list-header
-          :has-row-action="hasRowAction"
-        />
+        <list-header/>
         <div v-if="!isLoading" id="vueListRows">
           <Row
             v-for="dataRow in listData"
             :key="'r_'+dataRow.id"
             :data-row="dataRow"
             :cols="Object.values(displayedColumns)"
-            :row-actions="rowActions"
             :details-component-path="detailsComponentPath"
             @click.native="callback(dataRow)"
           />
@@ -61,7 +58,6 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
 
 import { container } from 'tsyringe'
 import Column from '~/assets/ts/list/Column'
-import RowAction from '~/assets/ts/list/RowAction'
 import LeftActionBarProperties from '~/assets/ts/list/LeftActionBarProperties'
 import PaginationHelper from '~/assets/js/paginationHelper.js'
 import Filter from '~/assets/ts/list/Filter'
@@ -114,12 +110,6 @@ export default class List extends Vue {
     leftActionBarProperties!: LeftActionBarProperties
 
   @Prop({
-    type: Array,
-    default: () => []
-  })
-    rowActions!: RowAction[]
-
-  @Prop({
     type: String,
     default: null
   })
@@ -132,10 +122,6 @@ export default class List extends Vue {
 
   get isMobile () {
     return this.$device.isMobile
-  }
-
-  get hasRowAction () {
-    return this.rowActions.length > 0
   }
 
   get paginationCurrentPage () {
