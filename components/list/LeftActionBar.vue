@@ -71,7 +71,6 @@ import { container } from 'tsyringe'
 import LeftActionBarProperties from '../../assets/ts/list/LeftActionBarProperties'
 import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
 import LeftActionBarElement from '~/assets/ts/list/LeftActionBarElement'
-import MedInputSelect from '~/components/form/elements/MedInputSelect.vue'
 import MedInputButton from '~/components/form/elements/MedInputButton.vue'
 import LeftActionBarLinkDescriptor from '~/assets/ts/list/LeftActionBarLinkDescriptor'
 import ListService from '~/assets/ts/service/ListService'
@@ -100,7 +99,6 @@ const customFilterChangeHandler = function (router: VueRouter, element: LeftActi
 @Component({
   components: {
     MedSelect,
-    MedInputSelect,
     MedInputButton
   }
 })

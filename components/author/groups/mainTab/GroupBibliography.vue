@@ -33,7 +33,6 @@ import ButtonDescriptor from '~/assets/ts/form/ButtonDescriptor'
 import { AuthorBook } from '~/assets/ts/models/Author'
 import Group from '~/components/page/Group.vue'
 import BookService from '~/assets/ts/service/BookService'
-import MedInputSelect from '~/components/form/elements/MedInputSelect.vue'
 import MedSelectDescriptor, { SelectValue } from '~/assets/ts/form/MedSelectDescriptor'
 import Loader from '@/components/widgets/Loader.vue'
 import MedSelect from '~/components/form/elements/MedSelect.vue'
@@ -43,7 +42,6 @@ const bookService = container.resolve(BookService)
 @Component({
   components: {
     MedSelect,
-    MedInputSelect,
     SimpleList,
     Group,
     Loader

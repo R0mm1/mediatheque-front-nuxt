@@ -8,7 +8,6 @@
       details-component-path="book/BookListRowDetails.vue"
       :callback="setBook"
       name="book"
-      @custom-action-triggered="customActionTriggered"
     />
     <BookListPopupDelete
       v-if="bookToDeleteDisplayPopup"
@@ -36,7 +35,6 @@ import { BookPaperItem } from '~/assets/ts/models/BookPaper'
 import { BookElectronicItem } from '~/assets/ts/models/BookElectronic'
 import BookListPopupDelete from '~/components/book/BookListPopupDelete.vue'
 import BookStoreService from '~/assets/ts/service/BookStoreService'
-import RowActionPayload from '~/assets/ts/list/RowActionPayload'
 import { BookAudioItem } from '~/assets/ts/models/BookAudio'
 import MedSelectDescriptor, { SelectValue } from '~/assets/ts/form/MedSelectDescriptor'
 import UserService from '~/assets/ts/service/UserService'
@@ -156,29 +154,6 @@ export default class Book extends Vue {
 
   setBook (selectedBook: BookPaperItem | BookElectronicItem | BookAudioItem) {
     window.location.href = bookService.getBookUrl(selectedBook)
-  }
-
-  customActionTriggered (action: RowActionPayload, book: BookPaperItem | BookElectronicItem) {
-    switch (action.action) {
-      case 'download_electronic':
-        if (typeof book.id === 'undefined') {
-          throw new TypeError('The book id is not defined')
-        }
-
-        bookElectronicModule.get(book.id).then(() => {
-          bookElectronicModule.downloadEbook()
-        })
-        break
-      case 'download_audio':
-        if (typeof book.id === 'undefined') {
-          throw new TypeError('The book id is not defined')
-        }
-
-        bookAudioModule.get(book.id).then(() => {
-          bookAudioModule.downloadBookFile()
-        })
-        break
-    }
   }
 
   bookDeleteCancel () {
