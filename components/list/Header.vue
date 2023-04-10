@@ -2,7 +2,7 @@
   <div class="list-header">
     <div v-for="column in displayedColumns" :key="column.uid" class="cell">
       <div class="headerRow" role="columnheader" :aria-label="column.label">
-        <div class="headerRowLabel">
+        <div class="headerRowLabel" data-cy="headerRowLabel">
           {{ column.label }}
         </div>
 
