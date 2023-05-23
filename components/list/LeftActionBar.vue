@@ -7,6 +7,7 @@
         :key="labElement.formElementDescriptor.name"
         class="leftActionBarElement"
         :class="getClass(labElement)"
+        data-cy="leftActionBarElement"
       >
         <template v-if="isButton(labElement)">
           <div

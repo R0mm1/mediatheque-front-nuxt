@@ -1,11 +1,12 @@
 <template>
-  <div :id="elementId" class="listRow" @mouseenter="onMouseOver" @mouseleave="onMouseOut">
+  <div :id="elementId" class="listRow" data-cy="listRow" @mouseenter="onMouseOver" @mouseleave="onMouseOut">
     <div class="listCells" role="row">
       <div
         v-for="column in cols"
         :key="column.uid"
         class="cell"
         role="gridcell"
+        data-cy="cell"
         @touchstart="cellTouchStart(column)"
         @touchend="cellTouchEnd(column)"
       >
