@@ -1,5 +1,5 @@
 <template>
-  <Popup :is-displayed="true">
+  <Popup :is-displayed="true" data-cy="listColumnSelectionPopup">
     <template #popup_header>
       Sélection des colonnes
     </template>
@@ -8,12 +8,13 @@
         v-for="checkboxDescriptor in checkboxDescriptors"
         :key="checkboxDescriptor.name"
         v-model="columns[checkboxDescriptor.name].isDisplayed"
+        data-cy="listColumnSelectionPopupCheckbox"
         :checkbox-descriptor="checkboxDescriptor"
         @change.native="columnChanged(checkboxDescriptor.name, $event)"
       />
     </template>
     <template #popup_footer>
-      <MedInputButton :button-descriptor="selectButtonDescriptor" @click.native="validateSelection" />
+      <MedInputButton :button-descriptor="selectButtonDescriptor" data-cy="select" @click.native="validateSelection" />
     </template>
   </Popup>
 </template>
@@ -42,7 +43,6 @@ export default class ColumnSelectionPopup extends Vue {
   listService = container.resolve(ListService)
 
   selectButtonDescriptor = new ButtonDescriptor('select', 'Sélectionner')
-  cancelButtonDescriptor = new ButtonDescriptor('cancel', 'Annuler')
 
   backup: UserColumnConfig[] = []
 

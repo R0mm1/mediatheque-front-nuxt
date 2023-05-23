@@ -1,0 +1,22 @@
+{
+  "@context": "\/contexts\/User",
+  "@id": "\/users",
+  "@type": "hydra:Collection",
+  "hydra:totalItems": 2,
+  "hydra:member": [
+    {
+      "@id": "\/users\/1ecd4ecb-1964-6aa4-a1a8-b3e8f85dda4a",
+      "@type": "User",
+      "id": "1ecd4ecb-1964-6aa4-a1a8-b3e8f85dda4a",
+      "firstname": "Romain",
+      "lastname": "QUENTEL"
+    },
+    {
+      "@id": "\/users\/1ecd4ecb-1964-6aa4-a789-ef4bfc1da766",
+      "@type": "User",
+      "id": "1ecd4ecb-1964-6aa4-a789-ef4bfc1da766",
+      "firstname": "Justine",
+      "lastname": "Ptitegoutte"
+    }
+  ]
+}

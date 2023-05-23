@@ -2,7 +2,7 @@
   <div class="list-header">
     <div v-for="column in displayedColumns" :key="column.uid" class="cell">
       <div class="headerRow" role="columnheader" :aria-label="column.label">
-        <div class="headerRowLabel">
+        <div class="headerRowLabel" data-cy="headerRowLabel">
           {{ column.label }}
         </div>
 
@@ -34,15 +34,13 @@
       />
     </div>
 
-    <div v-if="lastEmptyColumn" class="cell" role="columnheader" aria-label="Actions" />
-
     <!-- To avoid having a width diff with list body due to scrollbar -->
     <div class="list-header-scrollbar-width" />
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator'
+import { Component, Vue, Watch } from 'vue-property-decorator'
 
 import { container } from 'tsyringe'
 import Column, { ColumnSort } from '~/assets/ts/list/Column'
@@ -57,8 +55,6 @@ const listService = container.resolve(ListService)
   }
 })
 export default class Header extends Vue {
-  @Prop(Boolean) hasRowAction!: Boolean
-
   listDisplayPopup: { [index: string]: boolean } = {}
   listHasPopupNotice: { [index: string]: boolean } = {}
 
@@ -129,10 +125,6 @@ export default class Header extends Vue {
   @Watch('columns')
   reloadDisplayedColumns () {
     this.displayedColumns = listService.getDisplayedColumns()
-  }
-
-  get lastEmptyColumn (): Boolean {
-    return this.hasRowAction || Object.values(this.displayedColumns).length === 0
   }
 
   created () {

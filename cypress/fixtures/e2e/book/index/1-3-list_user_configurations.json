@@ -1,0 +1,57 @@
+{
+  "@context": "\/contexts\/UserConfiguration",
+  "@id": "\/user_configurations",
+  "@type": "hydra:Collection",
+  "hydra:totalItems": 1,
+  "hydra:member": [
+    {
+      "@id": "\/user_configurations\/1ed0b522-be8f-6e1e-836c-1563a2b0ed4a",
+      "@type": "UserConfiguration",
+      "id": "1ed0b522-be8f-6e1e-836c-1563a2b0ed4a",
+      "name": "list_book_default",
+      "value": {
+        "columns": [
+          {
+            "uid": "title",
+            "isDisplayed": true
+          },
+          {
+            "uid": "year",
+            "isDisplayed": false
+          },
+          {
+            "uid": "language",
+            "isDisplayed": false
+          },
+          {
+            "uid": "authors",
+            "isDisplayed": true
+          }
+        ]
+      }
+    }
+  ],
+  "hydra:view": {
+    "@id": "\/user_configurations?name=list_book_default",
+    "@type": "hydra:PartialCollectionView"
+  },
+  "hydra:search": {
+    "@type": "hydra:IriTemplate",
+    "hydra:template": "\/user_configurations{?name,name[]}",
+    "hydra:variableRepresentation": "BasicRepresentation",
+    "hydra:mapping": [
+      {
+        "@type": "IriTemplateMapping",
+        "variable": "name",
+        "property": "name",
+        "required": false
+      },
+      {
+        "@type": "IriTemplateMapping",
+        "variable": "name[]",
+        "property": "name",
+        "required": false
+      }
+    ]
+  }
+}

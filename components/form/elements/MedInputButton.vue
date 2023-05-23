@@ -8,12 +8,16 @@
     :label="buttonDescriptor.value"
     :title="buttonDescriptor.value"
   >
-    <i v-if="typeof buttonDescriptor.faIcon === 'string'" :class="buttonDescriptor.faIcon" aria-hidden="false" />
+    <i v-if="typeof buttonDescriptor.faIcon === 'string'" :class="buttonDescriptor.faIcon" aria-hidden="false"/>
 
-    <template v-if="!hasHref">
-      {{ buttonDescriptor.value }}
+    <template v-if="displayValue">
+      <template v-if="!hasHref">
+        {{ buttonDescriptor.value }}
+      </template>
+      <a v-else :href="buttonDescriptor.href.href" :target="buttonDescriptor.href.target">
+        {{ buttonDescriptor.value }}
+      </a>
     </template>
-    <a v-else :href="buttonDescriptor.href.href" :target="buttonDescriptor.href.target">{{ buttonDescriptor.value }}</a>
   </FormulateInput>
 </template>
 
@@ -37,6 +41,10 @@ export default class MedInputButton extends Vue {
 
   get hasHref () {
     return typeof this.buttonDescriptor.href !== 'undefined'
+  }
+
+  get displayValue () {
+    return this.buttonDescriptor.style !== 'icon-round'
   }
 }
 </script>

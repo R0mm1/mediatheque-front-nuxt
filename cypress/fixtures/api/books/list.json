@@ -1,0 +1,163 @@
+{
+  "@context": "\/contexts\/Book",
+  "@id": "\/books",
+  "@type": "hydra:Collection",
+  "hydra:totalItems": 3,
+  "hydra:member": [
+    {
+      "@id": "\/paper_books\/1",
+      "@type": "PaperBook",
+      "id": 1,
+      "title": "Bouddha",
+      "year": "2003",
+      "language": "Français",
+      "authors": [
+        {
+          "@id": "\/authors\/1",
+          "@type": "Author",
+          "id": 1,
+          "person": {
+            "@id": "\/people\/1ed34ffb-d537-6448-98e0-9dc7e931d2cd",
+            "@type": "Person",
+            "id": "1ed34ffb-d537-6448-98e0-9dc7e931d2cd",
+            "firstname": "Clive",
+            "lastname": "Cussler"
+          }
+        },
+        {
+          "@id": "\/authors\/5",
+          "@type": "Author",
+          "id": 5,
+          "person": {
+            "@id": "\/people\/1ed34ffb-d537-6cc2-8bfa-9dc7e931d2cd",
+            "@type": "Person",
+            "id": "1ed34ffb-d537-6cc2-8bfa-9dc7e931d2cd",
+            "firstname": "Craig",
+            "lastname": "Dirgo"
+          }
+        }
+      ],
+      "shortSummary": "Qui se méfierait d'un vieux cargot rouillé, susceptible de s'échouer dans le premier port venu?"
+    },
+    {
+      "@id": "\/electronic_books\/2",
+      "@type": "ElectronicBook",
+      "id": 2,
+      "title": "Là où chantent les écrevisses",
+      "year": "2018",
+      "language": "Français",
+      "authors": [
+        {
+          "@id": "\/authors\/3",
+          "@type": "Author",
+          "id": 3,
+          "person": {
+            "@id": "\/people\/1ed34ffb-d537-6ef2-9033-9dc7e931d2cd",
+            "@type": "Person",
+            "id": "1ed34ffb-d537-6ef2-9033-9dc7e931d2cd",
+            "firstname": "Delia",
+            "lastname": "Owens"
+          }
+        }
+      ],
+      "shortSummary": "Pendant des années, les rumeurs les plus folles ont couru sur « la Fille des marais » de Barkley Cove, une petite ville de Caroline du Nord. Pourtant, Kya n'est pas cette fille sauvage et analphabète que tous imaginent et craignent.A l'âge"
+    },
+    {
+      "@id": "\/audio_books\/3",
+      "@type": "AudioBook",
+      "id": 3,
+      "title": "L'inconnue de la crique",
+      "year": "1999",
+      "language": "Français",
+      "authors": [
+        {
+          "@id": "\/authors\/4",
+          "@type": "Author",
+          "id": 4,
+          "person": {
+            "@id": "\/people\/1ed34ffb-d537-6a74-9496-9dc7e931d2cd",
+            "@type": "Person",
+            "id": "1ed34ffb-d537-6a74-9496-9dc7e931d2cd",
+            "firstname": "Martha",
+            "lastname": "Grimes"
+          }
+        }
+      ],
+      "shortSummary": "Au milieu de la lande battue par les vents de Cornouailles, s'élève le manoir de Seabourne, gigantesque demeure bâtie à flanc de falaise. Ce lieu isolé, idéal pour ceux voulant fuir la compagnie des hommes, est la retraite du très aristocra"
+    }
+  ],
+  "hydra:view": {
+    "@id": "\/books?itemsPerPage=30\u0026bookType=all\u0026page=1",
+    "@type": "hydra:PartialCollectionView",
+    "hydra:first": "\/books?itemsPerPage=30\u0026bookType=all\u0026page=1",
+    "hydra:last": "\/books?itemsPerPage=30\u0026bookType=all\u0026page=1",
+    "hydra:next": "\/books?itemsPerPage=30\u0026bookType=all\u0026page=1"
+  },
+  "hydra:search": {
+    "@type": "hydra:IriTemplate",
+    "hydra:template": "\/books{?title,year,pageCount,pageCount[],isbn,language,summary,authorFullname,bookType,owner}",
+    "hydra:variableRepresentation": "BasicRepresentation",
+    "hydra:mapping": [
+      {
+        "@type": "IriTemplateMapping",
+        "variable": "title",
+        "property": "title",
+        "required": false
+      },
+      {
+        "@type": "IriTemplateMapping",
+        "variable": "year",
+        "property": "year",
+        "required": false
+      },
+      {
+        "@type": "IriTemplateMapping",
+        "variable": "pageCount",
+        "property": "pageCount",
+        "required": false
+      },
+      {
+        "@type": "IriTemplateMapping",
+        "variable": "pageCount[]",
+        "property": "pageCount",
+        "required": false
+      },
+      {
+        "@type": "IriTemplateMapping",
+        "variable": "isbn",
+        "property": "isbn",
+        "required": false
+      },
+      {
+        "@type": "IriTemplateMapping",
+        "variable": "language",
+        "property": "language",
+        "required": false
+      },
+      {
+        "@type": "IriTemplateMapping",
+        "variable": "summary",
+        "property": "summary",
+        "required": false
+      },
+      {
+        "@type": "IriTemplateMapping",
+        "variable": "authorFullname",
+        "property": "authorFullname",
+        "required": false
+      },
+      {
+        "@type": "IriTemplateMapping",
+        "variable": "bookType",
+        "property": "bookType",
+        "required": false
+      },
+      {
+        "@type": "IriTemplateMapping",
+        "variable": "owner",
+        "property": "owner",
+        "required": false
+      }
+    ]
+  }
+}

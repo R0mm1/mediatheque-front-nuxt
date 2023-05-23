@@ -34,7 +34,6 @@ import Group from '~/components/page/Group.vue'
 import authorModule from '~/assets/ts/store/AuthorModule'
 import editorModule from '~/assets/ts/store/EditorModule'
 import { BookPaperModule } from '~/assets/ts/store/book/BookPaperModule'
-import MedInputSelect from '~/components/form/elements/MedInputSelect.vue'
 import MedChips from '~/components/form/elements/MedChips.vue'
 import ChipsDescriptor from '~/assets/ts/form/ChipsDescriptor'
 import { BookElectronicModule } from '~/assets/ts/store/book/BookElectronicModule'
@@ -54,7 +53,6 @@ const formService = container.resolve(FormService)
 @Component({
   components: {
     MedChips,
-    MedInputSelect,
     MedSelect,
     MedInputText,
     Group

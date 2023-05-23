@@ -84,6 +84,14 @@ export class BookAudioModule extends BookModule implements EntityModuleInterface
     this.book.bookFile = bookFile
   }
 
+  @Mutation init (): void {
+    super.init()
+    this.flagService.reset()
+    this.historyService.init()
+    this.violations = {}
+    this.book = new Proxy(this.bookService.getBaseElectronicBook(), this.proxy)
+  }
+
   @Mutation unlinkBookFile () {
     this.historyService.addEntry('bookFile', undefined, this.book.bookFile)
     this.book.bookFile = undefined
@@ -109,13 +117,16 @@ export class BookAudioModule extends BookModule implements EntityModuleInterface
       })
   }
 
-  @Action({ rawError: true }) downloadBookFile () {
+  @Action({ rawError: true }) downloadBookFile (): Promise<void> {
     if (typeof this.book.bookFile === 'object' && this.book.bookFile !== null) {
       this.bookWithFileHelper.downloadBookFile(
         this.audioBookFilename,
         'audio_book_files/' + this.book.bookFile.id,
         'audio_book_file_download_tokens'
       )
+      return Promise.resolve()
+    } else {
+      return Promise.reject(new Error('bookFile property is empty or null'))
     }
   }
 }

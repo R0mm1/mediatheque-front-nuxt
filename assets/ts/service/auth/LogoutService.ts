@@ -29,8 +29,7 @@ export default class LogoutService {
         })).toString(),
         {
           headers: {
-            Authorization: 'Bearer ' + accessToken,
-            'Content-type': 'application/x-www-form-urlencoded'
+            Authorization: 'Bearer ' + accessToken
           }
         }
       )
