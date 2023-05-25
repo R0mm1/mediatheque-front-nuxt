@@ -32,6 +32,7 @@ export default class GroupInformation extends Vue {
     return new TextDescriptor('comment')
       .setLabel(this.$t('reference_groups.comment').toString())
       .setEditModeOn(false)
+      .setDataCy('referenceGroupComment')
   }
 }
 </script>

@@ -1,0 +1,33 @@
+{
+  "@context": "/contexts/ReferenceGroup",
+  "@id": "/reference_groups/1",
+  "@type": "ReferenceGroup",
+  "id": 1,
+  "elements": [
+    {
+      "@id": "/reference_group_books/1edf9636-6d6b-6bce-a19d-63a6884b6b02",
+      "@type": "ReferenceGroupBook",
+      "id": "1edf9636-6d6b-6bce-a19d-63a6884b6b02",
+      "book": {
+        "@id": "/electronic_books/2",
+        "@type": "ElectronicBook",
+        "id": 2,
+        "title": "Là où chantent les écrevisses"
+      },
+      "position": 0
+    },
+    {
+      "@id": "/reference_group_books/1edf9636-6d6b-6bce-a19d-63a6884b6b03",
+      "@type": "ReferenceGroupBook",
+      "id": "1edf9636-6d6b-6bce-a19d-63a6884b6b02",
+      "book": {
+        "@id": "/audio_books/3",
+        "@type": "AudioBook",
+        "id": 3,
+        "title": "L'inconnue de la crique"
+      },
+      "position": 1
+    }
+  ],
+  "comment": "Groupe de test Cypress"
+}

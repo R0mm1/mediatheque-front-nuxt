@@ -23,6 +23,11 @@ export default class ReferenceGroupBookService {
     return this.requestService.execute(request)
   }
 
+  delete (id: string) {
+    const request = this.requestService.createRequest(this.baseUrl + '/' + id, 'DELETE')
+    return this.requestService.execute(request)
+  }
+
   save (referenceGroupBook: Partial<ReferenceGroupBook>): Promise<ReferenceGroupBookItem> {
     const method = referenceGroupBook.id ? 'PUT' : 'POST'
     const url = this.baseUrl + (method === 'PUT' ? '/' + referenceGroupBook.id : '')

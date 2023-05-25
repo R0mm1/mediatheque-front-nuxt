@@ -5,8 +5,8 @@
       :disabled="!sortable || !editModeOn"
     >
       <transition-group>
-        <div v-for="element in elementsWorkingCopy" :key="element.id" class="list_row">
-          <div class="row_content">
+        <div v-for="element in elementsWorkingCopy" :key="element.id" class="list_row" data-cy="listRow">
+          <div class="row_content" data-cy="rowContent">
             {{ element.content }}
           </div>
 
@@ -14,6 +14,8 @@
             v-for="(action, actionIndex) in actions"
             :key="actionIndex"
             :button-descriptor="action.buttonDescriptor"
+            class="row_button"
+            data-cy="rowButton"
             @click.native="action.action(element)"
           />
         </div>
@@ -148,6 +150,11 @@ export default class SimpleList extends Vue {
     flex: 1;
     text-overflow: ellipsis;
     overflow: hidden;
+    padding-right: 5px;
+  }
+
+  .row_button:not(:last-of-type){
+    margin-right: 5px;
   }
 
   .formulate-input {

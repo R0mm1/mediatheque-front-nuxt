@@ -42,7 +42,18 @@ export default {
       undefined_book_title: 'Erreur: titre non définit'
     },
     comment: 'Description',
-    the_reference_group: 'Le groupe'
+    the_reference_group: 'Le groupe',
+    remove_element: {
+      popup: {
+        header: 'Confirmez la suppression du livre',
+        body: 'Voulez-vous vraiment enlever le livre "{bookTitle}" du groupe "{groupComment}"? Cette action est définitive.',
+        action: {
+          cancel: 'Annuler',
+          remove: 'Enlever'
+        }
+      },
+      success: 'Le livre a été enlevé du groupe'
+    }
   },
   books: {
     list: {
