@@ -11,6 +11,7 @@ export default class TextDescriptor extends AbstractDescriptor {
   type: ('text'|'password') = TextDescriptor.typeText
   editModeOn: boolean = true
   error: string | null = null
+  private _dataCy: string = ''
 
   // eslint-disable-next-line no-useless-constructor
   public constructor (name: string) {
@@ -50,5 +51,18 @@ export default class TextDescriptor extends AbstractDescriptor {
   setError (error: string | null) {
     this.error = error
     return this
+  }
+
+  setDataCy (dataCy: string) {
+    this.dataCy = dataCy
+    return this
+  }
+
+  set dataCy (dataCy: string) {
+    this._dataCy = dataCy
+  }
+
+  get dataCy () {
+    return this._dataCy.length === 0 ? 'input-' + this.type : this._dataCy
   }
 }

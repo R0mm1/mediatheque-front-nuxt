@@ -18,6 +18,7 @@ export default class ButtonDescriptor extends AbstractDescriptor {
   style: ButtonStyle = 'normal'
   noDefaultStyle: boolean = false
   href?: ButtonHrefDescriptor = undefined
+  private _dataCy: string = ''
 
   constructor (name: string, value?: string, type?: string) {
     super(name)
@@ -57,5 +58,18 @@ export default class ButtonDescriptor extends AbstractDescriptor {
   setStyle (style: ButtonStyle) {
     this.style = style
     return this
+  }
+
+  setDataCy (dataCy: string) {
+    this.dataCy = dataCy
+    return this
+  }
+
+  set dataCy (dataCy: string) {
+    this._dataCy = dataCy
+  }
+
+  get dataCy () {
+    return this._dataCy.length === 0 ? 'input-' + this.type : this._dataCy
   }
 }

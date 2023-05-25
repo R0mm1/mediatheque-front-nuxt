@@ -7,6 +7,7 @@
     :name="buttonDescriptor.name"
     :label="buttonDescriptor.value"
     :title="buttonDescriptor.value"
+    :data-cy="buttonDescriptor.dataCy"
   >
     <i v-if="typeof buttonDescriptor.faIcon === 'string'" :class="buttonDescriptor.faIcon" aria-hidden="false"/>
 

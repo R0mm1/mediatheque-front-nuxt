@@ -1,13 +1,13 @@
 <template>
   <div class="widget_popup" :class="{displayed: isDisplayed}">
     <div>
-      <div class="popup_header">
+      <div class="popup_header" data-cy="popupHeader">
         <slot name="popup_header" />
       </div>
-      <div class="popup_body">
+      <div class="popup_body" data-cy="popupBody">
         <slot name="popup_body" />
       </div>
-      <div class="popup_footer">
+      <div class="popup_footer" data-cy="popupFooter">
         <slot name="popup_footer" />
       </div>
     </div>
