@@ -11,31 +11,37 @@
   </div>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
-
+<script setup lang="ts">
 export interface TabData {
-  id: string;
-  label: string;
-  disable?: boolean;
+  id: string
+  label: string
+  disable?: boolean
 }
 
-@Component
-export default class Tabs extends Vue {
-  @Prop({ type: Array, default: () => [] }) tabs!: TabData[]
-  @Prop({ type: String, default: () => [] }) value!: string
-
-  active: string | null = null
-
-  tabChanged (id: string) {
-    this.active = id
-    this.$emit('input', id)
-  }
-
-  created () {
-    this.active = this.value
-  }
+interface Props {
+  tabs?: TabData[]
+  value: string
 }
+
+interface Emits {
+  (e: 'input', id: string): void
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  tabs: () => []
+})
+
+const emit = defineEmits<Emits>()
+
+const active = ref<string | null>(null)
+
+const tabChanged = (id: string) => {
+  active.value = id
+  emit('input', id)
+}
+
+// created() → top-level in setup
+active.value = props.value
 </script>
 
 <style scoped lang="scss">

@@ -4,10 +4,8 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'Column'
-}
+<script setup lang="ts">
+// Simple layout component with slot
 </script>
 
 <style scoped lang="scss">

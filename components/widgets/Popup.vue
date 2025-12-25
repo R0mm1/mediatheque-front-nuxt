@@ -14,19 +14,14 @@
   </div>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
-
-@Component({
-  components: {}
-})
-export default class Popup extends Vue {
-  @Prop({
-    type: Boolean,
-    default: false
-  }) isDisplayed!: boolean
+<script setup lang="ts">
+interface Props {
+  isDisplayed?: boolean
 }
 
+withDefaults(defineProps<Props>(), {
+  isDisplayed: false
+})
 </script>
 
 <style scoped lang="scss">
