@@ -183,16 +183,15 @@ async linkNewCover(file: File) {
 
 ## Stores Migrés
 
-✅ **user.ts** - Simple, bon exemple de base
-✅ **book.ts** - Complexe, classe abstraite avec beaucoup de méthodes
-✅ **bookElectronic.ts** - Héritage + fonctionnalités spécifiques
+✅ **user.ts** - Simple, bon exemple de base (CRUD)
+✅ **book.ts** - Complexe, classe abstraite avec 25+ méthodes, services multiples
+✅ **bookElectronic.ts** - Héritage + fonctionnalités spécifiques (upload, extraction)
+✅ **bookPaper.ts** - Similaire à bookElectronic, conversion de type
+✅ **bookAudio.ts** - Gestion fichiers audio, download avec filename dynamique
+✅ **author.ts** - Nested proxy pattern (author.person), custom flags
+✅ **list.ts** - Le plus complexe: pagination, filtres, tri, colonnes, user config
 
-🔄 **À migrer:**
-- bookPaper.ts (similaire à bookElectronic)
-- bookAudio.ts (similaire à bookElectronic)
-- list.ts (complexe - pagination, filtres)
-- author.ts
-- editor.ts (si existe)
+**Phase 2 COMPLÈTE - 7/7 stores migrés**
 
 ## Impact sur les Composants
 
