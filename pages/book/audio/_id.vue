@@ -2,21 +2,13 @@
   <AudioBook :book-id="bookId" />
 </template>
 
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import AudioBook from '~/components/book/AudioBook.vue'
+<script setup lang="ts">
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+import AudioBook from "~/components/book/AudioBook.vue";
 
-@Component({
-  components: { AudioBook }
-})
-export default class ElectronicBookPage extends Vue {
-  bookId!: Number
-
-  created () {
-    this.bookId = parseInt(this.$route.params.id)
-  }
-}
+const route = useRoute();
+const bookId = computed(() => parseInt(route.params.id as string));
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

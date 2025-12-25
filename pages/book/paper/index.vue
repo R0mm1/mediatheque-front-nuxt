@@ -2,16 +2,8 @@
   <PaperBook :book-id="null" :edit-mode-on="true" />
 </template>
 
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import PaperBook from '~/components/book/PaperBook.vue'
-
-@Component({
-  components: { PaperBook }
-})
-export default class NewPaperBookPage extends Vue {
-}
+<script setup lang="ts">
+import PaperBook from "~/components/book/PaperBook.vue";
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

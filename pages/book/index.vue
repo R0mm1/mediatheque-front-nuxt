@@ -1,5 +1,5 @@
 <template>
-  <div id="book-list" :class="{withPopupOpened: bookToDeleteDisplayPopup}">
+  <div id="book-list" :class="{ withPopupOpened: bookToDeleteDisplayPopup }">
     <List
       ref="list"
       api-endpoint="/books"
@@ -18,227 +18,238 @@
   </div>
 </template>
 
-<script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator'
-import { container } from 'tsyringe'
-import Column from 'assets/ts/list/Column'
-import DataSubProperty from 'assets/ts/list/DataSubProperty'
-import LeftActionBarElement from 'assets/ts/list/LeftActionBarElement'
-import LeftActionBarProperties from 'assets/ts/list/LeftActionBarProperties'
-import BookService from 'assets/ts/service/BookService'
-import bookElectronicModule from 'assets/ts/store/book/BookElectronicModule'
-import bookAudioModule from '~/assets/ts/store/book/BookAudioModule'
-import LeftActionBarSeparatorDescriptor from 'assets/ts/list/LeftActionBarSeparatorDescriptor'
-import List from '~/components/list/List.vue'
-import LeftActionBarLinkDescriptor from 'assets/ts/list/LeftActionBarLinkDescriptor'
-import { BookPaperItem } from '~/assets/ts/models/BookPaper'
-import { BookElectronicItem } from '~/assets/ts/models/BookElectronic'
-import BookListPopupDelete from '~/components/book/BookListPopupDelete.vue'
-import BookStoreService from '~/assets/ts/service/BookStoreService'
-import { BookAudioItem } from '~/assets/ts/models/BookAudio'
-import MedSelectDescriptor, { SelectValue } from '~/assets/ts/form/MedSelectDescriptor'
-import UserService from '~/assets/ts/service/UserService'
-import bookListModule from '~/assets/ts/store/list/BookListModule'
+<script setup lang="ts">
+import { ref, computed, watch } from "vue";
+import { useRouter } from "vue-router";
+import { container } from "tsyringe";
+import Column from "assets/ts/list/Column";
+import DataSubProperty from "assets/ts/list/DataSubProperty";
+import LeftActionBarElement from "assets/ts/list/LeftActionBarElement";
+import LeftActionBarProperties from "assets/ts/list/LeftActionBarProperties";
+import BookService from "assets/ts/service/BookService";
+import bookElectronicModule from "assets/ts/store/book/BookElectronicModule";
+import bookAudioModule from "~/assets/ts/store/book/BookAudioModule";
+import LeftActionBarSeparatorDescriptor from "assets/ts/list/LeftActionBarSeparatorDescriptor";
+import List from "~/components/list/List.vue";
+import LeftActionBarLinkDescriptor from "assets/ts/list/LeftActionBarLinkDescriptor";
+import { BookPaperItem } from "~/assets/ts/models/BookPaper";
+import { BookElectronicItem } from "~/assets/ts/models/BookElectronic";
+import BookListPopupDelete from "~/components/book/BookListPopupDelete.vue";
+import BookStoreService from "~/assets/ts/service/BookStoreService";
+import { BookAudioItem } from "~/assets/ts/models/BookAudio";
+import MedSelectDescriptor, {
+  SelectValue,
+} from "~/assets/ts/form/MedSelectDescriptor";
+import UserService from "~/assets/ts/service/UserService";
+import bookListModule from "~/assets/ts/store/list/BookListModule";
+import { useRuntimeConfig } from "#app";
 
-const bookService = container.resolve(BookService)
+const config = useRuntimeConfig();
+const router = useRouter();
+const bookService = container.resolve(BookService);
 
-@Component({
-  components: {
-    List,
-    BookListPopupDelete
-  },
-  layout (context) {
-    return context.$device.isMobile ? 'mobile-layout-with-menu' : 'default'
-  }
-})
-export default class Book extends Vue {
-  cols = [
-    new Column('title', 'Titre'),
-    new Column('year', 'Année'),
-    new Column('language', 'Langue'),
-    new Column('authors', 'Auteurs')
-      .setSearchParameterName('authorFullname')
-      .setIsSortable(false)
-      .setSubProperties([
-        new DataSubProperty('person', [
-          new DataSubProperty('firstname'),
-          new DataSubProperty('lastname')
-        ])
-      ])
-  ]
+const cols = [
+  new Column("title", "Titre"),
+  new Column("year", "Année"),
+  new Column("language", "Langue"),
+  new Column("authors", "Auteurs")
+    .setSearchParameterName("authorFullname")
+    .setIsSortable(false)
+    .setSubProperties([
+      new DataSubProperty("person", [
+        new DataSubProperty("firstname"),
+        new DataSubProperty("lastname"),
+      ]),
+    ]),
+];
 
-  leftActionBarProperties = new LeftActionBarProperties([
+const leftActionBarProperties = new LeftActionBarProperties(
+  [
     new LeftActionBarElement(
-      'separator',
+      "separator",
       () => null,
-      new LeftActionBarSeparatorDescriptor('add').setLabel('Ajouter').setFaIcon('fas fa-plus')
+      new LeftActionBarSeparatorDescriptor("add")
+        .setLabel("Ajouter")
+        .setFaIcon("fas fa-plus")
     ),
     new LeftActionBarElement(
-      'element',
+      "element",
       () => null,
-      new LeftActionBarLinkDescriptor('addPaper', 'Livre papier', '/book/paper').setFaIcon('fas fa-scroll')
+      new LeftActionBarLinkDescriptor(
+        "addPaper",
+        "Livre papier",
+        "/book/paper"
+      ).setFaIcon("fas fa-scroll")
     ),
     new LeftActionBarElement(
-      'element',
+      "element",
       () => null,
-      new LeftActionBarLinkDescriptor('addElectronic', 'Epub', '/book/electronic/upload').setFaIcon('fas fa-tablet-alt')
+      new LeftActionBarLinkDescriptor(
+        "addElectronic",
+        "Epub",
+        "/book/electronic/upload"
+      ).setFaIcon("fas fa-tablet-alt")
     ),
     new LeftActionBarElement(
-      'element',
+      "element",
       () => null,
-      new LeftActionBarLinkDescriptor('addAudio', 'Audio', '/book/audio').setFaIcon('fas fa-music')
+      new LeftActionBarLinkDescriptor(
+        "addAudio",
+        "Audio",
+        "/book/audio"
+      ).setFaIcon("fas fa-music")
     ),
     new LeftActionBarElement(
-      'separator',
+      "separator",
       () => null,
-      new LeftActionBarSeparatorDescriptor('filters').setLabel('Filtres').setFaIcon('fas fa-sliders-h')
+      new LeftActionBarSeparatorDescriptor("filters")
+        .setLabel("Filtres")
+        .setFaIcon("fas fa-sliders-h")
     ),
     new LeftActionBarElement(
-      'filter',
+      "filter",
       () => null,
-      new MedSelectDescriptor('bookType')
+      new MedSelectDescriptor("bookType")
         .setOptions([
           {
-            label: 'Tous',
-            key: 'all',
-            value: 'all',
-            default: true
+            label: "Tous",
+            key: "all",
+            value: "all",
+            default: true,
           },
           {
-            label: 'Papier',
-            key: 'paper',
-            value: 'paper'
+            label: "Papier",
+            key: "paper",
+            value: "paper",
           },
           {
-            label: 'Epub',
-            key: 'electronic',
-            value: 'electronic'
+            label: "Epub",
+            key: "electronic",
+            value: "electronic",
           },
           {
-            label: 'Audio',
-            key: 'audio',
-            value: 'audio'
-          }
+            label: "Audio",
+            key: "audio",
+            value: "audio",
+          },
         ])
-        .setFaIcon('fas fa-book')
+        .setFaIcon("fas fa-book")
     ),
     new LeftActionBarElement(
-      'filter',
+      "filter",
       () => null,
-      new MedSelectDescriptor('owner')
-        .setOptions(container.resolve(UserService).getUsers().then((data) => {
-          const options: SelectValue[] = data['hydra:member']
-            .map((user) => {
-              return {
-                key: user.id?.toString() ?? '',
-                value: user.id,
-                label: user.firstname + ' ' + user.lastname
-              }
+      new MedSelectDescriptor("owner")
+        .setOptions(
+          container
+            .resolve(UserService)
+            .getUsers()
+            .then((data) => {
+              const options: SelectValue[] = data["hydra:member"]
+                .map((user) => {
+                  return {
+                    key: user.id?.toString() ?? "",
+                    value: user.id,
+                    label: user.firstname + " " + user.lastname,
+                  };
+                })
+                .sort((first, second) =>
+                  first.label.localeCompare(second.label)
+                );
+
+              options.unshift({
+                key: "all",
+                value: null,
+                label: "Tous",
+                default: true,
+              });
+
+              return options;
             })
-            .sort((first, second) => first.label.localeCompare(second.label))
+        )
+        .setFaIcon("fas fa-user")
+    ),
+  ],
+  false
+);
 
-          options.unshift(
-            {
-              key: 'all',
-              value: null,
-              label: 'Tous',
-              default: true
-            }
-          )
+const bookToDeleteDisplayPopup = ref(false);
 
-          return options
-        }))
-        .setFaIcon('fas fa-user')
-    )
-  ], false)
+const setBook = (
+  selectedBook: BookPaperItem | BookElectronicItem | BookAudioItem
+) => {
+  window.location.href = bookService.getBookUrl(selectedBook);
+};
 
-  setBook (selectedBook: BookPaperItem | BookElectronicItem | BookAudioItem) {
-    window.location.href = bookService.getBookUrl(selectedBook)
+const bookDeleteCancel = () => {
+  bookListModule.setBookToDelete(null);
+};
+
+const bookDeleteTrigger = () => {
+  if (bookListModule.bookToDelete === null) {
+    return;
+  }
+  const bookStore = new BookStoreService().getStore(
+    bookListModule.bookToDelete
+  );
+  bookStore.setBook(bookListModule.bookToDelete);
+  bookStore
+    .deleteBook()
+    .then(() => {
+      bookListModule.setBookToDelete(null);
+    })
+    .catch((error: Error) => {
+      console.error("Erreur lors de la suppression du livre:", error);
+    });
+};
+
+const bookToDeleteBookTitle = computed(
+  () => bookListModule.bookToDelete?.title
+);
+
+const bookToDelete = computed(() => bookListModule.bookToDelete);
+
+const bookToDownload = computed(() => bookListModule.bookToDownload);
+
+watch(bookToDelete, () => {
+  bookToDeleteDisplayPopup.value = bookListModule.bookToDelete !== null;
+});
+
+watch(bookToDownload, () => {
+  if (bookToDownload.value === null || !bookToDownload.value.id) {
+    return;
   }
 
-  bookDeleteCancel () {
-    bookListModule.setBookToDelete(null)
-  }
+  const downloadErrorHandler = (err: Error) => {
+    console.error("Erreur lors du téléchargement du livre:", err);
+  };
 
-  bookDeleteTrigger () {
-    if (bookListModule.bookToDelete === null) {
-      return
-    }
-    const bookStore = (new BookStoreService()).getStore(bookListModule.bookToDelete)
-    bookStore.setBook(bookListModule.bookToDelete)
-    bookStore.deleteBook()
-      .then(() => {
-        bookListModule.setBookToDelete(null);
-        (this.$refs.list as any).load()
-      })
-      .catch((error) => {
-        this.$toasted.show(error, {
-          ...this.$config.default.notification_settings,
-          type: 'error',
-          icon: 'fa-times'
+  switch (bookToDownload.value["@type"]) {
+    case BookService.bookElectronic:
+      bookElectronicModule
+        .get(bookToDownload.value.id)
+        .then(() => bookElectronicModule.downloadEbook())
+        .catch((err: Error) => {
+          downloadErrorHandler(err);
         })
-      })
+        .finally(() => bookElectronicModule.init());
+      break;
+    case BookService.bookAudio:
+      bookAudioModule
+        .get(bookToDownload.value.id)
+        .then(() => bookAudioModule.downloadBookFile())
+        .catch((err: Error) => {
+          downloadErrorHandler(err);
+        })
+        .finally(() => bookAudioModule.init());
+      break;
+    default:
+      downloadErrorHandler(
+        new Error(
+          "Cannot download books of type " + bookToDownload.value["@type"]
+        )
+      );
   }
-
-  bookToDeleteDisplayPopup: boolean = false
-
-  get bookToDeleteBookTitle () {
-    return bookListModule.bookToDelete?.title
-  }
-
-  get bookToDelete () {
-    return bookListModule.bookToDelete
-  }
-
-  @Watch('bookToDelete')
-  bookToDeleteChanged () {
-    this.bookToDeleteDisplayPopup = bookListModule.bookToDelete !== null
-  }
-
-  get bookToDownload () {
-    return bookListModule.bookToDownload
-  }
-
-  @Watch('bookToDownload')
-  bookToDownloadChanged () {
-    if (this.bookToDownload === null || !this.bookToDownload.id) {
-      return
-    }
-
-    const downloadErrorHandler = (err: Error) => {
-      this.$toast.error(
-        this.$t('books.list.download_book_error').toString(),
-        {
-          ...this.$config.default.notification_settings,
-          duration: 3000,
-          icon: 'fa-times'
-        }
-      )
-      console.error(err)
-    }
-
-    switch (this.bookToDownload['@type']) {
-      case BookService.bookElectronic:
-        bookElectronicModule.get(this.bookToDownload.id)
-          .then(() => bookElectronicModule.downloadEbook())
-          .catch((err: Error) => {
-            downloadErrorHandler(err)
-          })
-          .finally(() => bookElectronicModule.init())
-        break
-      case BookService.bookAudio:
-        bookAudioModule.get(this.bookToDownload.id)
-          .then(() => bookAudioModule.downloadBookFile())
-          .catch((err: Error) => {
-            downloadErrorHandler(err)
-          })
-          .finally(() => bookAudioModule.init())
-        break
-      default:
-        downloadErrorHandler(new Error('Cannot download books of type ' + this.bookToDownload['@type']))
-    }
-  }
-}
+});
 </script>
 
 <style lang="scss">

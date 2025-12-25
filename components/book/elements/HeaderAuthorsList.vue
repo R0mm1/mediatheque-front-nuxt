@@ -5,27 +5,34 @@
       :key="author.id"
       class="book-author"
       @click="goToAuthorPage(author.id)"
-    ><!-- comment is here to connect lines and avoid unwanted white spaces to appears in browser
-  --><template v-if="index !== 0">, </template>{{ author.person.firstname }} {{ author.person.lastname }}<!--
---></span>
+      ><!-- comment is here to connect lines and avoid unwanted white spaces to appears in browser
+  --><template v-if="index !== 0">, </template>{{ author.person.firstname }}
+      {{ author.person.lastname
+      }}<!--
+--></span
+    >
   </span>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
+import { useRouter } from "vue-router";
+import { Author } from "~/assets/ts/models/Author";
 
-import { Component, Prop, Vue } from 'vue-property-decorator'
-import { Author } from '~/assets/ts/models/Author'
-
-@Component({})
-export default class HeaderAuthorsList extends Vue {
-  @Prop({ type: Array, default: [] }) authors!: Author[]
-
-  goToAuthorPage (authorId: number) {
-    this.$router.push({
-      path: '/author/' + authorId
-    })
-  }
+interface Props {
+  authors?: Author[];
 }
+
+withDefaults(defineProps<Props>(), {
+  authors: () => [],
+});
+
+const router = useRouter();
+
+const goToAuthorPage = (authorId: number) => {
+  router.push({
+    path: "/author/" + authorId,
+  });
+};
 </script>
 
 <style scoped>

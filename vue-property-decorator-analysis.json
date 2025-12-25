@@ -1,0 +1,308 @@
+[
+  {
+    "path": "components/groups/groups/mainTab/GroupInformation.vue",
+    "propCount": 0,
+    "methodCount": 0,
+    "hasLifecycle": false,
+    "hasWatchers": false,
+    "hasEmit": false,
+    "complexity": "simple"
+  },
+  {
+    "path": "components/author/groups/mainTab/GroupBibliography.vue",
+    "propCount": 0,
+    "methodCount": 1,
+    "hasLifecycle": false,
+    "hasWatchers": false,
+    "hasEmit": false,
+    "complexity": "simple"
+  },
+  {
+    "path": "components/groups/groups/MainTab.vue",
+    "propCount": 0,
+    "methodCount": 2,
+    "hasLifecycle": false,
+    "hasWatchers": false,
+    "hasEmit": false,
+    "complexity": "simple"
+  },
+  {
+    "path": "components/groups/GroupListPopupDelete.vue",
+    "propCount": 1,
+    "methodCount": 0,
+    "hasLifecycle": false,
+    "hasWatchers": false,
+    "hasEmit": false,
+    "complexity": "simple"
+  },
+  {
+    "path": "components/author/groups/mainTab/GroupInformation.vue",
+    "propCount": 1,
+    "methodCount": 0,
+    "hasLifecycle": false,
+    "hasWatchers": false,
+    "hasEmit": false,
+    "complexity": "simple"
+  },
+  {
+    "path": "components/book/BookListPopupDelete.vue",
+    "propCount": 1,
+    "methodCount": 0,
+    "hasLifecycle": false,
+    "hasWatchers": false,
+    "hasEmit": false,
+    "complexity": "simple"
+  },
+  {
+    "path": "components/groups/GroupListRowDetails.vue",
+    "propCount": 1,
+    "methodCount": 1,
+    "hasLifecycle": false,
+    "hasWatchers": false,
+    "hasEmit": false,
+    "complexity": "simple"
+  },
+  {
+    "path": "components/form/elements/MedInputButton.vue",
+    "propCount": 1,
+    "methodCount": 1,
+    "hasLifecycle": false,
+    "hasWatchers": false,
+    "hasEmit": false,
+    "complexity": "simple"
+  },
+  {
+    "path": "components/groups/groups/mainTab/GroupBookDeletePopup.vue",
+    "propCount": 2,
+    "methodCount": 0,
+    "hasLifecycle": false,
+    "hasWatchers": false,
+    "hasEmit": false,
+    "complexity": "simple"
+  },
+  {
+    "path": "components/groups/groups/mainTab/GroupBooks.vue",
+    "propCount": 0,
+    "methodCount": 6,
+    "hasLifecycle": false,
+    "hasWatchers": false,
+    "hasEmit": false,
+    "complexity": "medium"
+  },
+  {
+    "path": "components/list/ColumnSelectionPopup.vue",
+    "propCount": 0,
+    "methodCount": 6,
+    "hasLifecycle": true,
+    "hasWatchers": false,
+    "hasEmit": true,
+    "complexity": "medium"
+  },
+  {
+    "path": "components/list/Header.vue",
+    "propCount": 0,
+    "methodCount": 11,
+    "hasLifecycle": true,
+    "hasWatchers": true,
+    "hasEmit": false,
+    "complexity": "medium"
+  },
+  {
+    "path": "components/book/groups/mainTab/GroupReferences.vue",
+    "propCount": 0,
+    "methodCount": 29,
+    "hasLifecycle": true,
+    "hasWatchers": false,
+    "hasEmit": false,
+    "complexity": "medium"
+  },
+  {
+    "path": "components/groups/Group.vue",
+    "propCount": 1,
+    "methodCount": 1,
+    "hasLifecycle": true,
+    "hasWatchers": false,
+    "hasEmit": false,
+    "complexity": "medium"
+  },
+  {
+    "path": "components/form/elements/MedChips.vue",
+    "propCount": 1,
+    "methodCount": 2,
+    "hasLifecycle": false,
+    "hasWatchers": false,
+    "hasEmit": true,
+    "complexity": "medium"
+  },
+  {
+    "path": "components/author/Author.vue",
+    "propCount": 1,
+    "methodCount": 4,
+    "hasLifecycle": true,
+    "hasWatchers": false,
+    "hasEmit": false,
+    "complexity": "medium"
+  },
+  {
+    "path": "components/book/BookListRowDetails.vue",
+    "propCount": 1,
+    "methodCount": 4,
+    "hasLifecycle": false,
+    "hasWatchers": false,
+    "hasEmit": false,
+    "complexity": "medium"
+  },
+  {
+    "path": "components/book/audioBook/groups/AudioGroupInformation.vue",
+    "propCount": 1,
+    "methodCount": 5,
+    "hasLifecycle": false,
+    "hasWatchers": false,
+    "hasEmit": false,
+    "complexity": "medium"
+  },
+  {
+    "path": "components/book/electronicBook/groups/ElectronicGroupInformation.vue",
+    "propCount": 1,
+    "methodCount": 5,
+    "hasLifecycle": false,
+    "hasWatchers": false,
+    "hasEmit": false,
+    "complexity": "medium"
+  },
+  {
+    "path": "components/book/paperBook/groups/PaperGroupInformation.vue",
+    "propCount": 1,
+    "methodCount": 6,
+    "hasLifecycle": false,
+    "hasWatchers": false,
+    "hasEmit": false,
+    "complexity": "medium"
+  },
+  {
+    "path": "components/list/LeftActionBar.vue",
+    "propCount": 1,
+    "methodCount": 18,
+    "hasLifecycle": false,
+    "hasWatchers": false,
+    "hasEmit": false,
+    "complexity": "medium"
+  },
+  {
+    "path": "components/book/paperBook/BookEditPopupOcrSummary.vue",
+    "propCount": 1,
+    "methodCount": 23,
+    "hasLifecycle": false,
+    "hasWatchers": true,
+    "hasEmit": true,
+    "complexity": "medium"
+  },
+  {
+    "path": "components/list/HeaderPopup.vue",
+    "propCount": 2,
+    "methodCount": 2,
+    "hasLifecycle": true,
+    "hasWatchers": false,
+    "hasEmit": true,
+    "complexity": "medium"
+  },
+  {
+    "path": "components/form/elements/MedInputText.vue",
+    "propCount": 2,
+    "methodCount": 3,
+    "hasLifecycle": true,
+    "hasWatchers": true,
+    "hasEmit": false,
+    "complexity": "medium"
+  },
+  {
+    "path": "components/form/elements/MedInputTextWithButton.vue",
+    "propCount": 2,
+    "methodCount": 3,
+    "hasLifecycle": true,
+    "hasWatchers": true,
+    "hasEmit": false,
+    "complexity": "medium"
+  },
+  {
+    "path": "components/form/elements/MedSelect.vue",
+    "propCount": 2,
+    "methodCount": 7,
+    "hasLifecycle": true,
+    "hasWatchers": true,
+    "hasEmit": false,
+    "complexity": "medium"
+  },
+  {
+    "path": "components/book/groups/mainTab/GroupInformation.vue",
+    "propCount": 2,
+    "methodCount": 10,
+    "hasLifecycle": false,
+    "hasWatchers": true,
+    "hasEmit": false,
+    "complexity": "medium"
+  },
+  {
+    "path": "components/list/Row.vue",
+    "propCount": 3,
+    "methodCount": 14,
+    "hasLifecycle": true,
+    "hasWatchers": false,
+    "hasEmit": false,
+    "complexity": "medium"
+  },
+  {
+    "path": "components/page/EntityLayout.vue",
+    "propCount": 4,
+    "methodCount": 2,
+    "hasLifecycle": true,
+    "hasWatchers": true,
+    "hasEmit": true,
+    "complexity": "medium"
+  },
+  {
+    "path": "components/book/Book.vue",
+    "propCount": 6,
+    "methodCount": 7,
+    "hasLifecycle": true,
+    "hasWatchers": false,
+    "hasEmit": false,
+    "complexity": "medium"
+  },
+  {
+    "path": "components/form/elements/formulate/Select.vue",
+    "propCount": 6,
+    "methodCount": 12,
+    "hasLifecycle": true,
+    "hasWatchers": true,
+    "hasEmit": false,
+    "complexity": "medium"
+  },
+  {
+    "path": "components/list/List.vue",
+    "propCount": 6,
+    "methodCount": 12,
+    "hasLifecycle": true,
+    "hasWatchers": true,
+    "hasEmit": false,
+    "complexity": "medium"
+  },
+  {
+    "path": "components/form/elements/formulate/Files.vue",
+    "propCount": 8,
+    "methodCount": 9,
+    "hasLifecycle": false,
+    "hasWatchers": false,
+    "hasEmit": false,
+    "complexity": "medium"
+  },
+  {
+    "path": "components/form/elements/formulate/Chips.vue",
+    "propCount": 11,
+    "methodCount": 10,
+    "hasLifecycle": false,
+    "hasWatchers": true,
+    "hasEmit": false,
+    "complexity": "medium"
+  }
+]

@@ -2,21 +2,17 @@
   <Author :author-id="authorId" />
 </template>
 
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+<script setup lang="ts">
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+import Author from "~/components/author/Author.vue";
 
-@Component({})
-export default class AuthorPage extends Vue {
-  authorId!:Number
-
-  created () {
-    this.authorId = parseInt(this.$route.params.id)
-  }
-}
+const route = useRoute();
+const authorId = computed(() => parseInt(route.params.id as string));
 </script>
 
 <style scoped>
-.group_information{
+.group_information {
   max-width: 350px;
 }
 </style>

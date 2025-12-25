@@ -2,22 +2,13 @@
   <Group :group-id="groupId" />
 </template>
 
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import Group from '~/components/groups/Group.vue'
+<script setup lang="ts">
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+import Group from "~/components/groups/Group.vue";
 
-@Component({
-  components: { Group }
-})
-export default class GroupPage extends Vue {
-  groupId!: Number
-
-  created () {
-    this.groupId = parseInt(this.$route.params.id)
-  }
-}
+const route = useRoute();
+const groupId = computed(() => parseInt(route.params.id as string));
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

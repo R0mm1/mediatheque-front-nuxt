@@ -9,22 +9,21 @@
   />
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
-import BookBook from '~/components/book/Book.vue'
-import bookAudioModule from '~/assets/ts/store/book/BookAudioModule'
+<script setup lang="ts">
+import BookBook from "~/components/book/Book.vue";
+import bookAudioModule from "~/assets/ts/store/book/BookAudioModule";
 
-@Component({
-  components: { BookBook }
-})
-export default class PaperBook extends Vue {
-  @Prop({ type: Number, required: false }) bookId!: number|null
-  @Prop({ type: Boolean, required: false, default: false }) editModeOn!:boolean
-
-  bookModule = bookAudioModule
+interface Props {
+  bookId?: number | null;
+  editModeOn?: boolean;
 }
+
+withDefaults(defineProps<Props>(), {
+  bookId: null,
+  editModeOn: false,
+});
+
+const bookModule = bookAudioModule;
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

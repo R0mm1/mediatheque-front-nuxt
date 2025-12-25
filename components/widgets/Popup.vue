@@ -1,5 +1,5 @@
 <template>
-  <div class="widget_popup" :class="{displayed: isDisplayed}">
+  <div class="widget_popup" :class="{ displayed: isDisplayed }">
     <div>
       <div class="popup_header" data-cy="popupHeader">
         <slot name="popup_header" />
@@ -14,25 +14,21 @@
   </div>
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
-
-@Component({
-  components: {}
-})
-export default class Popup extends Vue {
-  @Prop({
-    type: Boolean,
-    default: false
-  }) isDisplayed!: boolean
-}
-
+<script setup lang="ts">
+withDefaults(
+  defineProps<{
+    isDisplayed?: boolean;
+  }>(),
+  {
+    isDisplayed: false,
+  }
+);
 </script>
 
 <style scoped lang="scss">
-@import "~assets/scss/colors.scss";
+@import "~/assets/scss/colors.scss";
 
-.widget_popup{
+.widget_popup {
   position: absolute;
   top: 0;
   left: 0;
@@ -46,7 +42,7 @@ export default class Popup extends Vue {
     display: none;
   }
 
-  > div{
+  > div {
     padding: 15px;
     background-color: white;
     border: 1px solid $shade0;
@@ -61,17 +57,13 @@ export default class Popup extends Vue {
     font-weight: 500;
   }
 
-  .popup_body{
+  .popup_body {
     margin: 15px 0;
   }
 
-  .popup_footer{
+  .popup_footer {
     display: flex;
-    justify-content: end;
-
-    .formulate-input:not(:last-of-type){
-      margin-right: 5px;
-    }
+    justify-content: flex-end;
   }
 }
 </style>

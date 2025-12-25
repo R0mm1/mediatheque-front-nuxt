@@ -2,21 +2,13 @@
   <PaperBook :book-id="bookId" />
 </template>
 
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import PaperBook from '~/components/book/PaperBook.vue'
+<script setup lang="ts">
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+import PaperBook from "~/components/book/PaperBook.vue";
 
-@Component({
-  components: { PaperBook }
-})
-export default class PaperBookPage extends Vue {
-  bookId!: Number
-
-  created () {
-    this.bookId = parseInt(this.$route.params.id)
-  }
-}
+const route = useRoute();
+const bookId = computed(() => parseInt(route.params.id as string));
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

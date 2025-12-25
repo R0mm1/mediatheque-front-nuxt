@@ -2,17 +2,8 @@
   <Author :author-id="null" />
 </template>
 
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
-import Author from '~/components/author/Author.vue'
-
-@Component({
-  components: { Author }
-})
-export default class NewAuthorPage extends Vue {
-}
+<script setup lang="ts">
+import Author from "~/components/author/Author.vue";
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
