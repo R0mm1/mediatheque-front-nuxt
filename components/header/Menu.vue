@@ -1,10 +1,9 @@
 <template>
-  <ul id="mainMenu">
+  <ul id="mainMenu" ref="mainMenuRef">
     <li
       v-for="(menuItem, menuIndex) in menu"
       :id="'main_menu_'+menuIndex"
       :key="menuIndex"
-      v-click-outside="close"
       :class="{opened: menuItem.opened}"
       @click="toggle(menuIndex)"
     >
@@ -18,56 +17,61 @@
   </ul>
 </template>
 
-<script>
-import ClickOutside from 'vue-click-outside'
-
-export default {
-  name: 'Menu',
-  directives: {
-    'click-outside': ClickOutside
-  },
-  data () {
-    return {
-      menu: [
-        {
-          label: 'Livres',
-          opened: false,
-          children: [
-            {
-              label: 'Par livre',
-              target: '/book'
-            },
-            {
-              label: 'Par auteur',
-              target: '/authors'
-            },
-            {
-              label: 'Par groupes',
-              target: '/groups'
-            }
-          ]
-        }
-      ]
-    }
-  },
-  methods: {
-    toggle (index) {
-      this.menu[index].opened = !this.menu[index].opened
-    },
-    close (event) {
-      let menuIndex = null
-      if (typeof event.target.id === 'string' && event.target.id.startsWith('main_menu_')) {
-        menuIndex = parseInt(event.target.id.split('main_menu_')[1])
-      }
-      this.menu.forEach((menu, index) => {
-        if (index === menuIndex) {
-          return
-        }
-        menu.opened = false
-      })
-    }
-  }
+<script setup lang="ts">
+interface MenuItem {
+  label: string
+  opened: boolean
+  children: Array<{
+    label: string
+    target: string
+  }>
 }
+
+const mainMenuRef = ref<HTMLElement | null>(null)
+
+const menu = ref<MenuItem[]>([
+  {
+    label: 'Livres',
+    opened: false,
+    children: [
+      {
+        label: 'Par livre',
+        target: '/book'
+      },
+      {
+        label: 'Par auteur',
+        target: '/authors'
+      },
+      {
+        label: 'Par groupes',
+        target: '/groups'
+      }
+    ]
+  }
+])
+
+const toggle = (index: number) => {
+  menu.value[index].opened = !menu.value[index].opened
+}
+
+const close = (event: MouseEvent) => {
+  let menuIndex: number | null = null
+  const target = event.target as HTMLElement
+
+  if (typeof target.id === 'string' && target.id.startsWith('main_menu_')) {
+    menuIndex = parseInt(target.id.split('main_menu_')[1])
+  }
+
+  menu.value.forEach((menuItem, index) => {
+    if (index === menuIndex) {
+      return
+    }
+    menuItem.opened = false
+  })
+}
+
+// Use click-outside composable to close menus when clicking outside
+useClickOutside(mainMenuRef, close)
 </script>
 
 <style scoped lang="scss">
