@@ -6,6 +6,7 @@ export default defineNuxtConfig({
 
   modules: [
     '@pinia/nuxt',
+    '@formkit/nuxt',
     '@nuxtjs/i18n',
     '@nuxtjs/device'
   ],
